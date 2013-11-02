@@ -1,0 +1,97 @@
+\def\argmax{\mathop{\operator@font arg\,max}}
+%\def\makesc#1{\textsc{\MakeLowercase{#1}}}
+%\def\term#1{\textsf{#1}}   % IR terms in examples not index terms!
+\def\term#1{\textrm{#1}}   % IR terms in examples not index terms!
+\def\query#1{{\sf #1}}
+\def\oper#1{\textrm{\textsc{#1}}} % AND, OR, NOT
+\def\class{\emph}          % for classes and clusters
+\def\dnrm#1{\mbox{$_{\hbox{\scriptsize #1}}$}}
+\def\uprm#1{\mbox{$^{\hbox{\scriptsize #1}}$}}
+\def\collf{\mathord{\mathrm{cf}}}
+\def\termf{\mathord{\mathrm{tf}}}
+\def\docf{\mathord{\mathrm{df}}}
+\def\ave{\mathop{\operator@font ave}}
+\newcommand{\xvar}{X}
+\newcommand{\wvar}{U}
+\newcommand{\docsetlabeled}{\mathbb{D}}
+\newcommand{\onedoclabeled}{{\langle d,c \rangle}}
+\newcommand{\onedoc}{d}
+\newcommand{\tcposindex}{k}
+\newcommand{\tcword}{t}
+\newcommand{\tcjclass}{c}
+\newcommand{\dlenave}{L\dnrm{ave}}
+\newcommand{\dlentest}{L\dnrm{a}}
+\newcommand{\dvoctest}{M\dnrm{a}}
+\newcommand{\observationo}{N}
+\newcommand{\ktopk}{k}
+\newcommand{\docset}{D}
+\def\argmin{\mathop{\operator@font arg\,min}}
+\newcommand{\twasx}{t}
+\newcommand{\dvocave}{M\dnrm{ave}}
+\newcommand{\oldell}{i}
+\newcommand{\mthatwask}{m}
+\newcommand{\nthatwasell}{n}
+
+\def\weestrut{\hbox{%
+          \vrule\@height.6\baselineskip
+                \@depth.25\baselineskip
+                \@width\z@}}
+
+\definecolor{texblue}{rgb}{0, 0, 1} 
+\def\myblue#1{\textcolor{texblue}{#1}}
+\definecolor{texred}{rgb}{1, 0, 0} 
+\def\myred#1{\textcolor{texred}{#1}}
+\definecolor{texgreen}{rgb}{0, 1, 0} 
+\definecolor{texgreen}{rgb}{0.2,0.6,0.2}
+\def\mygreen#1{\textcolor{texgreen}{#1}}
+
+% have this if you'd like a recurring outline
+% \AtBeginSection[]  % ``Beamer, do the following at the start
+% 		   % of every section''
+% {
+% \begin{frame}<beamer>
+% \frametitle{Outline} % make a frame titled ``Outline''
+% \tableofcontents[currentsection]  % show TOC and highlight
+% 				% current section
+% \end{frame}
+% }
+
+% have this if you'd like a recurring outline
+% \AtBeginSubsection[]  % ``Beamer, do the following at the start
+% 		   % of every section''
+% {
+% \begin{frame}<beamer>
+% \frametitle{Outline} % make a frame titled ``Outline''
+% \tableofcontents[currentsection,currentsubsection]  % show TOC and highlight
+% 				% current section
+% \end{frame}
+% }
+
+\def\justoneline#1{
+\begin{frame}
+
+{\LARGE #1}
+
+\end{frame}
+}
+
+%%% Hinrich pstricks stuff
+
+\newcommand{\Xeasquare}[3][]{\fnode[#1]{#2}{#3}}
+\newcommand{\Xeanode}[3][]{\circlenode[#1]{#2}{#3}}
+\newcommand{\XeaFnode}[2]{\circlenode[doubleline=true]{#1}{#2}}
+\newcommand{\Xeatrans}[4][]{\ncline[#1]{->}{#2}{#3}\mput*{#4}}
+\newcommand{\Xeaarc}[4][8]{\ncarc[arcangleA=#1, arcangleB=#1]{->}{#2}{#3}\mput*{#4}}
+\newcommand{\Xeacurve}[4][]{\nccurve[#1]{->}{#2}{#3}\mput*{#4}}
+\newcommand{\Xealoop}[3][angleA=-30, angleB=30]{\nccurve[ncurv=4, #1]{->}{#2}{#2}\Bput*{#3}}
+\newcommand{\Xeastart}[1]{\ncdiag[angleA=180, angleB=180, arm=.5, arrowsize=4pt 4]{->}{#1}{#1}}
+\newcommand{\eaStateName}{d}
+\newcommand{\eanode}[2][]{\Xeanode[#1]{q#2}{${\eaStateName}_{#2}$}}
+\newcommand{\easquare}[2][]{\Xeasquare[#1]{q#2}{${\eaStateName}_{#2}$}}
+\newcommand{\eaFnode}[1]{\XeaFnode{q#1}{${\eaStateName}_{#1}$}}
+\newcommand{\eatrans}[4][]{\Xeatrans[#1]{q#2}{q#3}{#4}}
+\newcommand{\eaarc}[4][8]{\Xeaarc[#1]{q#2}{q#3}{#4}}
+\newcommand{\eacurve}[4][]{\Xeacurve[#1]{q#2}{q#3}{#4}}
+\newcommand{\ealoop}[3][angleA=-30, angleB=30]{\Xealoop[#1]{q#2}{#3}}
+\newcommand{\eastart}[1]{\Xeastart{q#1}}
+\long\def\eateat#1{\ignorespaces}
