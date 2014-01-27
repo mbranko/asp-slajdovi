@@ -4,7 +4,7 @@
 \usepackage{tikz}
 \usepackage{url}
 \usepackage{ifxetex}
-\RequireXeTeX
+%\RequireXeTeX
 \usepackage{fontspec} % zahteva paket euenc
 \usepackage{xunicode}
 \usepackage{xltxtra}
@@ -25,7 +25,7 @@ Novom Sadu}
 
 \frame{\titlepage}
 
-\section[Rekurzija]{Rekurzija}
+\section[Pojam rekurzije]{Pojam rekurzije}
 \frame{
   \frametitle{Rekurzija kao šablon}
   \begin{itemize}
@@ -33,12 +33,7 @@ Novom Sadu}
     \item klasičan primer: faktorijel \\
     $$n! = 1 \cdot 2 \cdot 3 \cdot \ldots (n-1)\cdot n$$
     \item rekurzivna definicija: \\
-    $$ n! = \left\{
-      \begin{array}{rl}
-        1 &\mbox{ ako $n=0$} \\
-        n(n-1)! &\mbox{ ina\v{c}e}
-      \end{array} 
-      \right. $$
+    $$ n! = \left\{\begin{array}{rl} 1 & \mbox{ ako n=0} \\ n(n-1)! &\mbox{ ina\v{c}e} \end{array} \right. $$
   \end{itemize}
 }
 \begin{frame}[fragile]
@@ -84,6 +79,7 @@ def fact(n):
     \includegraphics[width=7cm]{asp-02-pic01.pdf}
   \end{center}
 }
+\section[Engleski lenjir]{Engleski lenjir}
 \frame{
   \frametitle{Primer rekurzije: ,,engleski lenjir``}
   \begin{itemize}
@@ -147,6 +143,7 @@ def draw_ruler(num_inches, major_length):
         draw_line(major_length, str(j))   # draw inch j line and label
 \end{minted}  
 \end{frame}
+\section[Binarna pretraga]{Binarna pretraga}
 \begin{frame}[fragile,shrink=15]
   \frametitle{Binarna pretraga}
 \begin{minted}[linenos=false]{python}
@@ -169,4 +166,50 @@ def binary_search(data, target, low, high):
       return binary_search(data, target, mid + 1, high)
 \end{minted}  
 \end{frame}
+\frame{
+  \frametitle{Vizuelizacija binarne pretrage}
+  \begin{itemize}
+    \item \texttt{target == data[mid]} -- našli smo ga
+    \item \texttt{target < data[mid]} -- ponavljamo pretragu u levoj
+    polovini
+    \item \texttt{target > data[mid]} -- ponavljamo pretragu u desnoj
+    polovini
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=8cm]{asp-02-pic05.png}
+  \end{center}
+}
+\frame{
+  \frametitle{Analiza binarne pretrage}
+  \begin{itemize}
+    \item radi u $O(\log n)$ vremenu
+    \item veličina preostale liste je \texttt{high-low+1}
+    \item posle jednog poređenja, to postaje
+    $$ (mid-1)-low+1 = \left\lfloor{\frac{low+high}{2}}\right\rfloor \leq
+    \frac{high-low+1}{2} $$ $$ high - (mid+1) + 1 = high -
+    \left\lfloor{\frac{low+high}{2}}\right\rfloor \leq \frac{high-low+1}{2} $$
+    \item $\Rightarrow$ svaki rekurzivni poziv deli region pretrage na pola;
+    prema tome, može biti najviše $\log n$ nivoa
+  \end{itemize}
+}
+\frame{
+  \frametitle{Linearna rekurzija}
+  \begin{itemize}
+    \item testiranje baznih slučajeva
+    \begin{itemize}
+      \item početi sa testiranjem baznih slučajeva (mora biti bar jedan)
+      \item obrada baznog slučaja ne sme koristiti rekurziju
+      \item svaki mogući lanac rekurzivnih poziva \myred{mora} se završiti
+      dolaskom do baznog slučaja
+    \end{itemize}
+    \item rekurzivno jednom
+    \begin{itemize}
+      \item napraviti jedan rekurzivni poziv
+      \item možemo napraviti grananje sa odlukom da se izabere jedan od mogućih
+      rekurzivnih poziva
+      \item svaki mogući rekurzivni poziv treba da se približi baznom slučaju
+    \end{itemize}
+  \end{itemize}
+}
+
 \end{document}
