@@ -11,11 +11,14 @@
 \usepackage{polyglossia}
 \usepackage{minted}
 \usepackage{algorithmic}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
 \usepackage{xcolor,colortbl}
+\usepackage{textcomp}
 %\setdefaultlanguage[script=Latin]{serbian}
 
 \title{Rekurzija}
-\author{}
+\author{\textcopyright \ \ Goodrich, Tamassia, Goldwasser}
 \institute{Katedra za informatiku, Fakultet tehničkih nauka, Univerzitet u
 Novom Sadu}
 \date{2014.}
@@ -192,6 +195,8 @@ def binary_search(data, target, low, high):
     prema tome, može biti najviše $\log n$ nivoa
   \end{itemize}
 }
+
+\section[Linearna rekurzija]{Linearna rekurzija}
 \frame{
   \frametitle{Linearna rekurzija}
   \begin{itemize}
@@ -211,5 +216,275 @@ def binary_search(data, target, low, high):
     \end{itemize}
   \end{itemize}
 }
+\begin{frame}[fragile]
+  \frametitle{Primer linearne rekurzije}
+\myred{LinearSum}($A$, $n$)
+\begin{algorithmic}
+\REQUIRE $A$: niz celih brojeva
+\REQUIRE $n$: broj brojeva u nizu koje treba sabrati
+\ENSURE suma prvih $n$ brojeva u $A$
+\IF{$n = 1$}
+  \RETURN $A[0]$
+\ELSE
+  \RETURN LinearSum($A$, $n-1$) + $A[n-1]$
+\ENDIF
+\end{algorithmic}
+\end{frame}
+\frame{
+  \frametitle{Primer linearne rekurzije}
+  \begin{center}
+    \includegraphics[width=8cm]{asp-02-pic06.png}
+  \end{center}
+}
+\begin{frame}[fragile]
+  \frametitle{Obrtanje redosleda u nizu}
+\myred{ReverseArray}($A$, $i$, $j$)
+\begin{algorithmic}
+\REQUIRE $A$: niz brojeva
+\REQUIRE $i$, $j$: nenegativni indeksi, $i<j$
+\ENSURE obrnut redosled u $A$ počevši od indeksa $i$ do indeksa $j$
+\IF{$i < j$}
+  \STATE swap $A[i]$, $A[j]$
+  \STATE ReverseArray($A$, $i+1$, $j-1$)
+\ENDIF
+\end{algorithmic}
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{Definisanje elemenata za rekurziju}
+  \begin{itemize}
+    \item prilikom dizajniranja rekurzivnih funkcija važno je definisati ih tako da je rekurzija jednostavna
+    \item ponekad to znači da treba definisati dodatne parametre funkcije
+    \item na primer, definisali smo ReverseArray($A, i, j$) umesto ReverseArray($A$)
+  \end{itemize}
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{Definisanje elemenata za rekurziju}
+  \begin{itemize}
+    \item Python implementacija
+  \end{itemize}
+\begin{minted}[linenos=false]{python}
+def reverse(S, start, stop):
+  """Obrni elemente u isečku S[start:stop]."""
+  # ako ima bar dva elementa
+  if start < stop - 1:
+    # zameni im mesta
+    S[start], S[stop-1] = S[stop-1], S[start]
+    # rekurzivno obrni ostatak
+    reverse(S, start+1, stop-1)               
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Stepenovanje}
+  \begin{itemize}
+    \item funkciju za stepenovanje $p(x,n) = x^n$ možemo definisati rekurzivno:
+  \end{itemize}
+  $$ p(x,n) = \left\{ \begin{array}{l l} 1 & \quad \text{ako $n=0$} \\x\cdot p(x, n-1) & \quad \text{inače}\end{array}\right. $$
+  \begin{itemize}
+    \item na ovaj način ćemo dobiti funkciju koja radi u $O(n)$ vremenu (jer pravimo $n$ poziva)
+    \item može li brže?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Stepenovanje}
+  \begin{itemize}
+    \item možemo napraviti brži linearno rekurzivan algoritam pomoću ponavljanog kvadriranja:
+  \end{itemize}
+  $$ p(x,n) = \left\{ \begin{array}{l l} 1 & \quad \text{ako je $x=0$} \\x\cdot p(x, \frac{n-1}{2})^2 & \quad \text{ako je $x>0$ neparan}\\p(x,n/2)^2 & \quad
+  \text{ako je $x>0$ paran} \end{array}\right. $$
+  \begin{itemize}
+    \item na primer: \\
+    $ 2^4 =  2^{(4/2)}^2 = (2^{4/2})^2 = (2^2)^2 = 4^2 = 16 $ \\
+    $ 2^5  =  2^{1+(4/2)}^2 = 2(2^{4/2})^2 = 2(2^2)^2 = 2(4^2) = 32 $ \\
+    $ 2^6  = 2^{(6/2)2} = (2^{6/2})2 = (2^3)^2 = 8^2 = 64 $ \\
+    $ 2^7  = 2^{1+(6/2)}^2 = 2(2^{6/2})^2 = 2(2^3)^2 = 2(8^2) = 128$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Rekurzivno stepenovanje}
+\myred{Power}($x, n$):
+\begin{algorithmic}
+\REQUIRE broj $x$ i njegov stepen $n$
+\ENSURE vrednost $x^n$
+\IF{$n=0$}
+  \RETURN 1
+\ENDIF
+\IF{$n$ je paran}
+  \STATE $y \leftarrow$ Power($x, (n-1)/2$) \COMMENT{\myred{svakim pozivom polovimo $n$}}
+  \RETURN $x\cdot y\cdot y$
+\ELSE
+  \STATE $y \leftarrow$ Power($x, n/2$)
+  \RETURN $y\cdot y$  \COMMENT{\myred{promenljiva umesto duplog poziva funkcije}}
+\ENDIF  
+\end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{,,Repna`` rekurzija}
+  \begin{itemize}
+    \item kada je rekurzivni poziv poslednji korak u funkciji
+    \item primer: ReverseArray($A, i, j$)
+    \item lako se preradi u iterativni postupak
+  \end{itemize}
+\myred{IterativeReverseArray}($A, i, j$)
+\begin{algorithmic}
+\REQUIRE niz A i nenegativni indeksi $i$ i $j$, $i<j$
+\ENSURE obrnut redosled elemenata u A počevši od indeksa $i$ do $j$
+\WHILE{$i<j$}
+  \STATE swap $A[i], A[j]$
+  \STATE $i \leftarrow i + 1$
+  \STATE $j \leftarrow j - 1$
+\ENDWHILE
+\end{algorithmic}
+\end{frame}
+
+\section[Binarna rekurzija]{Binarna rekurzija}
+\begin{frame}[fragile]
+  \frametitle{Binarna rekurzija}
+  \begin{itemize}
+    \item kada postoje \myred{dva} rekurzivna poziva za svaki bazni slučaj
+    \item primer: engleski lenjir
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=5cm]{asp-02-pic02.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Binarna rekurzija: sumiranje elemenata}
+\myred{BinarySum}($A, i, n$)
+\begin{algorithmic}
+\REQUIRE niz $A$ i celi brojevi $i$ i $n$
+\ENSURE zbir $n$ brojeva iz $A$ počevši od $i$-tog
+\IF{n=1}
+  \RETURN $A[i]$
+\ELSE
+  \RETURN BinarySum($A, i, n/2$) + BinarySum($A, i+n/2, n/2$)
+\ENDIF
+\end{algorithmic}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-02-pic07.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Fibonačijevi brojevi}
+\begin{itemize}
+  \item definišu se rekurzivno: \\
+  $ F_0 = 0$ \\
+  $ F_1 = 1$ \\
+  $ F_i = F_{i-1} + F_{i-2} \quad $ za $i>1$ 
+  \item rekurzivni algoritam (prvi pokušaj):
+\end{itemize}
+\myred{BinaryFib}($k$)
+\begin{algorithmic}
+\REQUIRE nenegativan ceo broj $k$
+\ENSURE $k$-ti Fibonačijev broj $F_k$
+\IF{$k\leq 1$}
+  \RETURN $k$
+\ELSE
+  \RETURN BinaryFib($k-1$) + BinaryFib($k-2$)
+\ENDIF
+\end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Fibonačijevi brojevi}
+\begin{itemize}
+  \item neka je $n_k$ broj rekurzivnih poziva funkcije \myred{BinaryFib}($k$):
+  \begin{itemize}
+    \item $n_0 = 1$
+    \item $n_1 = 1$
+    \item $n_2 = n_1 + n_0 + 1 = 3$
+    \item $n_3 = n_2 + n_1 + 1 = 5$
+    \item $n_4 = n_3 + n_2 + 1 = 9$
+    \item $n_5 = n_4 + n_3 + 1 = 15$
+    \item $n_6 = n_5 + n_4 + 1 = 25$
+    \item $n_7 = n_6 + n_5 + 1 = 41$
+    \item $n_8 = n_7 + n_6 + 1 = 67$
+  \end{itemize}
+  \item $n_k$ se svaki drugi put više nego duplira!
+  \item dakle, $n_k \geq 2^{k/2}$
+  \item broj poziva raste \myred{eksponencijalno}!
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Fibonačijevi brojevi v2}
+\begin{itemize}
+  \item pomoću linearne rekurzije
+\end{itemize}
+\myred{LinearFib}($k$)
+\begin{algorithmic}
+\REQUIRE pozitivan ceo broj $k$
+\ENSURE par Fibonačijevih brojeva $(F_k, F_{k-1})$
+\IF{$k = 1$}
+  \RETURN $(k, 0)$
+\ELSE
+  \STATE $(i, j) \leftarrow$ LinearFib($k-1$)
+  \RETURN $(i+j, i)$
+\ENDIF
+\end{algorithmic}
+\begin{itemize}
+  \item ima samo $k-1$ rekurzivnih poziva!
+\end{itemize}
+\end{frame}
+
+\section[Višestruka rekurzija]{Višestruka rekurzija}
+\begin{frame}[fragile]
+  \frametitle{Višestruka rekurzija}
+\begin{itemize}
+  \item primer problema: zagonetke sabiranja
+  \begin{itemize}
+    \item $pot + pan = bib$
+    \item $dog + cat = pig$
+    \item $boy + girl = baby$
+  \end{itemize}
+  \item višestruka rekurzija
+  \item potencijalno pravi puno rekurzivnih poziva
+  \item ne samo jedan ili dva
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink=12]
+  \frametitle{Višestruka rekurzija}
+\myred{PuzzleSolve}($k, S, U$)
+\begin{algorithmic}
+\REQUIRE ceo broj $k$, sekvenca $S$, skup $U$ (skup svih elemenata)
+\ENSURE lista svih proširenja $S$ dužine $k$ korišćenjem elemenata iz $U$ bez ponavljanja
+\FORALL{$e \in U$}
+  \STATE ukloni $e$ iz $U$ \COMMENT {$e$ se sada koristi}
+  \STATE dodaj $e$ na kraj $S$
+  \IF{k = 1}
+    \STATE test da li $S$ predstavlja rešenje
+    \IF{$S$ predstavlja rešenje}
+      \RETURN 'Solution found:', $S$
+    \ENDIF
+  \ELSE
+    \STATE PuzzleSolve($k-1, S, U$)
+    \STATE dodaj $e$ u $U$ \COMMENT{$e$ se više ne koristi}
+    \STATE ukloni $e$ sa kraja $S$
+  \ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Višestruka rekurzija}
+  $cbb + ba = abc$ \\
+  $799 + 98 = 897$
+  \begin{center}
+    \includegraphics[width=10cm]{asp-02-pic08.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Višestruka rekurzija}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-02-pic09.png}
+  \end{center}
+\end{frame}
 
 \end{document}
