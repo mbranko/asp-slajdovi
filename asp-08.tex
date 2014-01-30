@@ -87,6 +87,13 @@ Novom Sadu}
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Stablo u memoriji}
+\begin{center}
+  \includegraphics[width=11cm]{asp-08-pic11.png}
+\end{center}
+\end{frame}
+
 \begin{frame}[fragile,shrink]
   \frametitle{Čvor stabla u Pythonu}
 \begin{minted}[linenos=false]{python}
@@ -289,6 +296,69 @@ class Tree:
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{Binarno stablo u memoriji / čvorovi i reference}
+\begin{center}
+  \includegraphics[width=11cm]{asp-08-pic13.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Binarno stablo u memoriji / pomoću niza}
+\begin{columns}
+  \begin{column}[c]{6cm}
+  \begin{itemize}
+    \item \myred{rang} čvora: 
+    \begin{itemize}
+      \item $rank(root) = 1$
+      \item za levo dete: $rank(node) = 2\cdot rank(parent)$
+      \item za desno dete: $rank(node) = 2\cdot rank(parent) + 1$
+    \end{itemize}
+    \item čvor $v$ se smešta u $A[rang(v)]$
+  \end{itemize}
+  \end{column}
+  \begin{column}[c]{5cm}
+  \begin{center}
+    \includegraphics[width=4cm]{asp-08-pic14.png}
+  \end{center}
+  \end{column}
+\end{columns}
+\begin{center}
+  \includegraphics[width=8cm]{asp-08-pic15.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Obilazak binarnog stabla / inorder}
+\myred{inorder}($n$)
+\begin{algorithmic}
+\IF{$n$ ima levo dete}
+  \STATE inorder(levo dete)
+\ENDIF
+\STATE obradi($n$)
+\IF{$n$ ima desno dete}
+  \STATE inorder(desno dete)
+\ENDIF
+\end{algorithmic}
+\begin{center}
+  \includegraphics[width=5cm]{asp-08-pic12.png}
+\end{center}
+\end{frame}
+
+\section[Primeri]{Primeri primene}
+\begin{frame}[fragile]
+  \frametitle{Stabla odlučivanja}
+  \begin{itemize}
+    \item binarno stablo strukturirano prema procesu odlučivanja
+    \item unutrašnji čvorovi -- pitanja sa da/ne odgovorima
+    \item listovi -- odluke
+    \item primer: gde za večeru?
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=9cm]{asp-08-pic16.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{Stablo aritmetičkih izraza}
   \begin{itemize}
     \item binarno stablo kreirano na osnovu aritmetičkog izraza
@@ -298,6 +368,91 @@ class Tree:
   \end{itemize}
   \begin{center}
     \includegraphics[width=6cm]{asp-08-pic10.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Ispisivanje aritmetičkih izraza}
+  \begin{itemize}
+    \item specijalni slučaj \textbf{inorder} obilaska
+  \end{itemize}
+\begin{columns}
+  \begin{column}[c]{5cm}
+    \myred{printExpr}($n$)
+    \begin{algorithmic}
+    \IF{$n$ ima levo dete}
+      \STATE print("(")
+      \STATE printExpr(levo dete)
+    \ENDIF
+    \STATE print($n$)
+    \IF{$n$ ima desno dete}
+      \STATE printExpr(desno dete)
+      \STATE print(")")
+    \ENDIF
+    \end{algorithmic}
+  \end{column}
+  \begin{column}[c]{6cm}
+    \begin{center}
+      \includegraphics[width=6cm]{asp-08-pic10.png}
+    \end{center}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Izračunavanje aritmetičkih izraza}
+  \begin{itemize}
+    \item specijalni slučaj \textbf{postorder} obilaska
+  \end{itemize}
+\begin{columns}
+  \begin{column}[c]{5cm}
+    \myred{evalExpr}($n$)
+    \begin{algorithmic}
+    \IF{$n$ je list}
+      \RETURN $n$.$element$
+    \ELSE
+      \STATE $x \leftarrow evalExpr(n.left)$
+      \STATE $x \leftarrow evalExpr(n.right)$
+      \STATE $\diamond \leftarrow$ operator u $n$
+      \RETURN $x \diamond y$
+    \ENDIF
+    \end{algorithmic}
+  \end{column}
+  \begin{column}[c]{6cm}
+    \begin{center}
+      \includegraphics[width=6cm]{asp-08-pic10.png}
+    \end{center}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Ojlerov obilazak stabla}
+  \begin{itemize}
+    \item opšti postupak za obilazak stabla
+    \item preorder, inorder, postorder su specijalni slučajevi
+    \item posmatramo grane stabla kao zidove koji uvek moraju da nam budu sa leve strane prilikom kretanja
+    \item svaki čvor se poseti tri puta
+    \begin{itemize}
+      \item sa leve strane (preorder)
+      \item sa donje strane (inorder)
+      \item sa desne strane (postorder)
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=6.5cm]{asp-08-pic17.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Crtanje stabla}
+  \begin{itemize}
+    \item treba odrediti $(x,y)$ koordinate čvorova stabla
+    \item $x(n)$: broj čvorova posećenih pre čvora $n$ u \textbf{inorder} obilasku
+    \item $y(n)$: dubina čvora $n$
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-08-pic18.pdf}
   \end{center}
 \end{frame}
 
