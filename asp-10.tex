@@ -308,4 +308,48 @@ class UnsortedTableMap(MapBase):
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Hash code $_1$}
+  \begin{itemize}
+    \item memorijska adresa
+    \begin{itemize}
+      \item adresa Python objekta u memoriji kao hash code
+      \item dobro osim za numeričke tipove i stringove
+    \end{itemize}
+    \item integer cast 
+    \begin{itemize}
+      \item za svaki tip podataka koji se predstavlja sa najviše onoliko bita koliko i \textbf{int} možemo uzeti int interpretaciju njegovih bita
+      \item za tipove koji zauzimaju više memorije moramo nekako ,,sažeti`` njegove bite
+      \item npr. \textbf{float} broj u Pythonu zauzima 64 bita a hash kod 32; možemo izabrati
+      \begin{itemize}
+        \item gornjih 32 bita
+        \item donjih 32 bita
+        \item neku kombinaciju sva 64 bita: XOR ili zbir gornje i donje polovine, itd.
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Hash code $_2$}
+  \begin{itemize}
+    \item suma komponenti
+    \begin{itemize}
+      \item adresa Python objekta u memoriji kao hash code
+      \item dobro osim za numeričke tipove i stringove
+    \end{itemize}
+    \item integer cast 
+    \begin{itemize}
+      \item za svaki tip podataka koji se predstavlja sa najviše onoliko bita koliko i \textbf{int} možemo uzeti int interpretaciju njegovih bita
+      \item za tipove koji zauzimaju više memorije moramo nekako ,,sažeti`` njegove bite
+      \item npr. \textbf{float} broj u Pythonu zauzima 64 bita a hash kod 32; možemo izabrati
+      \begin{itemize}
+        \item gornjih 32 bita
+        \item donjih 32 bita
+        \item neku kombinaciju sva 64 bita: XOR ili zbir gornje i donje polovine, itd.
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
 \end{document}
