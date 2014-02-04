@@ -17,6 +17,7 @@
 \usepackage{textcomp}
 %\setdefaultlanguage[script=Latin]{serbian}
 
+
 \title{Mape, heš tabele, skip liste, skupovi}
 \author{\textcopyright \ \ Goodrich, Tamassia, Goldwasser}
 \institute{Katedra za informatiku, Fakultet tehničkih nauka, Univerzitet u
@@ -28,7 +29,7 @@ Novom Sadu}
 
 \frame{\titlepage}
 
-\section[Mapa]{Pojam mape}
+\section[Mapa]{Mapa}
 \begin{frame}[fragile]
   \frametitle{Mapa}
   \begin{itemize}
@@ -716,6 +717,258 @@ class ProbeHashMap(HashMapBase):
   \begin{itemize}
     \item očekivano vreme izvršavanja svih operacija je \myred{$O(1)$}
     \item u praksi heširanje je vrlo brzo ako faktor popune nije blizu 100\%
+  \end{itemize}
+\end{frame}
+
+\section[Skip lista]{Skip lista}
+\begin{frame}[fragile]
+  \frametitle{Skip lista}
+  \begin{itemize}
+    \item binarna pretraga sa sortiranim nizom: omogućava pronalaženje elemenata u $O(\log n)$ vremenu
+    \item ali su operacije dodavanja i uklanjanja $O(n)$ u najgorem slučaju \\ \ \\
+    \item \myred{skip lista} omogućava sve u $O(\log n)$ vremenu
+    \item u \textbf{prosečnom} slučaju
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Skip lista}
+  \begin{itemize}
+    \item \myred{skip lista} za skup $S$ elemenata $(k, v)$ je serija lista $S_0, S_1, \ldots, S_h$ takvih da
+    \item[1] svaka lista $S_i$ sadrži posebne ključeve $-\infty$ i $\infty$
+    \item[2] lista $S_0$ sadrži ključeve iz $S$ u neopadajućem redosledu
+    \item[3] svaka lista je podskup prethodne \\
+    $S_0 \supseteq S_1 \supseteq \ldots \supseteq S_h$
+    \item[4] lista $S_h$ sadrži samo posebne ključeve 
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-10-pic11.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Skip lista: pretraga}
+  \begin{itemize}
+    \item tražimo ključ $x$ u skip listi na sledeći način:
+    \item počnemo od prvog elementa liste na vrhu
+    \item na tekućoj poziciji $p_i$ poredimo $x$ sa $y = key(next(p))$
+    \begin{itemize}
+      \item $x = y$ : pronašli smo traženi element
+      \item $x > y$ : idemo napred (\myred{scan forward})
+      \item $x < y$ : idemo dole (\myred{drop down})
+    \end{itemize}
+    \item ako smo na nivou $S_0$ i treba da idemo dole, nema traženog elementa
+    \item primer: tražimo 78
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-10-pic12.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Algoritmi sa uvedenom slučajnošću}
+  \begin{itemize}
+    \item \myred{randomized algorithms}
+    \item koriste (pseudo)slučajne vrednosti da upravlja svojim izvršavanjem
+    \item sadrže naredbe nalik ovim:
+    \begin{algorithmic}
+      \STATE $b \leftarrow random()$
+      \IF{$b = 0$}
+        \STATE do A \ldots
+      \ELSE
+        \STATE do B \ldots
+      \ENDIF
+    \end{algorithmic}
+    \item vreme izvršavanja zavisi od ishoda ,,bacanja novčića``
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Algoritmi sa uvedenom slučajnošću}
+  \begin{itemize}
+    \item analiza vremena izvršavanja ovakvih algoritama podrazumeva 
+    \begin{itemize}
+      \item svi ishodi ,,bacanja novčića`` su jednako verovatni
+      \item bacanja su međusobno nezavisna
+    \end{itemize}
+    \item vreme izvršavanja \textbf{u najgorem slučaju} za ovakve algoritme je često veliko ali je vrlo malo verovatno (npr. sva bacanja novčića imaju isti ishod)
+    \item koristićemo ovakav algoritam za dodavanje elemenata u skip listu
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Dodavanje u skip listu}
+  \begin{itemize}
+    \item dodavanje novog elementa $(x, o)$ u skip listu:
+    \begin{itemize}
+      \item ponavljamo bacanje novčića sve dok ne dobijemo ,,pismo``
+      \item sa $i$ označimo broj puta koliko se pojavila ,,glava``
+      \item ako je $i \geq h$ dodaćemo nove liste $S_{h+1}, \ldots, s_{i+1}$, svaku samo sa $-\infty$ + $\infty$
+      \item tražimo $x$ u skip listi i nađemo pozicije $p_0, p_1, \ldots, p_i$ elemenata sa najvećim ključem manjim od $x$ u svakoj od lista $S_0, S_1, \ldots, S_i$
+      \item za $j\leftarrow 0, \ldots, i$ dodaćemo $(x, o)$ u listu $S_j$ nakon pozicije $p_j$
+    \end{itemize}
+    \item primer: dodajemo ključ 15, za $i=2$ 
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-10-pic13.png}
+  \end{center}
+\end{frame}
+
+\renewcommand{\algorithmiccomment}[1]{\hfill \{\myred{#1}\}}
+
+\begin{frame}[fragile,shrink]
+\frametitle{Dodavanje u skip listu}
+\myred{SkipInsert}($k, v$)
+\begin{algorithmic}
+\REQUIRE ključ $k$ i vrednost $v$
+\ENSURE najviša pozicija dodatog elementa
+\STATE $p \leftarrow$ SkipSearch(k)
+\STATE $q \leftarrow$ None \COMMENT{$q$ će biti najviši čvor u koloni novog elementa}
+\STATE $i \leftarrow -1$
+\REPEAT
+  \STATE $i\leftarrow i+1$
+  \IF{$i\geq h$}
+    \STATE $h \leftarrow h + 1$ \COMMENT{dodajemo novi nivo u skip listu}
+    \STATE $t \leftarrow$ next($s$)
+    \STATE $s \leftarrow$ insertAfterAbove(None, $s$, ($-\infty$, None)) \COMMENT{povećaj levu}
+    \STATE insertAfterAbove(s, t, ($+\infty$, None)) \COMMENT{povećaj desnu kulu}
+  \ENDIF
+  \WHILE{above(p) is None}
+    \STATE $p \leftarrow$ prev($p$) \COMMENT{idi nazad}
+  \ENDWHILE
+  \STATE $p \leftarrow$ above($p$) \COMMENT{popni se 1 nivo}
+  \STATE $q \leftarrow$ insertAfterAbove($p,q,(k,v)$) \COMMENT{povećaj visinu kule}
+\UNTIL{coinFlip()==tails}
+\STATE $n \leftarrow n + 1$
+\RETURN $q$
+\end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Uklanjanje iz skip liste}
+  \begin{itemize}
+    \item uklanjanje elementa sa ključem $x$ iz skip liste:
+    \begin{itemize}
+      \item tražimo $x$ u skip listi i nađemo pozicije $p_0, p_1, \ldots, p_i$ elemenata sa najvećim ključem manjim od $x$ u svakoj od lista $S_0, S_1, \ldots, S_i$
+      \item uklonimo pozicije $p_0, p_1, \ldots, p_i$ iz listi
+      \item uklonimo sve prazne liste osim jedne
+    \end{itemize}
+    \item primer: uklanjamo ključ 34 
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-10-pic14.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Implementacija skip liste}
+  \begin{columns}
+    \begin{column}[c]{6cm}
+      \begin{itemize}
+        \item možemo da koristimo \myred{quad-nodes}
+        \begin{itemize}
+          \item element
+          \item link na prethodni
+          \item link na sledeći
+          \item link na čvor ispod
+          \item link na čvor iznad
+        \end{itemize}
+        \item definišemo specijalne ključeve {\tiny PLUS\_INF} i {\tiny MINUS\_INF} i odgovarajući komparator 
+      \end{itemize}
+    \end{column}
+    \begin{column}[c]{6cm}
+  \begin{center}
+    \includegraphics[width=5cm]{asp-10-pic15.png}
+  \end{center}
+    \end{column}
+  \end{columns}
+  \begin{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Skip liste i zauzeće prostora}
+  \begin{itemize}
+    \item količina zauzete memorije zavisi od bacanja novčića
+    \item iz teorije verovatnoće
+    \begin{itemize}
+      \item[(a)] verovatnoća da se dobije $i$ uzastopnih glava je $1/2^i$
+      \item[(b)] ako je svaki od $n$ elemenata prisutan u listi sa verovatnoćom $p$, veličina skupa je $np$
+      \item[(c)] ako svaki od $n$ događaja ima verovatnoću $p$, verovatnoća da će se desiti bar jedan nije veća od $np$
+      \item[(d)] očekivani broj bacanja novčića da se dobije ,,pismo`` je 2
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Skip liste i zauzeće prostora}
+  \begin{itemize}
+    \item posmatramo skip listu sa $n$ elemenata
+    \begin{itemize}
+      \item prema (a), dodaćemo čvor u listu $S_i$ sa verovatnoćom $1/2^i$
+      \item prema (b), očekivana veličina liste $S_i$ je $n/2^i$
+    \end{itemize}
+    \item očekivani broj čvorova u skip listi je
+    $$ \sum_{i=0}^h \frac{n}{2^i} = n \sum_{i=0}^h \frac{1}{2^i} < 2n$$
+    \item prema tome, očekivani broj čvorova u skip listi sa $n$ elemenata je \myred{$O(n)$}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Visina skip liste}
+  \begin{itemize}
+    \item vreme izvršavanja pretrage i dodavanja u skip listu zavisi od njene \textbf{visine}
+    \item posmatramo skip listu sa $n$ elemenata
+    \begin{itemize}
+      \item prema (a), dodaćemo čvor u listu $S_i$ sa verovatnoćom $1/2^i$
+      \item prema (c), verovatnoća da $S_i$ ima bar jedan čvor je najviše $n/2^i$
+    \end{itemize}
+    \item ako izaberemo $i=3\log n$, verovatnoća da $S_{3\log n}$ ima bar jedan čvor je najviše
+    $$\frac{n}{2^{3\log n}} = \frac{n}{n^3} = \frac{1}{n^2}$$
+    \item prema tome, skip lista sa $n$ elemenata je visoka najviše $3\log n$ sa verovatnoćom najmanje $1-1/n^2$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Visina skip liste}
+  \begin{itemize}
+    \item sa vrlo velikom verovatnoćom
+    \item visina skip liste sa $n$ elemenata je $O(\log n)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pretraga i ažuriranje skip liste}
+  \begin{itemize}
+    \item vreme pretrage je proporcionalno
+    \begin{itemize}
+      \item broju \myred{drop down} koraka, plus
+      \item broju \myred{scan forward} koraka
+    \end{itemize}
+    \item drop down koraci su ograničeni visinom skip liste, dakle $O(\log n)$ sa velikom verovatnoćom
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pretraga i ažuriranje skip liste}
+  \begin{itemize}
+    \item kada radimo \myred{scan forward} korak, ključ se ne nalazi u listi iznad
+    \begin{itemize}
+      \item scan forward postoji zato što je ranije novčić dao ,,pismo``
+    \end{itemize}
+    \item prema (d), u svakoj listi očekivani broj scan forward koraka je 2
+    \item prema tome, ukupan broj scan forward koraka je $O(\log n)$
+    \item očekivano vreme za pretragu u skip listi je \myred{$O(\log n)$}
+    \item slično tome dodavanje i uklanjanje
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Performanse skip liste}
+  \begin{itemize}
+    \item skip lista je struktura podataka za implementaciju mape
+    \item upotreba memorije je $O(n)$
+    \item brzina pretrage, dodavanja i uklanjanja je $O(\log n)$ sa velikom verovatnoćom
   \end{itemize}
 \end{frame}
 
