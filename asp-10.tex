@@ -335,20 +335,387 @@ class UnsortedTableMap(MapBase):
   \begin{itemize}
     \item suma komponenti
     \begin{itemize}
-      \item adresa Python objekta u memoriji kao hash code
-      \item dobro osim za numeričke tipove i stringove
+      \item podelimo bitove ključa na delove po 32 bita
+      \item saberemo delove (ignorišemo overflow)
+      \item zgodno za numeričke ključeve duže od int-a
     \end{itemize}
-    \item integer cast 
+    \item polinomska akumulacija
     \begin{itemize}
-      \item za svaki tip podataka koji se predstavlja sa najviše onoliko bita koliko i \textbf{int} možemo uzeti int interpretaciju njegovih bita
-      \item za tipove koji zauzimaju više memorije moramo nekako ,,sažeti`` njegove bite
-      \item npr. \textbf{float} broj u Pythonu zauzima 64 bita a hash kod 32; možemo izabrati
+      \item podelimo bitove ključa na delove fiksne dužine (npr. 8, 16, 32 bita) $a_0 a_1 a_2 \ldots a_{n-1}$
+      \item izračunamo polinom (ignorišući overflow) za fiksno $z$:
+      $$ p(z) = a_0 + a_1 z + a_2 z^2 + \ldots + a_{n-1} z^{n-1}$$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Hash code $_3$}
+  \begin{itemize}
+    \item polinomska akumulacija
+    \begin{itemize}
+      \item posebno zgodno za stringove ($z=33$ daje samo 6 kolizija za 50.000 engleskih reči)
+      \item polinom $p(z)$ se može izračunati u $O(n)$ vremenu Hornerovom metodom
       \begin{itemize}
-        \item gornjih 32 bita
-        \item donjih 32 bita
-        \item neku kombinaciju sva 64 bita: XOR ili zbir gornje i donje polovine, itd.
+        \item sledeći polinomi se računaju u $O(1)$ vremenu, svaki na osnovu prethodnog
+        \item $p_0(z) = a_{n-1}$
+        \item \ldots
+        \item $p_i(z) = a_{n-i-1} + zp_{i-1}(z)$
+        \item na kraju je: $p(z) = p_{n-1}(z)$
       \end{itemize}
     \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kompresujuća funkcija}
+  \begin{itemize}
+    \item celobrojno deljenje
+    \begin{itemize}
+      \item $h(y) = y \mod N$
+      \item veličina hash tabele $N$ je obično prost broj
+    \end{itemize}
+    \item multiply, add and divide (MAD)
+    \begin{itemize}
+      \item $h(y) = (ay+b) \mod N$
+      \item $a$ i $b$ su nenegativni celi brojevi takvi da je $a\mod N \neq 0$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Apstraktna heš tabela $_1$}
+\begin{minted}[linenos=false]{python}
+class HashMapBase(MapBase):
+  """Abstract base class for map using hash-table with MAD compression.
+
+  Keys must be hashable and non-None.
+  """
+
+  def __init__(self, cap=11, p=109345121):
+    """Create an empty hash-table map.
+
+    cap     initial table size (default 11)
+    p       positive prime used for MAD (default 109345121)
+    """
+    self._table = cap * [ None ]
+    self._n = 0                                   # number of entries in the map
+    self._prime = p                               # prime for MAD compression
+    self._scale = 1 + randrange(p-1)              # scale from 1 to p-1 for MAD
+    self._shift = randrange(p)                    # shift from 0 to p-1 for MAD
+
+  def _hash_function(self, k):
+    return (hash(k)*self._scale + self._shift) % self._prime % len(self._table)
+
+  def __len__(self):
+    return self._n
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Apstraktna heš tabela $_2$}
+\begin{minted}[linenos=false]{python}
+  def __getitem__(self, k):
+    j = self._hash_function(k)
+    return self._bucket_getitem(j, k)             # may raise KeyError
+
+  def __setitem__(self, k, v):
+    j = self._hash_function(k)
+    self._bucket_setitem(j, k, v)                 # subroutine maintains self._n
+    if self._n > len(self._table) // 2:           # keep load factor <= 0.5
+      self._resize(2 * len(self._table) - 1)      # number 2^x - 1 is often prime
+
+  def __delitem__(self, k):
+    j = self._hash_function(k)
+    self._bucket_delitem(j, k)                    # may raise KeyError
+    self._n -= 1
+
+  def _resize(self, c):
+    """Resize bucket array to capacity c and rehash all items."""
+    old = list(self.items())       # use iteration to record existing items
+    self._table = c * [None]       # then reset table to desired capacity
+    self._n = 0                    # n recomputed during subsequent adds
+    for (k,v) in old:
+      self[k] = v                  # reinsert old key-value pair
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Rukovanje kolizijama}
+  \begin{itemize}
+    \item kolizije nastaju kada se različiti elementi mapiraju na istu ćeliju
+    \item ulančavanje duplikata: svaki element heš tabele je glava liste koja čuva elemente
+    \item traži dodatnu memoriju pored same heš tabele
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-10-pic08.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Mapa sa ulančavanjem}
+  \begin{itemize}
+    \item delegiramo operacije mapi implementiranoj pomoću liste za svaku ćeliju
+  \end{itemize}
+\begin{minted}[linenos=false]{python}
+  def get(k):
+    return A[h(k)].get(k)
+  
+  def put(k, v):
+    t = A[h(k)].put(k, v)
+    if t is None:
+      n = n + 1
+    return t
+    
+  def remove(k):
+    t = A[h(k)].remove(k)
+    if t is not None:
+      n = n - 1
+    return t
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile,shrink=25]
+  \frametitle{Heš tabela sa ulančavanjem $_1$}
+\begin{minted}[linenos=false]{python}
+class ChainHashMap(HashMapBase):
+  """Hash map implemented with separate chaining for collision resolution."""
+
+  def _bucket_getitem(self, j, k):
+    bucket = self._table[j]
+    if bucket is None:
+      raise KeyError('Key Error: ' + repr(k))        # no match found
+    return bucket[k]                                 # may raise KeyError
+
+  def _bucket_setitem(self, j, k, v):
+    if self._table[j] is None:
+      self._table[j] = UnsortedTableMap()     # bucket is new to the table
+    oldsize = len(self._table[j])
+    self._table[j][k] = v
+    if len(self._table[j]) > oldsize:         # key was new to the table
+      self._n += 1                            # increase overall map size
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile,shrink=25]
+  \frametitle{Heš tabela sa ulančavanjem $_2$}
+\begin{minted}[linenos=false]{python}
+  def _bucket_delitem(self, j, k):
+    bucket = self._table[j]
+    if bucket is None:
+      raise KeyError('Key Error: ' + repr(k))        # no match found
+    del bucket[k]                                    # may raise KeyError
+
+  def __iter__(self):
+    for bucket in self._table:
+      if bucket is not None:                         # a nonempty slot
+        for key in bucket:
+          yield key
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Linearno traženje}
+  \begin{itemize}
+    \item \myred{linear probing}: smešta element u koliziji u prvu sledeću slobodnu ćeliju (cirkularno)
+    \item elementi u koliziji se nagomilavaju izazivajući dalje kolizije
+    \item primer:
+%     \begin{itemize}
+%       \item $h(x) = x\mod 13$
+%       \item dodajemo ključeve 18, 41, 22, 44, 59, 32, 31, 73
+%     \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-10-pic09.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Čitanje sa linearnim traženjem}
+  \begin{columns}
+    \begin{column}[c]{6cm}
+      \begin{itemize}
+        \item \myred{get}(k): počinjemo od pozicije $h(k)$
+        \item ispitujemo sledeće lokacije sve dok se ne dogodi nešto od:
+        \begin{itemize}
+          \item pronašli smo ključ $k$
+          \item naišli smo na praznu lokaciju
+          \item ispitali smo $N$ lokacija
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}[c]{5cm}
+      \myred{get}($k$)
+      \begin{algorithmic}
+        \small
+        \STATE $i \leftarrow h(k)$
+        \STATE $p \leftarrow 0$
+        \REPEAT
+          \STATE $c \leftarrow A[i]$
+          \IF{$c = \emptyset$}
+            \RETURN null
+          \ELSE 
+            \IF{$c.getKey() = k$}
+              \RETURN $c.getValue()$
+            \ELSE
+              \STATE $i \leftarrow (i+1)\mod N$
+              \STATE $p \leftarrow p+1$
+            \ENDIF
+          \ENDIF
+        \UNTIL{$p=N$}
+        \RETURN null
+      \end{algorithmic}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Izmene sa linearnim traženjem}
+  \begin{columns}
+    \begin{column}[c]{6cm}
+      \begin{itemize}
+        \item uvodimo poseban objekat {\tiny AVAILABLE} koji zamenjuje uklonjene elemente
+        \item \myred{remove}($k$)
+        \begin{itemize}
+          \item tražimo element sa ključem $k$
+          \item ako smo ga našli, vraćamo ga i na njegovo mesto upisujemo {\tiny AVAILABLE}
+          \item inače vratimo \texttt{None}
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}[c]{6cm}
+      \begin{itemize}
+        \item \myred{put}($k, o$)
+        \begin{itemize}
+          \item izuzetak ako je tabela puna
+          \item počinjemo od ćelije $h(k)$
+          \item ispitujemo naredne ćelije sve dok se ne dogodi nešto od:
+          \begin{itemize}
+            \item našli smo ćeliju koja je prazna ili sadrži {\tiny AVAILABLE}
+            \item isprobali smo svih $N$ ćelija
+          \end{itemize}
+          \item upišemo $(k, o)$ u ćeliju $i$
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile,shrink=25]
+  \frametitle{Heš tabela sa linearnim traženjem $_1$}
+\begin{minted}[linenos=false]{python}
+class ProbeHashMap(HashMapBase):
+  """Hash map implemented with linear probing for collision resolution."""
+  _AVAIL = object()       # sentinal marks locations of previous deletions
+
+  def _is_available(self, j):
+    """Return True if index j is available in table."""
+    return self._table[j] is None or self._table[j] is ProbeHashMap._AVAIL
+
+  def _find_slot(self, j, k):
+    """Search for key k in bucket at index j.
+
+    Return (success, index) tuple, described as follows:
+    If match was found, success is True and index denotes its location.
+    If no match found, success is False and index denotes first available slot.
+    """
+    firstAvail = None
+    while True:                               
+      if self._is_available(j):
+        if firstAvail is None:
+          firstAvail = j                      # mark this as first avail
+        if self._table[j] is None:
+          return (False, firstAvail)          # search has failed
+      elif k == self._table[j]._key:
+        return (True, j)                      # found a match
+      j = (j + 1) % len(self._table)          # keep looking (cyclically)
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile,shrink=25]
+  \frametitle{Heš tabela sa linearnim traženjem $_2$}
+\begin{minted}[linenos=false]{python}
+  def _bucket_getitem(self, j, k):
+    found, s = self._find_slot(j, k)
+    if not found:
+      raise KeyError('Key Error: ' + repr(k))        # no match found
+    return self._table[s]._value
+
+  def _bucket_setitem(self, j, k, v):
+    found, s = self._find_slot(j, k)
+    if not found:
+      self._table[s] = self._Item(k,v)               # insert new item
+      self._n += 1                                   # size has increased
+    else:
+      self._table[s]._value = v                      # overwrite existing
+
+  def _bucket_delitem(self, j, k):
+    found, s = self._find_slot(j, k)
+    if not found:
+      raise KeyError('Key Error: ' + repr(k))        # no match found
+    self._table[s] = ProbeHashMap._AVAIL             # mark as vacated
+
+  def __iter__(self):
+    for j in range(len(self._table)):                # scan entire table
+      if not self._is_available(j):
+        yield self._table[j]._key
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Duplo heširanje}
+  \begin{itemize}
+    \item koristi se \myred{sekundarna} heš funkcija $d(k)$
+    \item prilikom kolizije element se smešta u prvu slobodnu ćeliju iz niza
+    $$(i + jd(k))\mod N \quad\text{za}\,\, j = 0, 1, \ldots, N-1$$
+    \item sekundarna heš funkcija ne sme vratiti 0
+    \item veličina tabele $N$ mora biti prost broj da bi se mogle probati sve ćelije
+    \item čest izbor za $d(k)$: \\
+    $d(k) = q - (k\mod q)$
+    \begin{itemize}
+      \item $q < N$
+      \item $q$ je prost broj
+    \end{itemize}
+    \item rezultat $d(k)$ je u intervalu $[1, q]$ 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Duplo heširanje: primer}
+  \begin{columns}
+    \begin{column}[c]{6cm}
+      \begin{itemize}
+        \item heš tabela sa duplim heširanjem
+        \begin{itemize}
+          \item $N = 13$
+          \item $h(k) = k \mod 13$
+          \item $d(k) = 7 - (k\mod 7)$
+        \end{itemize}
+        \item dodajemo ključeve 18, 41, 22, 44, 59, 32, 31, 73 
+      \end{itemize}
+    \end{column}
+    \begin{column}[c]{6cm}
+      \begin{center}
+        \includegraphics[width=6cm]{asp-10-pic10.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Performanse heširanja}
+  \begin{itemize}
+    \item u najgorem slučaju pretraga, dodavanje, uklanjanje traju $O(n)$
+    \item najgori slučaj: kada su \textbf{svi} ključevi u koliziji
+    \item faktor popune $\alpha = n/N$ utiče na performanse
+    \item ako heševi liče na slučajne brojeve može se pokazati da je očekivani broj probanja prilikom dodavanja $1/(1-\alpha)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Performanse heširanja}
+  \begin{itemize}
+    \item očekivano vreme izvršavanja svih operacija je \myred{$O(1)$}
+    \item u praksi heširanje je vrlo brzo ako faktor popune nije blizu 100\%
   \end{itemize}
 \end{frame}
 
