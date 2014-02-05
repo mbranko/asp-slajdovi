@@ -83,7 +83,7 @@ Novom Sadu}
   \begin{center}
     \begin{tabular}{rp{8cm}}
       \textbf{\texttt{M[k]}} & vraća vrednost $v$ za ključ $k$ u mapi $M$; implementira je \texttt{\_\_getitem\_\_} \\ \hline
-      \textbf{\texttt{M[k}=v} & dodaje novi element $(k, v)$ u $M$ ili menja postojeći; implementira je \texttt{\_\_setitem\_\_} \\ \hline
+      \textbf{\texttt{M[k]=v}} & dodaje novi element $(k, v)$ u $M$ ili menja postojeći; implementira je \texttt{\_\_setitem\_\_} \\ \hline
       \textbf{\texttt{del M[k]}} & uklanja element sa ključem $k$ iz $M$; implementira je \texttt{\_\_delitem\_\_} \\
     \end{tabular}
   \end{center}
@@ -105,7 +105,7 @@ Novom Sadu}
       \item ključevi koji se nalaze u \textbf{levom} podstablu od $p$ su \textbf{manji} od $k$
       \item ključevi koji se nalaze u \textbf{desnom} podstablu od $p$ su \textbf{veći} od $k$
     \end{itemize}
-    %\item listovi ne čuvaju elemente
+    \item listovi ne čuvaju elemente, reference na listove mogu biti None
     \item inorder obilazak: ključevi u rastućem redosledu 
   \end{itemize}
   \begin{center}
@@ -210,22 +210,117 @@ Novom Sadu}
   \frametitle{Uklanjanje iz stabla}
   \begin{itemize}
     \item uklanjamo element sa ključem $k$
-    \item prvo nađemo $k$
-    \item ako $k$ ima najviše jedno dete
-    \item primer: dodajemo 68
+    \item prvo nađemo $p$ koji sadrži $k$
+    \item ako $p$ ima \textbf{najviše jedno} dete
+    \item njegovo dete $r$ vežemo u stablo umesto njega
+    \item primer: uklanjamo 32
   \end{itemize}
   \begin{columns}
     \begin{column}[c]{6cm}
       \begin{center}
-        \includegraphics[width=6cm]{asp-11-pic05a.pdf}
+        \includegraphics[width=6cm]{asp-11-pic06a.pdf}
       \end{center}
     \end{column}  
     \begin{column}[c]{6cm}
       \begin{center}
-        \includegraphics[width=6cm]{asp-11-pic05b.pdf}
+        \includegraphics[width=6cm]{asp-11-pic06b.pdf}
       \end{center}
     \end{column}  
   \end{columns}
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Uklanjanje iz stabla}
+  \begin{itemize}
+    \item ako $p$ ima \textbf{dva} deteta
+    \begin{itemize}
+      \item nađemo čvor $r$ čiji ključ neposredno prethodi $p$ -- to je ,,najdesniji`` čvor u njegovom levom podstablu
+      \item vežemo $r$ na mesto $p$; pošto $r$ neposredno prethodi $p$ po vrednosti ključa, svi elementi u desnom podstablu od $p$ su veći od $r$ i svi elementi u levom podstablu od $p$ su manji od $r$
+      \item treba još obrisati stari $r$ -- pošto je to ,,najdesniji`` element, on nema desno dete, pa se može obrisati po prethodnom algoritmu
+    \end{itemize}
+    \item primer: uklanjamo 88
+  \end{itemize}
+  \begin{columns}
+    \begin{column}[c]{6cm}
+      \begin{center}
+        \includegraphics[width=4.5cm]{asp-11-pic07a.pdf}
+      \end{center}
+    \end{column}  
+    \begin{column}[c]{6cm}
+      \begin{center}
+        \includegraphics[width=4.5cm]{asp-11-pic07b.pdf}
+      \end{center}
+    \end{column}  
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Performanse binarnog stabla pretrage}
+  \begin{columns}
+    \begin{column}[c]{6cm}
+      \begin{itemize}
+        \item zauzeće memorije je $O(n)$
+        \item pretraga, dodavanje i uklanjanje su $O(h)$
+        \item visina stabla $h$ je $O(\log n) \leq h \leq O(n)$
+      \end{itemize}
+    \end{column}  
+    \begin{column}[c]{6cm}
+      \begin{center}
+        \includegraphics[width=5cm]{asp-11-pic08.png}
+      \end{center}
+    \end{column}  
+  \end{columns}
+  \\ \ \\ \hfill balansirano stablo ima bolje performanse
+\end{frame}
+
+\section[Balansiranje]{Balansiranje binarnog stabla}
+\begin{frame}[fragile]
+  \frametitle{Balansiranje binarnog stabla}
+  \begin{itemize}
+    \item osnovna operacija za balansiranje je \myred{rotacija}
+    \item ,,rotiramo`` dete i njegovog roditelja
+    \item tom prilikom i podstabla menjaju mesta
+    \item jedna rotacija traje $O(1)$
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-11-pic09.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Balansiranje binarnog stabla}
+  \begin{itemize}
+    \item kompozitna operacija ,,\myred{restrukturiranje tri čvora}`` (tri-node restructuring)
+    \item posmatraju se čvor, njegovo dete i unuče
+    \item cilj je da se skrati putanja od čvora do unučeta
+    \item četiri moguća rasporeda čvorova
+    \begin{itemize}
+      \item prva dva traže jednu rotaaciju
+      \item druga dva traže dve rotacije
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Restrukturiranje sa jednom rotacijom}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-11-pic10.pdf}
+  \end{center}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-11-pic11.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Restrukturiranje sa dve rotacije}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-11-pic12.pdf}
+  \end{center}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-11-pic13.pdf}
+  \end{center}
+\end{frame}
+
+\section[AVL stabla]{AVL stabla}
 
 \end{document}
