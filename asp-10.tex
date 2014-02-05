@@ -877,9 +877,9 @@ class ProbeHashMap(HashMapBase):
       \end{itemize}
     \end{column}
     \begin{column}[c]{6cm}
-  \begin{center}
-    \includegraphics[width=5cm]{asp-10-pic15.png}
-  \end{center}
+      \begin{center}
+        \includegraphics[width=5cm]{asp-10-pic15.png}
+      \end{center}
     \end{column}
   \end{columns}
   \begin{itemize}
@@ -970,6 +970,141 @@ class ProbeHashMap(HashMapBase):
     \item upotreba memorije je $O(n)$
     \item brzina pretrage, dodavanja i uklanjanja je $O(\log n)$ sa velikom verovatnoćom
   \end{itemize}
+\end{frame}
+
+\section[Skup]{Skup}
+\begin{frame}[fragile]
+  \frametitle{Skup, multiskup, multimapa}
+  \begin{itemize}
+    \item \myred{skup} (set) je kolekcija elemenata koja ne poznaje redosled i ne sadrži duplikate
+    \begin{itemize}
+      \item elementi skupa su nalik ključevima koji nemaju sebi asocirane vrednosti
+    \end{itemize}
+    \item \myred{multiskup} (multiset, \myred{bag}) je skup koji dopušta duplikate
+    \item \myred{multimapa} je mapa koja dopušta da za jedan ključ bude vezano više vrednosti
+    \begin{itemize}
+      \item indeks u knjizi preslikava pojam na jednu ili više stranica na kojima se on pominje
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Skup ATP: osnovne operacije}
+  \begin{center}
+    \begin{tabular}{rp{8cm}}
+      \textbf{\texttt{S.add(e)}} & dodaje element $e$ u $S$; nema efekta ako je $e$ već prisutan u $S$\\ \hline
+      \textbf{\texttt{S.discard(e)}} & uklanja $e$ iz $S$; nema efekta ako $e$ nije prisutan u $S$\\ \hline
+      \textbf{\texttt{e in S}} & vraća \texttt{True} ako je $e$ prisutan u $S$; implementira je \texttt{\_\_contains\_\_} \\ \hline
+      \textbf{\texttt{len(S)}} & vraća broj elemenata u $S$; implementira je \texttt{\_\_len\_\_} \\ \hline
+      \textbf{\texttt{iter(S)}} & iterira kroz elemente iz $S$; implementira je \texttt{\_\_iter\_\_} \\
+    \end{tabular}
+  \end{center}
+  \begin{itemize}
+    \item pomoću osnovnih operacija implementiraju se sve ostale
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Skup ATP: dodatne operacije}
+  \begin{center}
+    \begin{tabular}{rp{8cm}}
+      \textbf{\texttt{S.remove(e)}} & uklanja $e$ iz $S$; ako $e$ nije prisutan u $S$ izaziva \texttt{KeyError}\\ \hline
+      \textbf{\texttt{S.pop()}} & vraća i uklanja proizvoljan element iz $S$; ako je $S$ prazan izaziva \texttt{KeyError}\\ \hline
+      \textbf{\texttt{S.clear()}} & uklanja sve elemente iz $S$ \\
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Skup ATP: poređenje skupova}
+  \begin{center}
+    \begin{tabular}{rp{7.5cm}}
+      \textbf{\texttt{S == T}} & vraća \texttt{True} ako skupovi imaju jednak sadržaj \\ \hline
+      \textbf{\texttt{S != T}} & vraća \texttt{True} ako skupovi nemaju jednak sadržaj \\ \hline
+      \textbf{\texttt{S <= T}} & vraća \texttt{True} ako je $S$ podskup od $T$ \\ \hline
+      \textbf{\texttt{S < T}} & vraća \texttt{True} ako je $S$ pravi podskup od $T$ \\ \hline
+      \textbf{\texttt{S >= T}} & vraća \texttt{True} ako je $S$ nadskup od $T$ \\ \hline
+      \textbf{\texttt{S > T}} & vraća \texttt{True} ako je $S$ pravi nadskup od $T$ \\ \hline
+      \textbf{\texttt{S.isdisjoint(T)}} & vraća \texttt{True} ako su $S$ i $T$ disjunktni \\
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Skup ATP: operacije nad skupovima}
+  \begin{center}
+    \begin{tabular}{cp{8.5cm}}
+      \textbf{\texttt{S | T}} & vraća novi skup koji je unija $S$ i $T$ \\ \hline
+      \textbf{\texttt{S |= T}} & ažurira $S$ da bude unija $S$ i $T$ \\ \hline
+      \textbf{\texttt{S \& T}} & vraća novi skup koji je presek $S$ i $T$ \\ \hline
+      \textbf{\texttt{S \&= T}} & ažurira $S$ da bude presek $S$ i $T$ \\ \hline
+      \textbf{\texttt{S \^{} T}} & vraća simetričnu razliku $S$ i $T$ \\ \hline
+      \textbf{\texttt{S \^{}= T}} & ažurira $S$ da bude simetrična razlika $S$ i $T$ \\ \hline
+      \textbf{\texttt{S - T}} & vraća razliku $S$ i $T$ \\ \hline
+      \textbf{\texttt{S -= T}} & ažurira $S$ da bude razlika $S$ i $T$ \\
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Implementacija skupa: poređenje $S < T$}
+\begin{minted}[linenos=false]{python}
+def __lt__(self, other):
+  """Vraća True ako je self pravi podskup od other."""
+  if len(self) >= len(other):
+    return False  # pravi podskup mora biti manji
+  for e in self:
+    if e not in other:
+      return False  # nije podskup, fali mu e
+  return True
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Implementacija skupa: unija $S | T$}
+\begin{minted}[linenos=false]{python}
+def __or__(self, other):
+  """Vraća novi skup kao uniju self i other."""
+  result = Set()  # rezultat je nova instanca
+  for e in self:
+    result.add(e)
+  for e in other:
+    result.add(e)
+  return result
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Implementacija skupa: operacija $S |= T$}
+\begin{minted}[linenos=false]{python}
+def __ior__(self, other):
+  """Menja self da bude unija self i other."""
+  for e in other:
+    self.add(e)
+  return self   # mora da se vrati self za operator |=
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Implementacija skupa: struktura podataka}
+  \begin{itemize}
+    \item pomoću liste
+    \item upotreba memorije je $O(n)$
+    \item \texttt{\_\_contains\_\_} je $O(n)$
+  \end{itemize} 
+  \begin{center}
+    \includegraphics[width=10cm]{asp-10-pic16.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Implementacija skupa: struktura podataka}
+  \begin{itemize}
+    \item pomoću hash tabele
+    \item hash tabela čuva samo ključeve tj. elemente
+    \item \texttt{\_\_contains\_\_} je $O(1)$ \\ \ \\
+    \item za koje vreme rade presek i unija?
+  \end{itemize} 
 \end{frame}
 
 \end{document}
