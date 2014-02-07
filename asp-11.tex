@@ -15,8 +15,8 @@
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 \usepackage{xcolor,colortbl}
 \usepackage{textcomp}
+\usepackage{unicode-math}
 %\setdefaultlanguage[script=Latin]{serbian}
-
 
 \title{Stabla pretrage}
 \author{\textcopyright \ \ Goodrich, Tamassia, Goldwasser}
@@ -29,7 +29,7 @@ Novom Sadu}
 
 \frame{\titlepage}
 
-\section[Binarno]{Binarno stablo pretrage}
+\section[Binarno stablo]{Binarno stablo pretrage}
 \begin{frame}[fragile]
   \frametitle{Mape sa poretkom}
   \begin{itemize}
@@ -321,6 +321,323 @@ Novom Sadu}
   \end{center}
 \end{frame}
 
-\section[AVL stabla]{AVL stabla}
+\section[AVL stablo]{AVL stablo}
+
+\begin{frame}[fragile]
+  \frametitle{AVL stablo}
+  \begin{itemize}
+    \item autori: G.M. \myred{A}delson-\myred{V}elskii i E. \myred{L}andis
+    \item visina podstabla: broj čvorova na najdužoj putanji od korena do lista
+    \item visina čvora = visina podstabla sa njim kao korenom
+    \item \myred{AVL stablo} je binarno stablo koje ima dodatnu osobinu:
+    \begin{itemize}
+      \item za svaki čvor u stablu, visine njegove dece razlikuju se najviše za 1
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=5cm]{asp-11-pic14.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Visina AVL stabla}
+  \begin{itemize}
+    \item \textbf{teorema}: visina AVL stabla sa $n$ čvorova je $O(\log n)$
+    \item \textbf{dokaz}: $n(h)$ -- najmanji broj unutrašnjih čvorova u AVL stablu visine $h$
+    \item očevidno: $n(1)=1$, $n(2)=2$
+    \item za $n>2$, AVL stablo visine $h$ sadrži koren, podstablo visine $h-1$ i podstablo visine $h-2$
+    \item tj. $n(h) = 1 + n(h-1) + n(h-2)$
+    \item kako je $n(h-1)>n(h-2)$, važi $n(h)>2n(h-2)$
+    \begin{itemize}
+      \item indukcijom: $n(h)>2n(h-2)$, $n(h)>4n(h-4)$, $n(h)>8(h-6)$, \ldots
+      \item \myred{$n(h)>2^in(h-2i)$}
+    \end{itemize}
+    \item bazni slučaj: $n(h)>2^{h/2-1}$
+    \item odnosno: $h < 2\log n(h) + 2$
+    \item tj. visina AVL stabla $h$ je $O(\log n)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{AVL stablo: dodavanje}
+  \begin{itemize}
+    \item stablo u koje dodajemo novi čvor je AVL stablo
+    \item dodavanje se vrši isto kao kod binarnog stabla -- u list
+    \item dodavanje može da naruši balansiranost
+    \item čvorovi koji mogu biti disbalansirani su samo preci novog čvora
+    \item primer: dodajemo čvor 54
+  \end{itemize}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        pre balansiranja 
+        \includegraphics[width=5cm]{asp-11-pic15a.pdf}
+      \end{center}
+    \end{column}  
+    \begin{column}[t]{6cm}
+      \begin{center}
+        posle balansiranja
+        \includegraphics[width=6cm]{asp-11-pic15b.pdf}
+      \end{center}
+    \end{column}  
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{AVL stablo: dodavanje}
+  \begin{itemize}
+    \item ,,search-and-repair`` strategija
+    \item $z$ -- prvi nebalansirani čvor na polazeći od $p$ koji smo naišli
+    %\item $y$ -- dete $z$ sa većom visinom (takođe predak $p$)
+    %\item $y$ -- dete $y$ sa većom visinom (predak $p$ ili sâm $p$)
+    \item radimo \textbf{trinode restructuring} za $z$ 
+  \end{itemize}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        pre balansiranja 
+        \includegraphics[width=5cm]{asp-11-pic15a.pdf}
+      \end{center}
+    \end{column}  
+    \begin{column}[t]{6cm}
+      \begin{center}
+        posle balansiranja
+        \includegraphics[width=6cm]{asp-11-pic15b.pdf}
+      \end{center}
+    \end{column}  
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{AVL stablo: dodavanje}
+pre dodavanja: \includegraphics[width=3.5cm]{asp-11-pic16a.pdf}
+
+dodavanje u $T_3$ remeti balans u $z$: \includegraphics[width=3.5cm]{asp-11-pic16b.pdf}
+
+nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{AVL stablo: uklanjanje}
+  \begin{itemize}
+    \item uklanja se uvek čvor koji ima 0 ili 1 dete
+    \item time se može narušiti balans AVL stabla
+    \item i ovde radimo restrukturiranje posle uklanjanja
+    \item primer: uklanjamo 32
+  \end{itemize}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        pre balansiranja, koren nije balansiran 
+        \includegraphics[width=5cm]{asp-11-pic17a.pdf}
+      \end{center}
+    \end{column}  
+    \begin{column}[t]{6cm}
+      \begin{center}
+        posle balansiranja (jedna rotacija)
+        \includegraphics[width=6cm]{asp-11-pic17b.pdf}
+      \end{center}
+    \end{column}  
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{AVL stablo: performanse}
+  \begin{itemize}
+    \item jedno restrukturiranje je $O(1)$ 
+    \item pretraga je $O(\log n)$ -- visina stabla je $O(\log n)$
+    \item dodavanje je $O(\log n)$
+    \begin{itemize}
+      \item pronalaženje mesta je $O(\log n)$
+      \item restrukturiranje uz stablo je $O(\log n)$
+    \end{itemize}
+    \item uklanjanje je $O(\log n)$
+    \begin{itemize}
+      \item pronalaženje mesta je $O(\log n)$
+      \item restrukturiranje uz stablo je $O(\log n)$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section[Splay stablo]{Splay stablo}
+\begin{frame}[fragile]
+  \frametitle{Splay stablo}
+  \begin{itemize}
+    \item \myred{splay}: ,,rašireno`` 
+    \item ne nameće logaritamsko ograničenje na visinu
+    \item \myred{splaying}: ,,širenje`` stabla prilikom dodavanja, uklanjanja \textbf{i pretrage}
+    \item ideja: da češće korišćeni elementi budu bliže korenu
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Splaying}
+  \begin{itemize}
+    \item čvor $x$ se premešta u koren nizom restrukturiranja 
+    \item operacije restrukturiranja zavise od položaja $x$, $y$ (roditelja) i $z$ (dede, ako postoji)
+    \item postoje tri slučaja:
+    \begin{itemize}
+      \item \myred{zig-zig}
+      \item \myred{zig-zag}
+      \item \myred{zig}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Splaying: zig-zig}
+  \begin{itemize}
+    \item $x$ i $y$ su  
+    \begin{itemize}
+      \item obojica levo dete svog roditelja ili
+      \item obojica desno dete svog roditelja
+    \end{itemize}
+    \item $x$ postaje koren, $y$ njegovo dete, $z$ njegovo unuče
+  \end{itemize}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        pre zig-zig 
+        \includegraphics[width=5cm]{asp-11-pic18a.pdf}
+      \end{center}
+    \end{column}  
+    \begin{column}[t]{6cm}
+      \begin{center}
+        posle zig-zig
+        \includegraphics[width=5cm]{asp-11-pic18b.pdf}
+      \end{center}
+    \end{column}  
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Splaying: zig-zag}
+  \begin{itemize}
+    \item $x$ i $y$ 
+    \begin{itemize}
+      \item prvi je levo dete a drugi je desno dete, ili
+      \item prvi je desno dete a drugi je levo dete
+    \end{itemize}
+    \item $x$ postaje koren, $y$ i $z$ njegova deca
+  \end{itemize}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        pre zig-zag 
+        \includegraphics[width=5cm]{asp-11-pic19a.pdf}
+      \end{center}
+    \end{column}  
+    \begin{column}[t]{6cm}
+      \begin{center}
+        posle zig-zag
+        \includegraphics[width=6cm]{asp-11-pic19b.pdf}
+      \end{center}
+    \end{column}  
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Splaying: zig}
+  \begin{itemize}
+    \item $x$ ima roditelja $y$ ali nema dedu $z$ \ \ :(
+    \item $x$ postaje koren, $y$ njegovo dete
+  \end{itemize}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        pre zig
+        \includegraphics[width=5cm]{asp-11-pic20a.pdf}
+      \end{center}
+    \end{column}  
+    \begin{column}[t]{6cm}
+      \begin{center}
+        posle zig
+        \includegraphics[width=5cm]{asp-11-pic20b.pdf}
+      \end{center}
+    \end{column}  
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Splaying: primer $_1$}
+  \begin{itemize}
+    \item zig-zig, zig-zag i zig primenjujemo sve dok $x$ ne postane koren
+    \item primer: dodajemo 14
+    \item na 14 se primenjuje zig-zag (jer 14 je desno dete a 13 je levo dete)
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-11-pic21.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Splaying: primer $_2$}
+  \begin{itemize}
+    \item posle primenjenog zig-zag stanje je
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-11-pic22.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Splaying: primer $_3$}
+  \begin{itemize}
+    \item sada može da se primeni zig-zig
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-11-pic23.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Splaying: primer $_4$}
+  \begin{itemize}
+    \item nakon primene zig-zig
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-11-pic24.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Splaying: primer $_5$}
+  \begin{itemize}
+    \item sada može ponovo zig-zig
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-11-pic25.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Splaying: primer $_6$}
+  \begin{itemize}
+    \item nakon drugog zig-zig
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-11-pic26.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Splay stablo: performanse}
+  \begin{itemize}
+    \item zig-zig, zig-zag i zig su $O(1)$
+    \item splaying čvora $p$ je $(d)$ gde je $d$ dubina čvora $p$
+    \item tj. isto koliko je potrebno i za navigaciju od korena do $p$ \\ \ \\
+    \item u najgorem slučaju, pretraga, dodavanje i uklanjanje su $O(h)$ gde je $h$ visina stabla
+    \item stablo nije balansirano $\Rightarrow$ može biti $h=n$
+    \item $\Rightarrow$ slabe performanse u najgorem slučaju
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Splay stablo: performanse}
+  \begin{itemize}
+    \item za \textbf{amortizovane} operacije vreme je $O(\log n)$
+    \item a za često tražene podatke pretraga je i \textbf{brža od} $O(\log n)$
+  \end{itemize}
+\end{frame}
 
 \end{document}
