@@ -271,7 +271,7 @@ Novom Sadu}
       \end{center}
     \end{column}  
   \end{columns}
-  \\ \ \\ \hfill balansirano stablo ima bolje performanse
+  \ \\ \hfill balansirano stablo ima bolje performanse
 \end{frame}
 
 \section[Balansiranje]{Balansiranje binarnog stabla}
@@ -909,6 +909,7 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
 \end{frame}
 
 \section[RB stablo]{Crveno-crno stablo}
+
 \begin{frame}[fragile]
   \frametitle{Crveno-crno stablo}
   \begin{itemize}
@@ -927,6 +928,157 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
     \includegraphics[width=7cm]{asp-11-pic30.pdf} \\
     \includegraphics[width=7cm]{asp-11-pic38.pdf}
   \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Crveno-crno stablo}
+  \begin{itemize}
+    \item \myred{crveno-}crno \myred{stablo} je binarno stablo sa osobinama
+    \begin{itemize}
+      \item koren je crn
+      \item svaki list je crn
+      \item deca crvenog čvora su crna
+      \item svi listovi imaju istu \textbf{crnu dubinu} $\Leftrightarrow$ sve putanje od korena do lista sadrže isti broj crnih čvorova
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Visina crveno-crnog stabla}
+  \begin{itemize}
+    \item visina RB stabla sa $n$ elemenata je $O(\log n)$
+    \item pretraga na isti način kao za binarno stablo
+    \item pretraga je takođe $O(\log n)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Crveno-crno stablo: dodavanje}
+  \begin{itemize}
+    \item dodavanje na isti način kao za binarno stablo 
+    \item novi čvor se boji u \myred{crveno} ako nije koren; koren je uvek crn
+      \item ako je roditelj novog čvora crven tada imamo \myred{duplo crveno} -- potrebna je reorganizacija stabla
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Korekcija duplog crvenog: stric je crn}
+  \begin{itemize}
+    \item slučaj 1: brat roditelja novog čvora je crn ili ne postoji
+    \item radimo tri-node restructuring
+    \item četiri moguće situacije, sa istim rezultatom:
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=2.5cm]{asp-11-pic39a.pdf}
+    \includegraphics[width=2.5cm]{asp-11-pic39b.pdf}
+    \includegraphics[width=2.5cm]{asp-11-pic39c.pdf}
+    \includegraphics[width=2.5cm]{asp-11-pic39d.pdf} \\
+    \includegraphics[width=2.5cm]{asp-11-pic39e.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Korekcija duplog crvenog: stric je crven}
+  \begin{itemize}
+    \item slučaj 2: brat roditelja novog čvora je crven
+    \item radimo \textbf{recoloring}:
+    \begin{itemize}
+      \item obojimo roditelja i strica u crno a dedu u crveno (ako je deda koren, ostaje crn)
+    \end{itemize}
+    \item moguća propagacija uz stablo
+  \end{itemize}
+  \includegraphics[width=7cm]{asp-11-pic40a.pdf} \\
+  \includegraphics[width=7cm]{asp-11-pic40b.pdf}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Crveno-crno stablo: uklanjanje}
+  \begin{itemize}
+    \item uklanjanje na isti način kao za binarno stablo 
+    \item $\Rightarrow$ uklanja se čvor koji ima najviše jedno dete
+    \item ako je uklonjeni čvor bio crven sve je OK (ne menja se crna dubina)
+    \item ako je uklonjeni čvor bio crn:
+    \begin{itemize}
+      \item ako nema dece sve je OK
+      \item ako mu je dete crveno: pomeramo dete na mesto uklonjenog roditelja i bojimo crno
+      \item ako mu je dete crno: gubimo jedan crni čvor na putanji, narušava se crna dubina
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Crveno-crno stablo: uklanjanje}
+  \begin{itemize}
+    \item uklanjanje na isti način kao za binarno stablo 
+    \item $\Rightarrow$ uklanja se čvor koji ima najviše jedno dete
+    \item ako je uklonjeni čvor bio crven sve je OK (ne menja se crna dubina)
+    \item ako je uklonjeni čvor bio crn:
+    \begin{itemize}
+      \item ako nema dece sve je OK
+      \item ako mu je dete crveno: pomeramo dete na mesto uklonjenog roditelja i bojimo crno
+      \item ako mu je dete crno: gubimo jedan crni čvor na putanji, narušava se crna dubina u tom podstablu
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Korekcija crne dubine}
+  \begin{itemize}
+    \item uklonjeni crni čvor je bio koren podstabla $T_{\text{light}}$
+    \item gledamo šta se nalazi u podstablu njegovog brata $y$ 
+    \item (brat mora da postoji jer je inače narušena crna dubina)
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=5cm]{asp-11-pic41.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Korekcija crne dubine}
+  \begin{itemize}
+    \item \textbf{slučaj 1}: brat $y$ je crn i ima crveno dete $x$
+    \item radimo \textbf{tri-node restructuring}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=9cm]{asp-11-pic42a.pdf} \\
+    \includegraphics[width=9cm]{asp-11-pic42b.pdf} \\
+  \end{center}
+  {\scriptsize (druga dva slučaja su simetrična)}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Korekcija crne dubine}
+  \begin{itemize}
+    \item \textbf{slučaj 2}: brat $y$ je crn i oba deteta su mu crna ili ih nema
+    \item radimo \textbf{recoloring}
+    \item ako je $z$ bio crven, tu je kraj; ako je bio crn, recoloring propagira prema gore
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=8cm]{asp-11-pic43a.pdf} \\
+    \includegraphics[width=8cm]{asp-11-pic43b.pdf} \\
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Korekcija crne dubine}
+  \begin{itemize}
+    \item \textbf{slučaj 3}: brat $y$ je crven
+    \item radimo \textbf{rotaciju} pa \textbf{recoloring}
+    \item čvor $y'$ je crn pa treba primeniti slučaj 1 ili slučaj 2 na njega
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=8cm]{asp-11-pic44.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Crveno-crno stablo: performanse}
+  \begin{itemize}
+    \item jednake kao i za (2,4) stablo
+    \item sve operacije su $O(\log n)$ \\ \ \\
+    \item odličan interaktivni demo za RB stabla: \\
+    \url{http://gauss.ececs.uc.edu/RedBlack/redblack.html}
+  \end{itemize}
 \end{frame}
 
 \end{document}
