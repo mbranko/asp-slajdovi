@@ -16,6 +16,7 @@
 \usepackage{xcolor,colortbl}
 \usepackage{textcomp}
 \usepackage{unicode-math}
+%\usepackage{hyphenat}
 %\setdefaultlanguage[script=Latin]{serbian}
 
 \title{Stabla pretrage}
@@ -638,6 +639,294 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
     \item za \textbf{amortizovane} operacije vreme je $O(\log n)$
     \item a za često tražene podatke pretraga je i \textbf{brža od} $O(\log n)$
   \end{itemize}
+\end{frame}
+
+\section[(2,4) stablo]{(2,4) stablo}
+\begin{frame}[fragile]
+  \frametitle{n-arno stablo}
+  \begin{itemize}
+    \item neka je $w$ čvor stabla; ako $w$ ima $d$ dece zovemo ga $d$-čvor
+    \item \myred{n-arno stablo pretrage} ima sledeće osobine:
+    \begin{itemize}
+      \item svaki unutrašnji čvor ima bar dva deteta, tj. svaki je $d$-čvor za $d\geq 2$
+      \item svaki unutrašnji $d$-čvor sa decom $c_1, c_2, \ldots, c_d$ čuva $d-1$ parova $(k_1,v_1), \ldots, (k_{d-1},v_{d-1})$
+      \item za $k_0=-\infty$, $k_d=+\infty$ važi: za svaki element $(k,v)$ iz podstabla od $w$ kome je koren $c_i$ važi da je $k_{i-1}\leq k\leq k_{i}$ 
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=6cm]{asp-11-pic27.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pretraga u n-arnom stablu}
+  \begin{itemize}
+    \item tražimo ključ $k$ polazeći od korena
+    \item u čvoru $w$ poredimo $k$ sa ključevima $k_1, \ldots, k_{d-1}$
+    \begin{itemize}
+      \item ako je $k=k_i$ za neko $1\leq i\leq d-1$ pronašli smo ključ
+      \item inače nastavljamo pretragu od deteta $c_i$ tako da je $k_{i-1}<k<k_i$ 
+    \end{itemize}
+    \item ako smo došli do lista pretraga je neuspešna
+    \item primer: tražimo $k=12$ (neuspešna)
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=6cm]{asp-11-pic28.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pretraga u n-arnom stablu}
+  \begin{itemize}
+    \item primer: tražimo $k=24$ (uspešna)
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=6cm]{asp-11-pic29.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pretraga u n-arnom stablu}
+  \begin{itemize}
+    \item pretraga unutar čvora?
+    \item treba nam \textbf{sekundarna struktura podataka}
+    \begin{itemize}
+      \item binarna pretraga po nizu je $O(\log d)$
+      \item sortirana mapa
+    \end{itemize}
+    \item pretraga u stablu je $O(h\log d_{\max})$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo}
+  \begin{itemize}
+    \item \myred{(2,4) stablo} je n-arno stablo sa dve osobine
+    \begin{itemize}
+      \item unutrašnji čvor ima najviše 4 deteta
+      \item svi listovi imaju istu dubinu
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-11-pic30.pdf}
+  \end{center}
+  \begin{itemize}
+    \item svaki čvor ima 2, 3 ili 4 deteta
+    \item visina stabla od $n$ elemenata je $O(\log n)$ 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: dodavanje}
+  \begin{itemize}
+    \item prvo tražimo ključ $k$
+    \item neuspešna pretraga se završava u listu
+    \item dodamo $k$ u roditelja $w$ tog lista 
+    \item (\myred{prelivanje}, \textbf{overflow}): ako je taj roditelj bio 4-čvor, sada je 5-čvor; moramo ga podeliti (\textbf{split}):
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=4cm]{asp-11-pic31.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: dodavanje}
+  \begin{itemize}
+    \item podela čvora $w$ prilikom prelivanja na $w'$ i $w''$
+    \item $w'$ je 3-čvor sa decom $c_1, c_2, c_3$ i ključevima $k_1, k_2$
+    \item $w''$ je 2-čvor sa decom $c_4, c_5$ i ključem $k_4$
+    \item ključ $k_3$ se penje u roditelja od $w$; ako je $w$ koren, napravi novi čvor 
+  \end{itemize}
+  \begin{columns}
+    \begin{column}[c]{4cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic31.pdf}
+      \end{center}
+    \end{column}
+    \begin{column}[c]{4cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic32.pdf}
+      \end{center}
+    \end{column}
+    \begin{column}[c]{4cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic33.pdf}
+      \end{center}
+    \end{column}
+  \end{columns}
+  podela može biti kaskadna!
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: uklanjanje}
+  \begin{itemize}
+    \item prvi slučaj: uklanjanjem ključa ne narušavaju se osobine (2,4) stabla
+    \item primer: uklanjamo 13
+  \end{itemize}
+  \begin{columns}
+    \begin{column}[c]{6cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic34a.pdf}
+      \end{center}
+    \end{column}
+    \begin{column}[c]{6cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic34b.pdf}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: uklanjanje}
+  \begin{itemize}
+    \item drugi slučaj: uklanjanje iz $w$ izaziva \textbf{underflow}
+    \item da li je jedan od najbliže braće 3-čvor ili 4-čvor?
+    \item radimo \textbf{transfer}:
+    \begin{itemize}
+      \item premeštamo dete brata u $w$
+      \item premeštamo ključ iz brata u roditelja
+      \item ključ iz roditelja u $w$
+    \end{itemize}
+    \item primer: uklanjamo 4
+  \end{itemize}
+  \begin{columns}
+    \begin{column}[c]{4cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic35a.pdf}
+      \\ uklanjamo 4
+      \end{center}
+    \end{column}
+    \begin{column}[c]{4cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic35b.pdf}
+      \\ transfer
+      \end{center}
+    \end{column}
+    \begin{column}[c]{4cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic35c.pdf}
+      \\ rezultat
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: uklanjanje}
+  \begin{itemize}
+    \item treći slučaj: uklanjanje izaziva \textbf{underflow}
+    \item nijedan od najbliže braće nije 3-čvor ili 4-čvor
+    \item radimo \textbf{fuziju}:
+    \begin{itemize}
+      \item spajamo $w$ sa bratom
+      \item ključ iz roditelja spuštamo u spojeni čvor 
+    \end{itemize}
+    \item primer: uklanjamo 12
+  \end{itemize}
+  \begin{columns}
+    \begin{column}[c]{4cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic36a.pdf}
+      \\ uklanjamo 12
+      \end{center}
+    \end{column}
+    \begin{column}[c]{4cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic36b.pdf}
+      \\ fuzija
+      \end{center}
+    \end{column}
+    \begin{column}[c]{4cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic36c.pdf}
+      \\ rezultat
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: uklanjanje}
+  \begin{itemize}
+    \item fuzija može da propagira underflow
+    \item ako se koren isprazni fuzijom, prosto se obriše
+  \end{itemize}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic37a.pdf} \\
+        \includegraphics[width=4cm]{asp-11-pic37c.pdf}
+      \end{center}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-11-pic37b.pdf} \\
+        \includegraphics[width=4cm]{asp-11-pic37d.pdf}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: performanse}
+  \begin{itemize}
+    \item \textbf{dodavanje} u (2,4) stablu sa $n$ elemenata
+    \begin{itemize}
+      \item visina stabla je $O(\log n)$
+      \item traženje ključa je $O(\log n)$
+      \item dodavanje novog ključa u čvor je $O(1)$
+      \item svaka podela čvora je $O(1)$
+      \item ukupan broj podela je $O(\log n)$ \\ \ \\
+    \end{itemize}
+    \item $\Rightarrow$ dodavanje je $O(\log n)$ 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: performanse}
+  \begin{itemize}
+    \item \textbf{uklanjanje} u (2,4) stablu sa $n$ elemenata
+    \begin{itemize}
+      \item visina stabla je $O(\log n)$
+      \item traženje ključa je $O(\log n)$
+      \item uklanjanje ključa je $O(1)$
+      \item može da usledi $O(\log n)$ iza kojih je max 1 transfer
+      \item fuzija i transfer su $O(1)$ \\ \ \\
+    \end{itemize}
+    \item $\Rightarrow$ uklanjanje je $O(\log n)$ 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Različite implementacije mape}
+  \begin{tabular}{p{2cm}|p{1cm}|p{1cm}|p{1cm}|p{4cm}}
+  & \textbf{search} & \textbf{insert} & \textbf{delete} & \textbf{napomene} \\ \hline\hline
+  hash tabela & 1 \mbox{\tiny očekivano} & 1 \mbox{\tiny očekivano} & 1 \mbox{\tiny očekivano} & {\scriptsize nema metode za sortiranu mapu; jednostavna implementacija} \\ \hline
+  skip lista & $\log n$ \mbox{\tiny verovatno} & $\log n$ \mbox{\tiny verovatno} & $\log n$ \mbox{\tiny verovatno} & {\scriptsize randomized insert; jednostavna implementacija} \\ \hline
+  AVL i (2,4) & $\log n$ \mbox{\tiny najgore} & $\log n$ \mbox{\tiny najgore} & $\log n$ \mbox{\tiny najgore} & {\scriptsize komplikovana implementacija} \\ \hline
+  \end{tabular}
+\end{frame}
+
+\section[RB stablo]{Crveno-crno stablo}
+\begin{frame}[fragile]
+  \frametitle{Crveno-crno stablo}
+  \begin{itemize}
+    \item \textbf{red-black} stablo je reprezentacija (2,4) stabla pomoću binarnog stabla čiji čvorovi su obojeni \myred{crveno} ili \textbf{crno}
+    \item u poređenju sa (2,4) stablom, RB stablo ima
+    \begin{itemize}
+      \item jednake $O(\log n)$ performanse
+      \item jednostavniju implementaciju sa samo jednim tipom čvora
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Crveno-crno stablo i (2,4) stablo}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-11-pic30.pdf} \\
+    \includegraphics[width=7cm]{asp-11-pic38.pdf}
+  \end{center}
 \end{frame}
 
 \end{document}
