@@ -549,4 +549,43 @@ def inplace_quick_sort(S, a, b):
 
 \section[Bucket sort]{Bucket sort}
 
+\begin{frame}[fragile]
+  \frametitle{Bucket sort}
+  \begin{itemize}
+    \item $S$ je sekvenca $n$ parova (ključ, element) sa ključevima u opsegu $[0, N-1]$
+    \item \myred{bucket sort} koristi ključeve kao indekse u pomoćnom nizu sekvenci (kanti) $B$
+    \begin{itemize}
+      \item \textbf{faza 1}: isprazni $S$ premeštanjem svakog $(k,o)$ u svoju kantu $B[k]$ 
+      \item \textbf{faza 2}: za $i=0,\ldots,N-1$ premesti elemente kante $B[i]$ na kraj $S$ 
+    \end{itemize}
+    \item analiza:
+    \begin{itemize}
+      \item faza 1 je $O(n)$ 
+      \item faza 2 je $O(n+N)$ 
+    \end{itemize}
+    \item $\Rightarrow$ bucket sort je $O(n+N)$\hfill\includegraphics[width=2cm]{asp-12-pic31.png}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Bucket sort}
+  \myred{bucketSort}($S$)
+  \begin{algorithmic}
+    \REQUIRE sekvenca $S$ sa int ključevima u opsegu $[0,N-1]$
+    \ENSURE sortirana $S$
+    \STATE $B \leftarrow$ niz od $N$ praznih sekvenci
+    \FORALL{$e$ in $S$}
+      \STATE $k \leftarrow e$.key()
+      \STATE $S$.remove($e$)
+      \STATE dodaj $e$ na kraj $B[k]$ 
+    \ENDFOR
+    \FOR{$i\leftarrow 0$ \TO $N-1$}
+      \FORALL{$e$ in $B[i]$}
+        \STATE $B[i]$.remove($e$)
+        \STATE dodaj $e$ na kraj $S$
+      \ENDFOR
+    \ENDFOR
+  \end{algorithmic}
+\end{frame}
+
 \end{document}
