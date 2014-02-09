@@ -577,15 +577,246 @@ def inplace_quick_sort(S, a, b):
     \FORALL{$e$ in $S$}
       \STATE $k \leftarrow e$.key()
       \STATE $S$.remove($e$)
-      \STATE dodaj $e$ na kraj $B[k]$ 
+      \STATE $B[k]$.addLast($e$) 
     \ENDFOR
     \FOR{$i\leftarrow 0$ \TO $N-1$}
       \FORALL{$e$ in $B[i]$}
         \STATE $B[i]$.remove($e$)
-        \STATE dodaj $e$ na kraj $S$
+        \STATE $S$.addLast($e$)
       \ENDFOR
     \ENDFOR
   \end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Primer: opseg ključeva [0,9]}
+  \includegraphics[width=10cm]{asp-12-pic32.png}
+  
+  \ % 
+  
+  \hfill\includegraphics[width=2cm]{asp-12-pic33.png}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Osobine bucket sorta}
+  \begin{itemize}
+    \item \textbf{tip ključa}: ključevi su isključivo integeri
+    \item \textbf{stabilno sortiranje}: čuva se poredak među elementima sa istom vrednošću ključa
+    \item proširenja
+    \begin{itemize}
+      \item ključevi u opsegu $[a,b]$: element sa ključem $k$ se smešta u $B[k-a]$
+      \item string ključevi iz konačnog skupa $D$ mogućih vrednosti -- sortiramo stringove, pa njihove indekse koristimo kao ključeve
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section[Radix sort]{Radix sort}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Leksikografski poredak}
+  \begin{itemize}
+    \item $d$-torka je sekvenca od $d$ ključeva $(k_1,\ldots,k_d)$
+    \item ključ $k_i$ je $i$-ta dimenzija torke
+    \item primer:
+    \begin{itemize}
+      \item Dekartove koordinate 3D tačke su 3-torke
+    \end{itemize}
+    \item \myred{leksikografski poredak} dve $d$-torke se definiše rekurzivno:
+    $$(x_1,\ldots,x_d) < (y_1,\ldots,y_d) $$
+    $$\Leftrightarrow$$ 
+    $$x_1 < y_1 \lor x_1 = y_1 \land (x_2,\ldots,x_d)<(y_2,\ldots,y_d)$$
+    \item torke se porede po prvoj dimenziji, pa onda po drugoj, itd.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Leksikografsko sortiranje}
+  \begin{itemize}
+    \item neka je $C_i$ komparator koji poredi dve torke po njhovoj $i$-toj dimenziji
+    \item neka je stableSort($S, C$) algoritam koji koristi komparator $C$
+    \item \myred{lexicographic sort} sortira sekvencu $d$-torki u leksikografskom redosledu izvršavajući $d$ puta algoritam stableSort, jednom za svaku dimenziju
+    \item lexicographic sort je $O(dT(n))$ gde je $T(n)$ vreme stableSort-a
+  \end{itemize}
+\myred{lexicographicSort}($S$)
+\begin{algorithmic}
+\REQUIRE sekvenca $S$ sa $d$-torkama
+\ENSURE sortirana $S$
+\FOR{$i\leftarrow d$ \TO $1$}
+  \STATE stableSort($S, C_i$)
+\ENDFOR
+\end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Leksikografsko sortiranje: primer}
+(7, 4, 6) (5, 1, 5) (2, 4, 6) (2, 1, 4) (3, 2, 4)
+(2, 1, \myred{4}) (3, 2, \myred{4}) (5, 1, \myred{5}) (7, 4, \myred{6}) (2, 4, \myred{6})
+(2, \myred{1}, 4) (5, \myred{1}, 5) (3, \myred{2}, 4) (7, \myred{4}, 6) (2, \myred{4}, 6)
+(\myred{2}, 1, 4) (\myred{2}, 4, 6) (\myred{3}, 2, 4) (\myred{5}, 1, 5) (\myred{7}, 4, 6)
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Radix sort}
+  \begin{itemize}
+    \item \myred{radix sort} je specijalizacija leksikografskog sortiranja koje koristi bucket sort kao stabilni sort algoritam za svaku dimenziju
+    \item radix sort je primenljiv na torke gde su ključevi u svakoj dimenziji integeri iz $[0,N-1]$
+    \item radix sort je $O(d\cdot (n+N))$
+  \end{itemize}
+\myred{radixSort}($S, N$)
+\begin{algorithmic}
+\REQUIRE sekvenca $S$ sa $d$-torkama
+\ENSURE sortirana $S$
+\FOR{$i\leftarrow d$ \TO $1$}
+  \STATE bucketSort($S, N$)
+\ENDFOR
+\end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Radix sort za binarne brojeve}
+  \begin{itemize}
+    \item posmatramo sekvencu od $n$ $b$-bitnih integera
+    $$x = x_{b-1} \ldots x_1 x_0$$
+    \item ove elemente tretiramo kao $b$-torku sa integerima u opsegu $[0,1]$
+    \item primenimo radix sort za $N=2$
+    \item ova varijanta radix sorta je $O(bn)$
+    \item $\Rightarrow$ možemo sortirati niz 32-bitnih integera u linearnom vremenu!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Primer}
+  \begin{itemize}
+    \item sortiramo sekvencu 4-bitnih integera
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-12-pic34.png}
+  \end{center}
+\end{frame}
+
+\section[Selekcija]{Selekcija}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Problem selekcije}
+  \begin{itemize}
+    \item za dati integer $k$ i $n$ elemenata $x_1, \ldots, x_n$ treba naći $k$-ti najmanji element
+    \item možemo sortirati niz za $O(n\log n)$ vreme i pristupiti $k$-tom elementu
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=6cm]{asp-12-pic35.png}
+  \end{center}
+  \begin{itemize}
+    \item da li može brže?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Quick select}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item \myred{quick select} je randomized algoritam zasnovan na \textbf{prune-and-search} principu
+        \begin{itemize}
+          \item \myred{prune}: izaberi slučajan element $x$ (\myred{pivot}) i podeli $S$ na $L$, $E$ i $G$
+          \item \myred{search}: zavisno od $k$, ili je element u $E$ ili moramo da tražimo rekurzivno u $L$ ili $G$
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=6cm]{asp-12-pic36.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Particija ulaza}
+  \myred{partition}($S, p$)
+  \begin{algorithmic}
+    \REQUIRE sekvenca $S$ i pozicija pivota $p$
+    \ENSURE sekvence $L$, $E$, $G$
+    \STATE $L,E,G \leftarrow$ prazne sekvence
+    \STATE $x \leftarrow S$.remove($p$) 
+    \WHILE{$\neg S.isEmpty()$}
+      \STATE $y \leftarrow S$.remove($S$.first())
+      \IF{$y < x$}
+        \STATE $L$.addLast($y$)
+      \ELSIF{$y = x$}
+        \STATE $E$.addLast($y$)
+      \ELSE 
+        \STATE $G$.addLast($y$)
+      \ENDIF
+    \ENDWHILE
+    \RETURN $L,E,G$
+  \end{algorithmic}
+  \hfill isto kao kod quick sorta $\Rightarrow$ particija je $O(n)$    
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Vizuelizacija quick selecta}
+  \begin{itemize}
+    \item quick select možemo prikazati kao putanju rekurzije
+    \item svaki čvor je jedan rekurzivni poziv quickSelecta, čuva $k$ i preostalu sekvencu
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=5cm]{asp-12-pic37.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Očekivane performanse}
+  \begin{itemize}
+    \item posmatrajmo rekurzivni poziv quick selecta za sekvencu dužine $s$
+    \begin{itemize}
+      \item \myred{dobar izbor}: dužine $L$ i $G$ su obe manje od $s\cdot 3/4$
+      \item \myred{loš izbor}: $L$ ili $G$ ima dužinu veću od $s\cdot 3/4$
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-12-pic38.png}
+  \end{center}
+  \begin{itemize}
+    \item slučajan izbor pivota je dobar sa verovatnoćom $1/2$
+    \begin{itemize}
+      \item $1/2$ mogućih pivota su dobar izbor
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=6cm]{asp-12-pic39.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Očekivane performanse}
+  \begin{itemize}
+    \item[(1)] iz verovatnoće: očekivani broj bacanja novčića da bismo dobili $k$ glava je $2k$
+    \item[(2)] iz verovatnoće: očekivanje je linearna funkcija
+    \begin{itemize}
+      \item $E(X+Y) = E(X)+E(Y)$
+      \item $E(cX) = cE(x)$
+    \end{itemize}
+    \item neka je $T(n)$ vreme quick selecta
+    \item prema \myred{(2)}: $T(n) = T(3n/4) + n\cdot\text{(očekivani broj izbora do dobrog)}$
+    \item prema \myred{(1)}: $T(n) = T(3n/4) + bn$
+    \item tj. $T(n)$ je geometrijska progresija
+    $$T(n) \leq 2bn + 2b(3/4)n + 2b(3/4)^2n + 2b(3/4)^3n \ldots $$
+    \item dakle $T(n)$ je $O(n)$
+    \item možemo rešiti problem selekcije u linearnom vremenu
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Deterministička selekcija}
+  \begin{itemize}
+    \item možemo uraditi selekciju i u najgorem slučaju za $O(n)$
+    \item osnovna ideja: rekurzivno koristimo quick select da bismo našli dobrog pivota za quick select
+    \begin{itemize}
+      \item podeli $S$ na $5$ delova dužine $n/5$
+      \item nađi median u svakom podskupu
+      \item nađi median ,,malih`` mediana rekurzivno
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \end{document}
