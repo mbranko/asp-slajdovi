@@ -1,0 +1,121 @@
+\documentclass[compress]{beamer}
+\usepackage{irbookslide}
+\usepackage{irilmenau2}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage{ifxetex}
+%\RequireXeTeX
+\usepackage{fontspec} % zahteva paket euenc
+\usepackage{xunicode}
+\usepackage{xltxtra}
+\usepackage{polyglossia}
+\usepackage{minted}
+\usepackage[noend]{algorithmic}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\algorithmiccomment}[1]{\hfill \{\myred{#1}\}}
+\usepackage{xcolor,colortbl}
+\usepackage{textcomp}
+\usepackage{unicode-math}
+%\usepackage{hyphenat}
+%\setdefaultlanguage[script=Latin]{serbian}
+
+\title{Obrada teksta}
+\author{\textcopyright \ \ Goodrich, Tamassia, Goldwasser}
+\institute{Katedra za informatiku, Fakultet tehničkih nauka, Univerzitet u
+Novom Sadu}
+\date{2014.}
+\subject{Predavanja sa ASP}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section[Stringovi]{Stringovi}
+\begin{frame}[fragile]
+  \frametitle{String}
+  \begin{itemize}
+    \item \myred{string} je niz karaktera
+    \item primeri stringova:
+    \begin{itemize}
+      \item Python program
+      \item HTML dokument
+      \item DNK sekvenca
+      \item digitalna slika
+    \end{itemize}
+    \item \myred{alfabet} $\Sigma$ je skup mogućih karaktera za familiju stringova
+    \item primeri alfabeta:
+    \begin{itemize}
+      \item ASCII
+      \item Unicode
+      \item \{0, 1\}
+      \item \{A, C, G, T\}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{String}
+  \begin{itemize}
+    \item neka je $P$ string dužine $m$
+    \begin{itemize}
+      \item \myred{podstring} $P[i..j]$ od $P$ je podsekvenca od $P$ koja sadrži
+      karaktere sa rangom između $i$ i $j$
+      \item \myred{prefiks} od $P$ je podstring tipa $P[0..i]$
+      \item \myred{sufiks} od $P$ je podstring tipa $P[i..m-1]$
+    \end{itemize}
+    \item za date stringove $T$ (tekst) i $P$ (šablon, \textit{pattern})
+    \textit{pattern matching} problem je pronalaženje podstringa
+    od $T$ koji je jednak $P$
+    \item primene:
+    \begin{itemize}
+      \item editori teksta
+      \item mašine za pretragu (\textit{search engines})
+      \item bioinformatika
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Nalaženje podstringa grubom silom}
+  \begin{itemize}
+    \item nalaženje \myred{grubom silom} (\textit{brute force}) poredi šablon
+    $P$ sa tekstom $T$ za svaki mogući položaj $P$ u odnosu na $T$ sve dok se
+    \begin{itemize}
+      \item ne pronađe poklapanje
+      \item ne testiraju sve pozicije
+      \item \myred{sufiks} od $P$ je podstring tipa $P[i..m-1]$
+    \end{itemize}
+    \item gruba sila radi u $O(nm)$ vremenu
+    \item primer najgoreg slučaja:
+    \begin{itemize}
+      \item $T = aaa \ldots ah$
+      \item $P = aaah$
+      \item može da se pojavi u slikama i DNK sekvencama
+      \item retko u tekstovima
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Nalaženje podstringa grubom silom}
+  \myred{BruteForceMatch}($T, P$)
+  \begin{algorithmic}
+    \REQUIRE tekst $T$ dužine $n$ i šablon $P$ dužine $m$
+    \ENSURE indeks početka podstringa u $T$ jednakog $P$ ili -1 ako nije pronađen
+    \FOR{$i \leftarrow 0$ \TO $n-m$}
+      \STATE $j \leftarrow 0$  \COMMENT{testiramo položaj i}
+      \WHILE{$j<m \land T[i+j]=P[j]$}
+        \STATE $j \leftarrow j+1$
+        \IF{$j=m$}
+          \RETURN $i$ \COMMENT{poklapanje na $i$}
+        \ELSE
+          \STATE break
+        \ENDIF
+      \ENDWHILE
+    \ENDFOR
+    \RETURN -1 \COMMENT{nije pronađen}
+  \end{algorithmic}    
+\end{frame}
+
+\end{document}
