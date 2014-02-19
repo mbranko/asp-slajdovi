@@ -32,6 +32,7 @@ Novom Sadu}
 \frame{\titlepage}
 
 \section[Stringovi]{Stringovi}
+
 \begin{frame}[fragile]
   \frametitle{String}
   \begin{itemize}
@@ -116,6 +117,371 @@ Novom Sadu}
     \ENDFOR
     \RETURN -1 \COMMENT{nije pronađen}
   \end{algorithmic}    
+\end{frame}
+
+\begin{frame}[fragile,shrink=18]
+  \frametitle{Gruba sila u Pythonu}
+\begin{minted}[linenos=false]{python}
+def find_brute_force(T, P):
+  """Return the lowest index of T at which
+     substring P begins (or else -1)."""
+  n, m = len(T), len(P)  # introduce convenient notations
+  for i in range(n-m+1): # try every potential starting index within T
+    k = 0                # an index into pattern P
+    while k < m and T[i + k] == P[k]: # kth character of P matches
+      k += 1
+    if k == m:           # if we reached the end of pattern,
+      return i           # substring T[i:i+m] matches P
+  return -1              # failed to find a match starting with any i
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Boyer-Moore}
+  \begin{itemize}
+    \item \myred{Boyer-Moore} algoritam se zasniva na dve heuristike
+    \begin{itemize}
+      \item \myred{ogledalo}: traži $P$ u $T$ unazad
+      \item \myred{skok}: ako se razlika otkrije u $T[i]=c$
+      \begin{itemize}
+        \item ako $P$ sadrži $c$, pomeri $P$ tako da se $T[i]$ poklopi sa
+        poslednjom pojavom $c$ u $P$
+        \item inače pomeri $P$ tako da se poklope $P[0]$ i $T[i+1]$
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-13-pic01.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{BM: Funkcija poslednjeg pojavljivanja}
+  \begin{itemize}
+    \item Boyer-Moore algoritam formira \myred{last occurence} funkciju $L$ koja
+    mapira $\Sigma$ na cele brojeve gde je $L(c)$ definisano kao
+    \begin{itemize}
+      \item najveći indeks $i$ takav da $P[i]=c$
+      \item -1 ako takvog indeksa nema
+    \end{itemize}
+    \item primer: $\Sigma = \{a,b,c,d\} \quad P = abacab$
+  \end{itemize}
+  \begin{center}
+    \begin{tabular}{c||c|c|c|c}
+    $c$ & $a$ & $b$ & $c$ & $d$ \\ \hline
+    $L(c)$ & $4$ & $5$ & $3$ & $-1$ \\
+    \end{tabular}
+  \end{center}
+  \begin{itemize}
+    \item može se predstaviti kao niz indeksiran numeričkim kodovima karaktera
+    \item može se izračunati za $O(m+s)$ vreme gde je $m$ dužina $P$ a $s$ je veličina $\Sigma$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Boyer-Moore algoritam}
+  \myred{BoyerMooreMatch}($T, P, \Sigma$)
+  \begin{algorithmic}
+    \STATE $L \leftarrow$ lastOccurence($P,\Sigma$)
+    \STATE $i \leftarrow m-1$
+    \STATE $j \leftarrow m-1$
+    \REPEAT
+      \IF{$T[i]=P[j]$}
+        \IF{$j=0$}
+          \RETURN $i$ \COMMENT{poklapanje na i}
+        \ELSE
+          \STATE $i \leftarrow i-1$
+          \STATE $j \leftarrow j-1$
+        \ENDIF
+      \ELSE
+        \STATE $l \leftarrow L[T[i]]$ \COMMENT{skok}
+        \STATE $i \leftarrow i + m - \min(j, 1+l)$
+        \STATE $j \leftarrow m-1$
+      \ENDIF
+    \UNTIL{$i>n-1$}
+    \RETURN $-1$ \COMMENT{nije pronađen}
+  \end{algorithmic}    
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Boyer-Moore}
+  \begin{center}
+    \includegraphics[width=6cm]{asp-13-pic02.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Boyer-Moore: primer}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-13-pic03.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Boyer-Moore: analiza}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item Boyer-Moore je $O(nm+s)$
+        \item primer najgoreg slučaja:
+        \begin{itemize}
+          \item $T = aaa \ldots a$
+          \item $P = baaa$
+        \end{itemize}
+        \item najgori slučaj nije verovatan u tekstovima
+        \item znatno brži od grube sile za tekstove na prirodnom jeziku
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=6cm]{asp-13-pic04.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Boyer-Moore u Pythonu}
+\begin{minted}[linenos=false]{python}
+def find_boyer_moore(T, P):
+  """Return the lowest index of T at which substring P begins (or else -1)."""
+  n, m = len(T), len(P)                   # introduce convenient notations
+  if m == 0: return 0                     # trivial search for empty string
+  last = {}                               # build 'last' dictionary
+  for k in range(m):
+    last[ P[k] ] = k                      # later occurrence overwrites
+  # align end of pattern at index m-1 of text
+  i = m-1                                 # an index into T
+  k = m-1                                 # an index into P
+  while i < n:
+    if T[i] == P[k]:                      # a matching character
+      if k == 0:
+        return i                          # pattern begins at index i of text
+      else:
+        i -= 1                            # examine previous character
+        k -= 1                            # of both T and P
+    else:
+      j = last.get(T[i], -1)              # last(T[i]) is -1 if not found
+      i += m - min(k, j + 1)              # case analysis for jump step
+      k = m - 1                           # restart at end of pattern
+  return -1
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Knuth-Morris-Pratt}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item \myred{Knuth-Morris-Pratt} poredi tekst sa šablonom \textbf{sleva
+        u desno} ali pomera šablon pametnije od grube sile
+        \item kada se nađe razlika, koliko \textbf{najviše} možemo pomeriti
+        šablon da izbegnemo suvišna poređenja?
+        \item odgovor: najveći prefiks $P[0..j]$ koji je sufiks $P[1..j]$
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=6cm]{asp-13-pic05.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{KMP: funkcija neuspeha}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item KMP analizira šablon da pronađe njegove prefikse unutar samog
+        šablona
+        \item \myred{funkcija neuspeha} $F(j)$ je veličina najvećeg prefiksa
+        $P[0..j]$ takvog da je ujedno i sufiks $P[1..j]$
+        \item razlika KMP i GS: ako nema poklapanja za $P[j] \neq T[i]$ pomeramo
+        $j \leftarrow F(j-1)$
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=6cm]{asp-13-pic06.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile,shrink=12]
+  \frametitle{Knuth-Morris-Pratt algoritam}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item funkcija neuspeha se može prikazati nizom koji se izračuna za $O(m)$
+        \item u svakoj iteraciji petlje, ili
+        \begin{itemize}
+          \item $i$ se poveća za $1$, ili
+          \item pomeraj $i-j$ se poveća za najmanje $1$ (primeti da $F(j-1)<j$)
+        \end{itemize}
+        \item $\Rightarrow$ nema više od $2n$ iteracija u petlji
+        \item $\Rightarrow$ KMP je $O(m+n)$
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \myred{KMPMatch}($T, P$)
+      \begin{algorithmic}
+        \STATE $F \leftarrow$ failureFunction($P$)
+        \STATE $i \leftarrow 0$
+        \STATE $j \leftarrow 0$
+        \WHILE{$i<n$}
+          \IF{$T[i]=P[j]$}
+            \IF{$j=m-1$}
+              \RETURN $i-j$ \COMMENT{poklapanje}
+            \ELSE
+              \STATE $i \leftarrow i+1$
+              \STATE $j \leftarrow j+1$
+            \ENDIF
+          \ELSE
+            \IF{}
+              \STATE $j \leftarrow F[j-1]$
+            \ELSE
+              \STATE $i \leftarrow i + 1$
+            \ENDIF
+          \ENDIF
+        \ENDWHILE
+        \RETURN $-1$ \COMMENT{nije pronađen}
+      \end{algorithmic}    
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile,shrink=12]
+  \frametitle{KMP: izračunavanje funkcije neuspeha}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item funkcija neuspeha se može prikazati nizom koji se izračuna za $O(m)$
+        \item slično kao i sam KMP algoritam
+        \item u svakoj iteraciji petlje, ili
+        \begin{itemize}
+          \item $i$ se poveća za $1$, ili
+          \item pomeraj $i-j$ se poveća za najmanje $1$ (primeti da $F(j-1)<j$)
+        \end{itemize}
+        \item $\Rightarrow$ nema više od $2n$ iteracija u petlji
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \myred{failureFunction}($P$)
+      \begin{algorithmic}
+        \STATE $F[0] \leftarrow 0$
+        \STATE $i \leftarrow 1$
+        \STATE $j \leftarrow 0$
+        \WHILE{$i<m$}
+          \IF{$P[i]=P[j]$}
+            \STATE \COMMENT{poklapa se $j+1$ znakova}
+            \STATE $F[i] \leftarrow j+1$
+            \STATE $i \leftarrow i+1$
+            \STATE $j \leftarrow j+1$
+          \ELSIF{$j>0$}
+            \STATE \COMMENT{koristi fF da pomeriš $P$}
+            \STATE $j \leftarrow F[j-1]$
+          \ELSE
+            \STATE $F[0] \leftarrow 0$ \COMMENT{nema poklapanja}
+            \STATE $i \leftarrow i + 1$
+          \ENDIF
+        \ENDWHILE
+      \end{algorithmic}    
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Knuth-Morris-Pratt: primer}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-13-pic07.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Knuth-Morris-Pratt u Pythonu $_1$}
+\begin{minted}[linenos=false]{python}
+def find_kmp(T, P):
+  """Return the lowest index of T
+     at which substring P begins (or else -1)."""
+  n, m = len(T), len(P)       # introduce convenient notations
+  if m == 0: return 0         # trivial search for empty string
+  fail = compute_kmp_fail(P)  # rely on utility to precompute
+  j = 0                       # index into text
+  k = 0                       # index into pattern
+  while j < n:
+    if T[j] == P[k]:          # P[0:1+k] matched thus far
+      if k == m - 1:          # match is complete
+        return j - m + 1           
+      j += 1                  # try to extend match
+      k += 1
+    elif k > 0:                    
+      k = fail[k-1]           # reuse suffix of P[0:k]
+    else:
+      j += 1
+  return -1                   # reached end without match
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile,shrink=12]
+  \frametitle{Knuth-Morris-Pratt u Pythonu $_2$}
+\begin{minted}[linenos=false]{python}
+def compute_kmp_fail(P):
+  """Utility that computes and returns KMP 'fail' list."""
+  m = len(P)
+  fail = [0] * m    # by default, presume overlap of 0 everywhere
+  j = 1
+  k = 0
+  while j < m:        # compute f(j) during this pass, if nonzero
+    if P[j] == P[k]:  # k + 1 characters match thus far
+      fail[j] = k + 1
+      j += 1
+      k += 1
+    elif k > 0:       # k follows a matching prefix
+      k = fail[k-1]
+    else:             # no match found starting at j
+      j += 1
+  return fail
+\end{minted}
+\end{frame}
+
+\section[Din prog]{Dinamičko programiranje}
+
+\begin{frame}[fragile]
+  \frametitle{Dinamičko programiranje}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item \myred{dinamičko programiranje} je pristup dizajnu algoritama
+        \item prvo primer: množenje matrica
+        $$ C[i,j] = \sum_{k=0}^{e-1} A[i,k]\cdot B[k,j]$$
+        \item vreme je $O(def)$
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=6cm]{asp-13-pic08.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Množenje matrica}
+  \begin{itemize}
+    \item računamo $A=A_0 \cdot A_{1}\cdot \ldots\cdot A_{n-1}$
+    \item $A_{i}$ ima dimenzije $d_{i}\times d_{i+1}$
+    \item koji redosled množenja izabrati?
+    \item primer:
+    \begin{itemize}
+      \item $B$ je $3\times 100$
+      \item $C$ je $100\times 5$
+      \item $D$ je $5\times 5$
+      \item $(B\cdot C)\cdot D$ traži 1500+75 = 1575 operacija
+      \item $B\cdot (C\cdot D)$ traži 1500+2500 = 4000 operacija
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \end{document}
