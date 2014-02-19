@@ -156,7 +156,7 @@ def find_brute_force(T, P):
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{BM: Funkcija poslednjeg pojavljivanja}
+  \frametitle{BM: funkcija poslednjeg pojavljivanja}
   \begin{itemize}
     \item Boyer-Moore algoritam formira \myred{last occurence} funkciju $L$ koja
     mapira $\Sigma$ na cele brojeve gde je $L(c)$ definisano kao
@@ -482,6 +482,269 @@ def compute_kmp_fail(P):
       \item $B\cdot (C\cdot D)$ traži 1500+2500 = 4000 operacija
     \end{itemize}
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Raspoređivanje zagrada / gruba sila}
+  \begin{itemize}
+    \item traženje rešenja grubom silom: isprobati sve moguće 
+    kombinacije zagrada za $A=A_0 \cdot A_{1}\cdot \ldots\cdot A_{n-1}$ 
+    \item izračunati broj operacija za svaku
+    \item i izabrati najbolju
+    \item vreme izvršavanja:
+    \begin{itemize}
+      \item broj mogućih rasporeda zagrada je jednak broju različitih 
+      binarnih stabala sa $n$ čvorova
+      \item \textbf{eksponencijalna} zavisnost!
+      \item tzv. Katalanov broj, iznosi skoro $4^n$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pohlepni pristup}
+  \begin{itemize}
+    \item ideja \#1: ponavljaj izbor onog proizvoda koji će imati \textbf{najviše} operacija
+    \item protiv-primer:
+    \begin{itemize}
+      \item $A$ je $10\times 5$
+      \item $B$ je $5\times 10$
+      \item $A$ je $10\times 5$
+      \item $B$ je $5\times 10$
+      \item ideja \#1 daje $(A\cdot B)\cdot (C\cdot D)$, \\ tj. 500+1000+500 = 2000 operacija
+      \item $A\cdot ((B\cdot C)\cdot D)$ je 500+250+250 = 1000 operacija
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pohlepni pristup}
+  \begin{itemize}
+    \item ideja \#2: ponavljaj izbor onog proizvoda koji će imati \textbf{najmanje} operacija
+    \item protiv-primer:
+    \begin{itemize}
+      \item $A$ je $101\times 11$
+      \item $B$ je $11\times 9$
+      \item $A$ je $9\times 100$
+      \item $B$ je $100\times 99$
+      \item ideja \#2 daje $A\cdot ((B\cdot C)\cdot D)$, \\ tj. 109989+9900+108900 = 228789 operacija
+      \item $(A\cdot B)\cdot (C\cdot D)$ je 9999+89991+89100 = 189090 operacija
+    \end{itemize}
+    \item pohlepni pristup ne donosi optimalan izbor
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{,,Rekurzivni`` pristup}
+  \begin{itemize}
+    \item definišemo \myred{potprobleme}
+    \begin{itemize}
+      \item nađi najbolji raspored zagrada za $A_{i}\cdot A_{i+1}\cdot \ldots A_{j}$
+      \item neka je $N_{i,j}$ broj operacija za ovaj potproblem
+      \item optimalno rešenje za ceo problem je $N_{0,n-1}$
+    \end{itemize}
+    \item \myred{optimalnost potproblema}: optimalno rešenje se može 
+    dobiti pomoću optimalnih potproblema
+    \begin{itemize}
+      \item mora postojati poslednje množenje (koren stabla izraza) za 
+      optimalno rešenje
+      \item neka je to na $i$-tom indeksu: $(A_{0}\cdot \ldots \cdot A_{i})\cdot (A_{i+1}\cdot \ldots \cdot A_{n-1})$
+      \item optimalno rešenje za ceo problem $N_{0,n-1}$ je suma dva optimalna potproblema plus poslednje množenje
+      \item ako bi optimalno rešenje imalo bolje potprobleme, ne bi bilo optimalno
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Karakteristična jednačina}
+  \begin{itemize}
+    \item globalni optimum se definiše pomoću optimalnih potproblema u 
+    zavisnosti od indeksa poslednjeg množenja
+    \item razmotrimo sve moguće vrednosti tog indeksa
+    \begin{itemize}
+      \item $A_{i}$ je dimenzije $d_{i}\times d_{i+1}$
+      \item karakteristična jednačina za $N_{i,j}$ je:
+      $$ N_{i,j} = \min_{i\leq k<j}\{ N_{i,k} + N_{k+1,j} + d_{i} d_{k+1} d_{j+1}\}$$
+    \end{itemize}
+    \item potproblemi nisu nezavisni, nego se \myred{preklapaju}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Algoritam dinamičkog programiranja}
+  \begin{itemize}
+    \item pošto se problemi preklapaju, nećemo koristiti rekurziju
+    \item konstruisaćemo optimalne potprobleme od dole na gore (\textit{bottom-up})
+    \item $N_{i,i}$ je lako, počnemo od njih
+    \item onda pređemo na potprobleme dužine 2, 3, \ldots{}
+    \item vreme izvršavanja je $O(n^3)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Algoritam dinamičkog programiranja}
+  \myred{matrixChain}($S$)
+  \begin{algorithmic}
+    \REQUIRE sekvenca $S$ matrica koje treba pomnožiti
+    \ENSURE broj operacija u optimalnom rasporedu zagrada
+    \FOR{$i \leftarrow 0$ \TO $n-1$}
+      \STATE $N_{i,i} \leftarrow 0$
+    \ENDFOR
+    \FOR{$b \leftarrow 1$ \TO $n-1$}
+      \FOR{$i \leftarrow 0$ \TO $n-b-1$}
+        \STATE $j \leftarrow i+b$
+        \STATE $N_{i,j} \leftarrow +\infty$
+        \FOR{$k \leftarrow j-1$ \TO $j-1$}
+          \STATE $N_{i,j} \leftarrow \min_{k} \{ N_{i,k} + N_{k+1,j} + d_{i} d_{k+1} d_{j+1}\}$
+        \ENDFOR
+      \ENDFOR
+    \ENDFOR
+  \end{algorithmic}    
+\end{frame}
+
+\begin{frame}[fragile,shrink=15]
+  \frametitle{Python implementacija}
+\begin{minted}[linenos=false]{python}
+def matrix_chain(d):
+  """Return solution to the matrix chain problem.
+
+  d is a list of n+1 numbers describing the dimensions of a chain of
+  n matrices such that kth matrix has dimensions d[k]-by-d[k+1].
+ 
+  Return an n-by-n table such that N[i][j] represents the minimum 
+  number of multiplications needed to compute the product of Ai 
+  through Aj inclusive.
+  """
+  n = len(d) - 1                  # number of matrices
+  N = [[0] * n for i in range(n)] # initialize n-by-n result to zero
+  for b in range(1, n):           # number of products in subchain
+    for i in range(n-b):          # start of subchain
+      j = i + b                   # end of subchain
+      N[i][j] = min(N[i][k] + N[k+1][j] + d[i]*d[k+1]*d[j+1] \
+        for k in range(i,j))
+  return N
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Vizuelizacija algoritma}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item bottom-up prvo popuni dijagonalu
+        \item $N_{i,j}$ se dobija na osnovu vrednosti iz $i$-tog reda i 
+        $j$-te kolone
+        \item popunjavanje svake ćelije u tabeli je $O(n)$
+        \item ukupno vreme je $O(n^3)$
+        \item raspored zagrada dobijamo pamćenjem $k$ u ćelijama tabele
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=6cm]{asp-13-pic09.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Opšti postupak dinamičkog programiranja}
+  \begin{itemize}
+    \item primenljivo na probleme čije rešavanje traži puno vremena 
+    (moguće eksponencijalni) ukoliko postoje:
+    \begin{itemize}
+      \item \myred{jednostavni potproblemi}: potproblemi se mogu 
+      definisati pomoću promenljivih $j,k,l,m$ itd.
+      \item \myred{optimalni potproblemi}: globalni optimum se može 
+      definisati pomoću optimalnih potproblema
+      \item \myred{preklapanje potproblema}: potproblemi nisu nezavisni
+      i treba ih konstruisati bottom-up
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Podsekvence}
+  \begin{itemize}
+    \item \myred{podsekvenca} stringa $x_{0}x_{1}x_{2}\ldots x_{n-1}$ je
+    string $x_{i_{1}}x_{i_{2}}\ldots x_{i_{k}}$ gde je $i_{j}<i_{j+1}$
+    \item nije isto što i podstring!
+    \item primer stringa: ABCDEFGHIJK
+    \begin{itemize}
+      \item jeste podsekvenca: ACEGIJK
+      \item jeste podsekvenca: DFGHK
+      \item nije podsekvenca: DAGH
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Problem najduže zajedničke podsekvence}
+  \begin{itemize}
+    \item \myred{longest common subsequence} (LCS)
+    \item za stringove $X$ i $Y$, LCS je najduža podsekvenca od $X$ i $Y$
+    \item primena: ispitivanje sličnosti DNK (alfabet je \{A,C,G,T\})
+    \item primer: ABCDEFG i XZACKDFWGH imaju LCS: ACDFG
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LCS grubom silom}
+  \begin{itemize}
+    \item primena grube sile na LCS:
+    \begin{itemize}
+      \item pronađi sve podsekvence od $X$
+      \item izdvoj one koje su i podsekvence od $Y$
+      \item izaberi najdužu
+    \end{itemize}
+    \item analiza:
+    \begin{itemize}
+      \item ako je $X$ dužine $n$, ima $2^n$ podsekvenci
+      \item ovo je eksponencijalno vreme!
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LCS dinamičkim programiranjem}
+  \begin{itemize}
+    \item neka je $L[i,j]$ LCS za $X[0..i]$ i $Y[0..j]$
+    \item neka postoji indeks -1, tako da je $L[-1,k]=0$ i $L[k,-1]=0$; 
+    to znači da null deo X ili Y nema poklapanja sa drugim
+    \item sada definišemo $L[i,j]$ u opštem slučaju:
+    \begin{itemize}
+      \item ako je $x_{i}=y_{j}$ onda $L[i,j] = L[i-1,j-1]+1$ \\ (imamo poklapanje)
+      \item ako je $x_{i}\neq y_{j}$ onda $L[i,j] = \max\{L[i-1,j], L[i,j-1]\}$ \\ (nemamo poklapanje)
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-13-pic10.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{LCS algoritam}
+  \myred{LCS}($X,Y$)
+  \begin{algorithmic}
+    \REQUIRE stringovi $X$ i $Y$ dužine $n$ odnosno $m$
+    \ENSURE $L[i,j]$ za $0\leq i<n$ i $0\leq j<m$
+    \FOR{$i \leftarrow 0$ \TO $n-1$}
+      \STATE $N_{i,-1} \leftarrow 0$
+    \ENDFOR
+    \FOR{$j \leftarrow 0$ \TO $m-1$}
+      \STATE $N_{-1,j} \leftarrow 0$
+    \ENDFOR
+    \FOR{$i \leftarrow 0$ \TO $n-1$}
+      \FOR{$j \leftarrow 0$ \TO $m-1$}
+        \IF{$x_{i} = y_{j}$}
+          \STATE $L[i,j] \leftarrow L[i-1,j-1]+1$
+        \ELSE
+          \STATE $L[i,j] \leftarrow \max\{L[i-1,j], L[i,j-1]\}$
+        \ENDIF
+      \ENDFOR
+    \ENDFOR
+    \RETURN $L$
+  \end{algorithmic}    
 \end{frame}
 
 \end{document}
