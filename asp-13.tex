@@ -747,4 +747,334 @@ def matrix_chain(d):
   \end{algorithmic}    
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{LCS algoritam: vizuelizacija}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-13-pic11.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LCS algoritam: analiza}
+  \begin{itemize}
+    \item algoritam ima dve ugnježdene petlje
+    \begin{itemize}
+      \item spoljna ima $n$ ciklusa
+      \item unutrašnja ima $m$ ciklusa
+      \item telo unutrašnje petlje ima konstantno vreme
+      \item $\Rightarrow$ ukupno vreme je $O(nm)$
+    \end{itemize}
+    \item odgovor je sačuvan u $L[n,m]$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink=10]
+  \frametitle{Python implementacija $_1$}
+\begin{minted}[linenos=false]{python}
+def LCS(X, Y):
+  """Return table such that L[j][k] is 
+     length of LCS for X[0:j] and Y[0:k].
+     """
+  n, m = len(X), len(Y)                
+  L = [[0] * (m+1) for k in range(n+1)] # (n+1) x (m+1) table
+  for j in range(n):
+    for k in range(m):
+      if X[j] == Y[k]:              # align this match
+        L[j+1][k+1] = L[j][k] + 1            
+      else:                         # choose to ignore one char
+        L[j+1][k+1] = max(L[j][k+1], L[j+1][k])
+  return L
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile,shrink=10]
+  \frametitle{Python implementacija $_2$}
+\begin{minted}[linenos=false]{python}
+def LCS_solution(X, Y, L):
+  """Return the longest common substring 
+     of X and Y, given LCS table L.
+     """
+  solution = []
+  j,k = len(X), len(Y)
+  while L[j][k] > 0:  # common characters remain
+    if X[j-1] == Y[k-1]:
+      solution.append(X[j-1])
+      j -= 1
+      k -= 1
+    elif L[j-1][k] >= L[j][k-1]:
+      j -=1
+    else:
+      k -= 1
+  return ''.join(reversed(solution)) # return left-to-right 
+                                     # version
+\end{minted}
+\end{frame}
+
+\section[Pohlepa]{Pohlepni metod}
+
+\begin{frame}[fragile]
+  \frametitle{Pohlepna metoda}
+  \begin{itemize}
+    \item \myred{pohlepna metoda} je pristup dizajnu algoritama zasnovan
+    na:
+    \begin{itemize}
+      \item \textbf{konfiguracije}: različiti izbori, kolekcije ili 
+      vrednosti koje treba pronaći
+      \item \textbf{funkcija cilja}: vrednost (\textit{score}) dodeljena
+      konfiguracijama koju želimo da minimizujemo ili maksimizujemo
+    \end{itemize}
+    \item najbolje funkcioniše za probleme koji imaju osobinu 
+    \myred{pohlepnog izbora}:
+    \begin{itemize}
+      \item globalno optimalno rešenje se može pronaći serijom lokalnih 
+      unapređenja polazeći od početne konfiguracije
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kompresija teksta}
+  \begin{itemize}
+    \item dati string $X$ zapiši/kodiraj kao $Y$ tako da $Y$ zauzima 
+    manje memorije 
+    \begin{itemize}
+      \item štedi memoriju i/ili propusni opseg mreže
+    \end{itemize}
+    \item odličan primer: \myred{Huffman-ovo kodiranje} 
+    \begin{itemize}
+      \item izračunaj frekvenciju pojavljivanja svakog znaka
+      \item najčešće znakove kodiraj najkraćim kodovima
+      \item nijedan kôd nije prefiks nekog drugog
+      \item koristi optimalno stablo kodiranja za određivanje kodova
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Stablo kodiranja}
+  \begin{itemize}
+    \item \myred{kôd} je preslikavanje karaktera iz alfabeta na binarni 
+    reprezent -- kodnu reč
+    \item \myred{prefiksni kôd} je takav binarni kôd da nijedna kodna 
+    reč nije prefiks druge kodne reči
+    \item \myred{stablo kodiranja} predstavlja prefiksni kôd
+    \begin{itemize}
+      \item listovi čuvaju karaktere iz alfabeta
+      \item kodna reč dobija se obilaskom putanje od korena do lista
+      \item 0 za levo dete i 1 za desno dete
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic12.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Optimizacija stabla kodiranja}
+  \begin{itemize}
+    \item za dati string $X$ tražimo prefiksni kod takav da rezultat 
+    kompresije bude što kraći
+    \begin{itemize}
+      \item česti karakteri treba da imaju kratke kodne reči
+      \item retki karakteri mogu da imaju duže kodne reči
+    \end{itemize}
+    \item primer:
+    \begin{itemize}
+      \item $X = abracadabra$
+      \item $T_{1}$ kodira $X$ u 29 bita
+      \item $T_{2}$ kodira $X$ u 24 bita
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic13.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Huffman-ovo kodiranje}
+  \begin{itemize}
+    \item za dati string $X$ Huffman-ovo kodiranje konstruiše prefiksni 
+    kod koji minimizuje dužinu kôda od $X$
+    \item radi u $O(n + d\log d)$ vremenu
+    \begin{itemize}
+      \item $n$ je dužina $X$ 
+      \item $d$ je veličina alfabeta
+    \end{itemize}
+    \item pomoćna struktura podataka: red sa prioritetom implementiran pomoću heapa
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Huffman-ov algoritam}
+  \myred{Huffman}($X$)
+  \begin{algorithmic}
+    \REQUIRE string $X$ dužine $n$ sa $d$ različitih znakova
+    \ENSURE stablo kodiranja za $X$
+    \STATE izračunaj frekvenciju $f(c)$ za svaki znak $c$ iz $X$
+    \STATE $Q$ je novi red sa prioritetom
+    \FORALL{$c \in X$}
+      \STATE kreiraj koren stabla $T$ koji čuva $c$
+      \STATE dodaj $T$ u $Q$ sa ključem $f(c)$
+    \ENDFOR
+    \WHILE{len($Q$)$>1$}
+      \STATE $(f_{1},T_{1}) \leftarrow Q$.remove\_min()
+      \STATE $(f_{2},T_{2}) \leftarrow Q$.remove\_min()
+      \STATE kreiraj novo stablo $T$ sa levim podstablom $T_{1}$ i desnim $T_{2}$
+      \STATE dodaj $T$ u $Q$ sa ključem $f_{1} + f_{2}$
+    \ENDWHILE
+    \STATE $(f,T) \leftarrow Q$.remove\_min()
+    \RETURN $T$
+  \end{algorithmic}    
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Huffman: primer 1}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic14.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Huffman: primer 2}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic15.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Problem ranca}
+  \begin{itemize}
+    \item dat je skup $S$ od $n$ elemenata, svaki element $i$ ima
+    \begin{itemize}
+      \item $b_{i}$ cenu (benefit)
+      \item $w_{i}$ težinu
+    \end{itemize}
+    \item \textbf{cilj}: izaberi elemente sa maksimalnom ukupnom 
+    vrednošću ali ukupnom težinom ne većom od $W$
+    \item ako je moguće uzeti razlomljene količine elemenata:
+    \begin{itemize}
+      \item $x_{i}$ je količina elementa $i$
+      \item cilj: maksimizovati
+      $$ \sum_{i\in S}b_{i}\frac{x_{i}}{w_{i}}$$
+      \item uz ograničenje:
+      $$ \sum_{i\in S} \leq W$$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Problem ranca: primer}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic16.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Problem ranca: algoritam}
+  \begin{itemize}
+    \item pohlepni izbor: izaberi element sa najvećom vrednošću (cena/težina)
+    \begin{itemize}
+      \item pošto je $\sum_{i\in S}b_{i}(x_{i}/w_{i}) = \sum_{i\in S}(b_{i}/w_{i})x_{i}$
+      \item radi u $O(n\log n)$ vremenu
+    \end{itemize}
+    \item \textbf{korektnost}: pretpostavimo da postoji bolje rešenje
+    \begin{itemize}
+      \item postoji element $i$ sa većom vrednošću od izabranog elementa 
+      $j$ ali je $x_{i}<w_{i}$ i $v_{i}<v_{j}$
+      \item ako zamenimo $i$ sa $j$ dobićemo bolje rešenje
+      \item koliko od $i$: $\min\{w_{i}-x_{i},x_{j}\}$
+      \item dakle, nema boljeg rešenja od pohlepnog
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Problem ranca: algoritam}
+  \myred{fractionalKnapsack}($S, W$)
+  \begin{algorithmic}
+    \REQUIRE skup $S$ elemenata $w$ sa cenom $b_{i}$ i težinom $w_{i}$, max težina $W$
+    \ENSURE količina $x_{i}$ elementa $i$ da se maksimizuje cena uz max težinu $W$
+    \FORALL{$i \in S$}
+      \STATE $x_{i} \leftarrow 0$
+      \STATE $v_{i} \leftarrow b_{i} / w_{i}$ \COMMENT{vrednost}
+    \ENDFOR
+    \STATE $w \leftarrow 0$ \COMMENT{ukupna težina}
+    \WHILE{$w<W$}
+      \STATE ukloni element $i$ sa najvećim $v_{i}$
+      \STATE $x_{i} \leftarrow \min\{w_{i}, W-w\}$
+      \STATE $w \leftarrow w + \min\{w_{i}, W-w\}$ 
+    \ENDWHILE
+  \end{algorithmic}    
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Raspoređivanje zadataka}
+  \begin{itemize}
+    \item za dati skup $T$ od $n$ zadataka svaki zadatak ima
+    \begin{itemize}
+      \item vreme početka $s_{i}$
+      \item vreme završetka $f_{i}$ (gde je $s_{i}<f_{i}$)
+    \end{itemize}
+    \item \textbf{cilj}: obaviti sve zadatke sa minimalnim brojem mašina
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic17.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Raspoređivanje zadataka: algoritam}
+  \begin{itemize}
+    \item pohlepni izbor: razmatraćemo zadatke po vremenu početka i
+    koristiti što manje mašina za ovaj redosled
+    \begin{itemize}
+      \item vreme izvršavanja $O(n\log n)$
+    \end{itemize}
+    \item \textbf{korektnost}: pretpostavimo da postoji bolji raspored
+    \begin{itemize}
+      \item možemo koristiti $k-1$ mašina
+      \item alogritam koristi $k$
+      \item neka je $i$ prvi zadatak planiran u postrojenju $k$
+      \item mašina $i$ mora biti u konfliktu sa $k-1$ drugih zadataka
+      \item ali to znači da postoji konzistentan raspored koji koristi
+      $k-1$ mašina
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Raspoređivanje zadataka: algoritam}
+  \myred{taskSchedule}($T$)
+  \begin{algorithmic}
+    \REQUIRE skup $T$ zadataka sa startnim vremenom $s_{i}$ i vremenom završetka $f_{i}$
+    \ENSURE raspored sa minimalnim brojem mašina
+    \STATE $m \leftarrow 0$ \COMMENT{broj mašina}
+    \WHILE{$T$ nije prazan}
+      \STATE ukloni zadatak $i$ sa najmanjim $s_{i}$
+      \IF{postoji mašina $j$ za zadatak $i$}
+        \STATE rasporedi zadatak $i$ na mašinu $j$
+      \ELSE
+        \STATE $m \leftarrow m+1$
+        \STATE rasporedi zadatak $i$ na mašinu $m$
+      \ENDIF
+    \ENDWHILE
+  \end{algorithmic}    
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Raspoređivanje zadataka: primer}
+  \begin{itemize}
+    \item za dati skup $T$ od $n$ zadataka, svaki zadatak ima
+    \begin{itemize}
+      \item vreme početka $s_{i}$
+      \item vreme završetka $f_{i}$ (gde je $s_{i}<f_{i}$)
+    \end{itemize}
+    \item \textbf{primer}: $[1,4],[1,3],[2,5],[3,7],[4,7],[6,9],[7,8]$
+    \item izvršiti zadatke na minimalnom broju mašina
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic17.png}
+  \end{center}
+\end{frame}
+
 \end{document}
