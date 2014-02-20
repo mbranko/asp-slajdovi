@@ -1077,4 +1077,174 @@ def LCS_solution(X, Y, L):
   \end{center}
 \end{frame}
 
+\section[Trie]{Trie}
+
+\begin{frame}[fragile]
+  \frametitle{Predprocesiranje stringova}
+  \begin{itemize}
+    \item predprocesiranje šablona ubrzava pattern matching
+    \begin{itemize}
+      \item vreme za KMP je proporcionalno dužini teksta nakon predprocesiranja
+    \end{itemize}
+    \item ako je tekst dugačak, ne menja se i često se pretražuje mogli bismo
+    da predprocesiramo tekst umesto šablona
+    \item \myred{trie} (čita se kao ,,try``) je struktura podataka za čuvanje
+    stringova, npr. svih reči u tekstu
+    \begin{itemize}
+      \item vreme pretrage je proporcionalno dužini šablona
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Standardni trie}
+  \begin{itemize}
+    \item \myred{standardni trie} za skup stringova $S$ je stablo:
+    \begin{itemize}
+      \item svaki čvor osim korena čuva jedan karakter
+      \item deca čvora su u alfabetskom redosledu
+      \item putanja od korena do lista daje čuvani string
+    \end{itemize}
+    \item primer: S=\{bear, bell, bid, buy, sell, stock, stop\}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic18.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Standardni trie: analiza}
+  \begin{itemize}
+    \item standardni trie troši $O(n)$ prostora
+    \item dodavanje, uklanjanje i pretraga su $O(dm)$
+    \begin{itemize}
+      \item $n$ ukupna dužina stringova u $S$
+      \item $m$ dužina stringa u operaciji
+      \item $d$ veličina alfabeta
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic18.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Traženje reči u trie}
+  \begin{columns}
+    \begin{column}[t]{4cm}
+      {\footnotesize
+      \begin{itemize}
+        \item dodaj reči iz teksta u trie
+        \item svaki list je jedna reč
+        \item list čuva indekse gde počinje reč
+      \end{itemize}}
+    \end{column}
+    \begin{column}[t]{8cm}
+      \begin{center}
+        \includegraphics[width=7.5cm]{asp-13-pic19.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic20.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kompresovani trie}
+  \begin{center}
+    \includegraphics[width=9cm]{asp-13-pic21.png}
+  \end{center}
+  \begin{columns}
+    \begin{column}[t]{5cm}
+      {\footnotesize
+      \begin{itemize}
+        \item \myred{kompresovani trie} ima unutrašnje čvorove sa bar 2 deteta
+        \item dobija se od standardnog kompresovanjem lanaca ,,redundantnih`` čvorova
+      \end{itemize}}
+    \end{column}
+    \begin{column}[t]{7cm}
+      \begin{center}
+        \includegraphics[width=6cm]{asp-13-pic22.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kompaktna reprezentacija}
+  \begin{itemize}
+    \item kompaktna reprezentacija kompresovanog trie-a za niz stringova
+    \begin{itemize}
+      \item čvorovi čuvaju opsege indeksa umesto podstringove
+      \item troši $O(s)$ prostora gde je $s$ broj stringova u nizu
+      \item služi kao pomoćna indeksna struktura
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-13-pic23.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Sufiksni trie}
+  \begin{itemize}
+    \item \myred{sufiksni trie} stringa $X$ je kompresovani trie svih sufiksa od $X$
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-13-pic24.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Sufiksni trie: analiza}
+  \begin{itemize}
+    \item string $X$ dužine $n$, alfabet veličine $d$
+    \begin{itemize}
+      \item troši $O(n)$ prostora
+      \item pretraga za $O(dm)$ vreme; $m$ dužina traženog šablona
+      \item konstruiše se za $O(n)$ vreme
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic25.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kodni trie}
+  \begin{itemize}
+    \item \myred{kodni trie} predstavlja prefiksni kod
+    \begin{itemize}
+      \item svaki list čuva karakter
+      \item kodna reč predstavlja putanju od korena do lista
+      \item 0 za levo dete, 1 za desno dete
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic26.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kodni trie}
+  \begin{itemize}
+    \item za dati string $X$ tražimo prefiksni kod takav da rezultat 
+    kompresije bude što kraći
+    \begin{itemize}
+      \item česti karakteri treba da imaju kratke kodne reči
+      \item retki karakteri mogu da imaju duže kodne reči
+    \end{itemize}
+    \item primer:
+    \begin{itemize}
+      \item $X = abracadabra$
+      \item $T_{1}$ kodira $X$ u 29 bita
+      \item $T_{2}$ kodira $X$ u 24 bita
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-13-pic27.png}
+  \end{center}
+\end{frame}
+
 \end{document}
