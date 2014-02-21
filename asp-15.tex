@@ -270,4 +270,53 @@ w = Widget()
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Visina (a,b) stabla}
+  \begin{itemize}
+    \item visina (a,b) stabla sa $n$ elemenata je
+    \begin{itemize}
+      \item $\Omega(\log n/\log b)$
+      \item $O(\log n/\log a)$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pretraga i ažuriranje u (a,b) stablu}
+  \begin{itemize}
+    \item pretraga se odvija kao u n-arnom stablu
+    \item dodavanje slično (2,4) stablu
+    \begin{itemize}
+      \item overflow nastupa kada se dodaje element u $b$-čvor
+      \item čvor se deli pomeranjem median vrednosti u roditelja i zamenom čvora sa
+      dva nova $(b+1)/2$-čvora
+    \end{itemize}
+    \item uklanjanje slično (2,4) stablu
+    \begin{itemize}
+      \item underflow nastupa kada se ukloni element iz $a$-čvora
+      \item ako je brat $a$-čvor radi se fuzija
+      \item ako brat nije $a$-čvor radi se transfer
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{B-stablo}
+  \begin{itemize}
+    \item najpoznatija struktura za čuvanje mape u spoljnoj memoriji
+    \item \myred{B-stablo} reda $d$ je (a,b) stablo za $a=d/2$ i $b=d$
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-15-pic07.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{I/O složenost B-stabla}
+  \begin{itemize}
+    \item B-stablo sa $n$ čvorova ima I/O složenost $O(\log_{B}n)$ za pretragu
+    i ažuriranje, i troši $O(n/B)$ blokova, gde je $B$ veličina bloka
+  \end{itemize}
+\end{frame}
+
 \end{document}
