@@ -31,7 +31,7 @@ Novom Sadu}
 
 \frame{\titlepage}
 
-\section[Pojam]{Pojam grafa}
+\section[Pojam grafa]{Pojam grafa}
 
 \begin{frame}[fragile]
   \frametitle{Pojam grafa}
@@ -40,7 +40,7 @@ Novom Sadu}
     \begin{itemize}
       \item $V$ je set čvorova (\textit{vertices})
       \item $E$ je skup grana (\textit{edges})
-      \item ćvorovi i grane čuvaju elemente
+      \item čvorovi i grane čuvaju elemente
     \end{itemize}
     \item primer:
     \begin{itemize}
@@ -246,7 +246,7 @@ Novom Sadu}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Ćvorovi i grane}
+  \frametitle{Čvorovi i grane}
   \begin{itemize}
     \item graf je kolekcija čvorova i grana
     \item prikazaćemo ga pomoću tri tipa: \texttt{Vertex}, \texttt{Edge} 
@@ -618,7 +618,7 @@ class Graph:
   \end{columns}
 \end{frame}
 
-\section[Obilazak]{Obilazak grafa}
+\section[Obilazak grafa]{Obilazak grafa}
 
 \begin{frame}[fragile]
   \frametitle{Obilazak grafa po dubini}
@@ -1069,7 +1069,7 @@ def BFS(g, s, discovered):
   \end{center}
 \end{frame}
 
-\section[Usmereni]{Usmereni graf}
+\section[Usmereni graf]{Usmereni graf i najkraći put}
 
 \begin{frame}[fragile]
   \frametitle{Usmereni graf}
@@ -1525,6 +1525,771 @@ def floyd_warshall(g):
   \begin{center}
     \includegraphics[width=7cm]{asp-14-pic57.png}
   \end{center}
+\end{frame}
+
+\section[Težinski graf]{Težinski graf}
+
+\begin{frame}[fragile]
+  \frametitle{Težinski graf}
+  \begin{itemize}
+    \item svaka grana ima dodeljenu \myred{težinu}
+    \item može da predstavlja rastojanje, trošak, itd.
+    \item primer: rastojanje između aerodroma
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic58.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Najkraći put}
+  \begin{itemize}
+    \item za dati težinski graf i čvorove $u$ i $v$ želimo da nađemo
+      putanju sa najmanjom ukupnom težinom između $u$ i $v$
+    \item težina putanje je suma težina grana u putanji
+    \item primer: rutiranje paketa u mreži
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic59.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Osobine najkraćeg puta}
+  \begin{itemize}
+    \item[1] podput najkraćeg puta je takođe najkraći put
+    \item[2] postoji stablo najkraćih puteva od početnog čvora do svih
+      ostalih čvorova
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic60.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Dijkstra algoritam}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item \myred{rastojanje} od čvora $v$ do čvora $s$ je dužina 
+          najkraćeg puta $v \rightarrow s$
+        \item Dajkstrin algoritam računa rastojanja do svih čvorova od
+          datog čvora $s$
+        \item pretpostavke:
+        \begin{itemize}
+          \item graf je povezan
+          \item grane nisu usmerene
+          \item težine nisu negativne
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item stvaramo ,,oblak`` čvorova počevši od $s$ dok ne uključimo
+          sve čvorove
+        \item za svaki čvor $v$ čuvamo labelu $d(v)$ koja predstavlja
+          rastojanje od $v$ do $s$ u podgrafu sastavljenom od čvorova iz
+          oblaka
+        \item u svakom koraku:
+        \begin{itemize}
+          \item u oblak dodamo čvor $u$ sa najmanjim rastojanjem $d(u)$
+          \item ažuriramo labele čvorova susednih sa $u$
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Relaksiranje grana}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item posmatramo granu $e=(u,z)$ takvu da
+        \begin{itemize}
+          \item $u$ je čvor poslednji dodat u oblak
+          \item $z$ nije u oblaku
+        \end{itemize}
+        \item reklasiranje grane $e$ ažurira rastojanje $d(z)$:
+          $$ d(z) \leftarrow \min\{d(z), d(u)+weight(e\}$$
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+  \begin{center}
+    \includegraphics[width=5cm]{asp-14-pic61.png}
+  \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Dijkstra primer $_1$}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic62.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Dijkstra primer $_2$}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic63.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Dijkstra algoritam}
+  \begin{algorithmic}
+    \STATE \myred{ShortestPath}($G,s$)
+    \STATE $D[s] \leftarrow 0$, $D[v]=\infty$ za svaki čvor $v\neq s$
+    \STATE red sa prioritetom $Q$ sadrži sve čvorove iz $G$, ključevi su iz $D$
+    \WHILE{$\neg Q$.isEmpty()}
+      \STATE \COMMENT{dodaj novi čvor $u$ u oblak}
+      \STATE $u \leftarrow Q$.removeMin() 
+      \FORALL{$v\in Q$ koji je sused od $u$}
+        \STATE \COMMENT{relaksiraj granu $(u,v)$}
+        \IF{$D[u]+w(u,v)<D[v]$}
+          \STATE $D[v] \leftarrow D[u]+w(u,v)$
+          \STATE promeni ključ za $v$ na $D[v]$ u $Q$
+        \ENDIF
+      \ENDFOR
+    \ENDWHILE
+    \RETURN $D[v]$ za svaki čvor $v$
+  \end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Dijkstra algoritam: analiza}
+  \begin{itemize}
+    \item operacije nad grafom
+    \begin{itemize}
+      \item nalazimo susedne grane po jednom za svaki čvor
+    \end{itemize}
+    \item operacije sa labelama
+    \begin{itemize}
+      \item za čvor $z$ postavljamo rastojanje i labele $O(deg(z))$ puta
+      \item postavljanje labele traje $O(1)$
+    \end{itemize}
+    \item operacije nad redom sa prioritetom
+    \begin{itemize}
+      \item svaki čvor se dodaje jednom i uklanja jednom iz RSP, svaka 
+        operacija traje $O(\log n)$
+      \item ključ čvora u RSP se menja najviše $deg(w)$ puta, svaka 
+        zamena ključa traje $O(\log n)$
+      \item postavljanje labele traje $O(1)$
+    \end{itemize}
+    \item Dajkstrin algoritam traje $O((n+m)\log n)$ ako je u 
+      implementaciji korišćena lista suseda
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Python implementacija}
+\begin{minted}[linenos=false]{python}
+def shortest_path_lengths(g, src):
+  d = {}                            # d[v] is upper bound from s to v
+  cloud = {}                        # map reachable v to its d[v] value
+  pq = AdaptableHeapPriorityQueue() # vertex v will have key d[v]
+  pqlocator = {}                    # map from vertex to its pq locator
+
+  # for each vertex v of the graph, add an entry to the priority queue, with
+  # the source having distance 0 and all others having infinite distance
+  for v in g.vertices():
+    if v is src:
+      d[v] = 0
+    else:
+      d[v] = float('inf')           # syntax for positive infinity
+    pqlocator[v] = pq.add(d[v], v)  # save locator for future updates
+
+  while not pq.is_empty():
+    key, u = pq.remove_min()
+    cloud[u] = key                  # its correct d[u] value
+    del pqlocator[u]                # u is no longer in pq
+    for e in g.incident_edges(u):   # outgoing edges (u,v)
+      v = e.opposite(u)
+      if v not in cloud:
+        # perform relaxation step on edge (u,v)
+        wgt = e.element()
+        if d[u] + wgt < d[v]:       # better path to v?
+          d[v] = d[u] + wgt         # update the distance
+          pq.update(pqlocator[v], d[v], v) # update the pq entry
+
+  return cloud                # only includes reachable vertices
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Dijkstra i pohlepa}
+  \begin{columns}
+    \begin{column}[t]{7cm}
+      \begin{itemize}
+        \item Dijkstra koristi pohlepni metod -- dodaje čvorove po 
+          rastućem rastojanju
+        \item pretpostavimo da nije našao najkraća rastojanja; neka je 
+          $F$ prvi pogrešan čvor
+        \item najkraći put je bio OK za prethodni čvor $D$
+        \item ali grana $(D,F)$ je tada relaksirana
+        \item prema tome, sve dok je $d(F)\geq d(D)$, $d(F)$ nije
+          pogrešno, tj. nismo pogrešili čvor
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{5cm}
+      \begin{center}
+        \includegraphics[width=5cm]{asp-14-pic64.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Dijkstra ne radi za negativne težine}
+  \begin{columns}
+    \begin{column}[t]{7cm}
+      \begin{itemize}
+        \item Dijkstra koristi pohlepni metod -- dodaje čvorove po 
+          rastućem rastojanju
+        \item ako bi čvor sa negativnom granom bio dodat u oblak,
+          pokvario bi rastojanja čvorova koji su već tamo
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{5cm}
+      \begin{center}
+        \includegraphics[width=5cm]{asp-14-pic65.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile,shrink=2]
+  \frametitle{Bellman-Ford algoritam}
+  \begin{columns}
+    \begin{column}[t]{5cm}
+      \begin{itemize}
+        \item radi i za negativne težine
+        \item grane moraju biti usmerene -- inače bismo imali negativne 
+          petlje!
+        \item $i$-ta iteracija pronalazi najkraće puteve sa $i$ grana
+        \item vreme: $O(nm)$
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{7cm}
+      \begin{algorithmic}
+        \STATE \myred{BellmanFord}($G,s$)
+        \FORALL{$v \in G$.vertices()}
+          \IF{$v = s$}
+            \STATE setDistance($v,0$)
+          \ELSE
+            \STATE setDistance($v,\infty$)
+          \ENDIF
+        \ENDFOR
+        \FOR{$i \leftarrow 1$ \TO $n-1$}
+          \FORALL{$e \in G$.edges()}
+            \STATE \COMMENT{relaksiraj granu $e$}
+            \STATE $u \leftarrow G$.origin($e$)
+            \STATE $z \leftarrow G$.opposite($u,e$)
+            \STATE $r \leftarrow$ getDistance($u$) + weight($e$)
+            \IF{$r < $getDistance($z$)}
+              \STATE setDistance($z,r$)
+            \ENDIF
+          \ENDFOR
+        \ENDFOR
+      \end{algorithmic}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Bellman-Ford primer}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic66.png}
+  \end{center}
+  \hfill {\scriptsize čvorovi su označeni sa $d(v)$}
+\end{frame}
+
+\begin{frame}[fragile,shrink=2]
+  \frametitle{Algoritam za usmereni aciklični graf}
+  \begin{columns}
+    \begin{column}[t]{5cm}
+      \begin{itemize}
+        \item radi i za negativne težine
+        \item koristi topološko uređenje
+        \item ne koristi posebnu strukturu podataka
+        \item znatno brži od Dijkstre: $O(n+m)$
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{7cm}
+      \begin{algorithmic}
+        \STATE \myred{DagDistances}($G,s$)
+        \FORALL{$v \in G$.vertices()}
+          \IF{$v = s$}
+            \STATE setDistance($v,0$)
+          \ELSE
+            \STATE setDistance($v,\infty$)
+          \ENDIF
+        \ENDFOR
+        \STATE \COMMENT{topološki sortiraj čvorove}
+        \FOR{$u \leftarrow 1$ \TO $n$}
+          \STATE \COMMENT{u topološkom redosledu}
+          \FORALL{$e \in G$.outEdges($u$)}
+            \STATE \COMMENT{relaksiraj granu $e$}
+            \STATE $z \leftarrow G$.opposite($u,e$)
+            \STATE $r \leftarrow$ getDistance($u$) + weight($e$)
+            \IF{$r < $getDistance($z$)}
+              \STATE setDistance($z,r$)
+            \ENDIF
+          \ENDFOR
+        \ENDFOR
+      \end{algorithmic}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{DAG primer}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic67.png}
+  \end{center}
+  \hfill {\scriptsize čvorovi su označeni sa $d(v)$}
+\end{frame}
+
+\section[Minimalno pokrivajuće stablo]{Minimalno pokrivajuće stablo}
+
+\begin{frame}[fragile]
+  \frametitle{Minimalno pokrivajuće stablo}
+  \begin{columns}
+    \begin{column}[t]{7cm}
+      \begin{itemize}
+        \item \myred{pokrivajući podgraf}: podgraf od $G$ koji sadrži 
+          sve čvorove iz $G$
+        \item \myred{pokrivajuće stablo}: pokrivajući podgraf koji je
+          stablo
+        \item \myred{minimalno pokrivajuće stablo}: pokrivajuće stablo
+          sa najmanjom sumom težina grana
+        \item ,,minimum spanning tree`` (MST)
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{5cm}
+      \begin{center}
+        \includegraphics[width=5cm]{asp-14-pic68.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{MST i petlje}
+  \begin{columns}
+    \begin{column}[t]{7cm}
+      \begin{itemize}
+        \item $T$ je MST grafa $G$
+        \item $e$ je grana koja nije u $T$
+        \item $C$ je petlja koju $e$ pravi sa $T$
+        \item za svaku granu $f$ iz $C$ važi: \\ $weight(f)\leq weight(e)$
+        \item dokaz kontradikcijom: ako bi bilo $weight(f)>weight(e)$
+          imali bismo MST sa manjom težinom zamenom $e$ sa $f$
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{5cm}
+      \begin{center}
+        \includegraphics[width=4.5cm]{asp-14-pic70.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{MST i particije}
+  \begin{columns}
+    \begin{column}[t]{7cm}
+      \begin{itemize}
+        \item posmatramo podelu čvorova iz $G$ na podskupove $U$ i $V$
+        \item $e$ je grana između podskupova sa najmanjom težinom
+        \item postoji MST od $G$ koji sadrži $e$
+        \item dokaz: $T$ je MST od $G$
+        \item ako $T$ ne sadrži $e$, posmatramo petlju $C$ koju čine $T$
+          i $e$ i neka je $f$ grana iz $C$ koja prelazi particiju
+        \item (prethodni slajd): $weight(f)\leq weight(e)$
+        \item prema tome: $weight(f)=weight(e)$
+        \item dobijamo novo MST zamenom $f$ sa $e$
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{5cm}
+      \begin{center}
+        \includegraphics[width=4.5cm]{asp-14-pic71.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Prim-Jarnik algoritam}
+  \begin{itemize}
+    \item sličan Dijkstra algoritmu
+    \item izaberemo čvor $s$ i pravimo MST kao oblak čvorova počevši od 
+      $s$
+    \item čvor $v$ čuva labelu $d(v)$ -- najmanja težina grane koja
+      povezuje $v$ sa oblakom
+    \item u svakom koraku:
+    \begin{itemize}
+      \item dodamo u oblak čvor $u$ sa najmanjim $d(u)$
+      \item ažuriramo labele čvorova susednih sa $u$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink=2]
+  \frametitle{Prim-Jarnik algoritam}
+  \begin{algorithmic}
+    \STATE \myred{PrimJarnik}($G$)
+    \STATE izaberi bilo koji $s$ iz $G$
+    \STATE $D[s] \leftarrow 0$
+    \FORALL{čvor $v \neq s$}
+      \STATE $D[v] \leftarrow \infty$
+    \ENDFOR
+    \STATE $T \leftarrow \emptyset$
+    \STATE napuni RSP $Q$ elementima ($D[v]$,($v$,None)) za svaki čvor $v$
+    \WHILE{$\neg Q$.isEmpty()}
+      \STATE $(u,e) \leftarrow Q$.removeMin()
+      \STATE poveži $u$ sa $T$ preko $e$
+      \FORALL{$e'=(u,v) | v \in Q$}
+        \STATE \COMMENT{da li $(u,v)$ bolje povezuje $v$ sa $T$}
+        \IF{$w(u,v)<D[v]$}
+          \STATE $D[v] \leftarrow w(u,v)$
+          \STATE promeni ključ za $v$ u $Q$ na $D[v]$
+          \STATE promeni vrednost za $v$ u $Q$ na ($v,e'$)
+        \ENDIF
+      \ENDFOR
+    \ENDWHILE
+    \RETURN $T$
+  \end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Prim-Jarnik primer $_1$}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic72.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Prim-Jarnik primer $_2$}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic73.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Prim-Jarnik algoritam: analiza}
+  \begin{itemize}
+    \item operacije nad grafom
+    \begin{itemize}
+      \item prolazimo kroz susedne grane po jednom za svaki čvor
+    \end{itemize}
+    \item operacije sa labelama
+    \begin{itemize}
+      \item za čvor $z$ postavljamo rastojanje i labele $O(deg(z))$ puta
+      \item postavljanje labele traje $O(1)$
+    \end{itemize}
+    \item operacije nad redom sa prioritetom
+    \begin{itemize}
+      \item svaki čvor se dodaje jednom i uklanja jednom iz RSP, svaka 
+        operacija traje $O(\log n)$
+      \item ključ čvora u RSP se menja najviše $deg(w)$ puta, svaka 
+        zamena ključa traje $O(\log n)$
+      \item postavljanje labele traje $O(1)$
+    \end{itemize}
+    \item Prim-Jarnik algoritam traje $O((n+m)\log n)$ ako je u 
+      implementaciji korišćena lista suseda
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Prim-Jarnik u Pythonu}
+\begin{minted}[linenos=false]{python}
+def MST_PrimJarnik(g):
+  d = {}                            # d[v] is bound on distance to tree
+  tree = []                         # list of edges in spanning tree
+  pq = AdaptableHeapPriorityQueue() # d[v] maps to value (v, e=(u,v))
+  pqlocator = {}                    # map from vertex to its pq locator
+
+  # for each vertex v of the graph, add an entry to the priority queue, with
+  # the source having distance 0 and all others having infinite distance
+  for v in g.vertices():
+    if len(d) == 0:                 # this is the first node
+      d[v] = 0                      # make it the root
+    else:
+      d[v] = float('inf')           # positive infinity
+    pqlocator[v] = pq.add(d[v], (v,None))
+
+  while not pq.is_empty():
+    key,value = pq.remove_min()
+    u,edge = value                  # unpack tuple from pq
+    del pqlocator[u]                # u is no longer in pq
+    if edge is not None:
+      tree.append(edge)             # add edge to tree
+    for link in g.incident_edges(u):
+      v = link.opposite(u)
+      if v in pqlocator:            # thus v not yet in tree
+        # see if edge (u,v) better connects v to the growing tree
+        wgt = link.element()
+        if wgt < d[v]:              # better edge to v?
+          d[v] = wgt                # update the distance
+          pq.update(pqlocator[v], d[v], (v, link)) # update the pq entry
+
+  return tree
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kruskal algoritam}
+  \begin{itemize}
+    \item particija čvorova u klastere (grozdove)
+    \begin{itemize}
+      \item inicijalno klasteri sa po jednim čvorom
+      \item održava se MST za svaki klaster
+      \item spajanje ,,najbližih`` klastera i njihovih MST
+    \end{itemize}
+    \item red sa prioritetom čuva grane izvan klastera
+    \begin{itemize}
+      \item ključ: težina
+      \item vrednost: grana
+    \end{itemize}
+    \item na kraju rada algoritma: jedan klaster i jedno MST
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink=2]
+  \frametitle{Kruskal algoritam}
+  \begin{algorithmic}
+    \STATE \myred{Kruskal}($G$)
+    \FORALL{$v \in G$}
+      \STATE postavi osnovni klaster $C(v) = \{v\}$
+    \ENDFOR
+    \STATE napuni RSP $Q$ granama iz $G$ koristeći težine kao ključeve
+    \STATE $T \leftarrow \emptyset$
+    \WHILE{$T$ ima manje od $n-1$ grana}
+      \STATE $(u,e) \leftarrow Q$.removeMin()
+      \STATE $C(u)$ je klaster koji sadrži $u$
+      \STATE $C(v)$ je klaster koji sadrži $v$
+      \IF{$C(u)<C(v)$}
+        \STATE dodaj granu $(u,v)$ u $T$
+        \STATE spoj $C(u)$ i $C(v)$ u jedan klaster
+      \ENDIF
+    \ENDWHILE
+    \RETURN $T$
+  \end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kruskal primer $_1$}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic74.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kruskal primer $_2$}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic75.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Struktura podataka za Kruskal algoritam: particija}
+  \begin{itemize}
+    \item algoritam rukuje šumom stabala
+    \item RSP daje grane u redosledu rastućih težina
+    \item grana se prihvata ako spaja različita stabla
+    \item potrebna je struktura podataka koja čuva \myred{particiju},
+      tj. kolekciju disjunktnih skupova, sa operacijama
+    \begin{itemize}
+      \item \myred{makeSet}($u$): kreiraj skup koji sadrži $u$
+      \item \myred{find}($u$): nađi skup koji sadrži $u$
+      \item \myred{union}($A,B$): zameni skupove $A$ i $B$ njihovom 
+        unijom
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Particija pomoću liste}
+  \begin{itemize}
+    \item svaki skup se čuva u sekvenci
+    \item svaki element ima referencu na skup
+    \begin{itemize}
+      \item \myred{find}($u$) traje $O(1)$ i vraća skup koji sadrži $u$
+      \item \myred{union}($A,B$): premeštamo elemente iz manjeg skupa u
+        veći i ažuriramo reference na skup; traje $O(min(|A|,|B|))$
+    \end{itemize}
+    \item kada se element obradi, prelazi u skup koji je bar duplo veći,
+      dakle svaki element se obrađuje najviše $\log n$ puta
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=8cm]{asp-14-pic77.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kruskal pomoću particije}
+  \begin{itemize}
+    \item spajanje klastera pomoću \myred{union}
+    \item pronalaženje klastera pomoću \myred{find}
+    \item brzina je $O((n+m)\log n)$
+    \begin{itemize}
+      \item operacije sa RSP: $O(m\log n)$
+      \item union-find operacije: $O(n\log n)$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Kruskal u Pythonu}
+\begin{minted}[linenos=false]{python}
+def MST_Kruskal(g):
+  tree = []                # list of edges in spanning tree
+  pq = HeapPriorityQueue() # entries are edges in G, with weights as key
+  forest = Partition()     # keeps track of forest clusters
+  position = {}            # map each node to its Partition entry
+
+  for v in g.vertices():
+    position[v] = forest.make_group(v)
+
+  for e in g.edges():
+    pq.add(e.element(), e) # edge's element is assumed to be its weight
+
+  size = g.vertex_count()
+  while len(tree) != size - 1 and not pq.is_empty():
+    # tree not spanning and unprocessed edges remain
+    weight,edge = pq.remove_min()
+    u,v = edge.endpoints()
+    a = forest.find(position[u])
+    b = forest.find(position[v])
+    if a != b:
+      tree.append(edge)
+      forest.union(a,b)
+
+  return tree
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Particija pomoću stabla}
+  \begin{itemize}
+    \item čvor stabla čuva element i referencu na skup
+    \item čvor $v$ čija referenca pokazuje na $v$ je istovremeno i skup
+    \item svaki skup je stablo, njegov koren čuva referencu na sebe
+    \item na primer, skupovi ,,1``, ,,2`` i ,,5``
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=8cm]{asp-14-pic78.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Particija pomoću stabla: union i find}
+  \begin{columns}
+    \begin{column}[t]{7cm}
+      \begin{itemize}
+        \item \myred{union}: koren jednog stabla treba da pokazuje na
+          koren drugog
+        \item \myred{find}: prati reference do korena koji pokazuje na 
+          samog sebe
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{5cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-14-pic79.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Recepti za union-find}
+  \begin{columns}
+    \begin{column}[t]{7cm}
+      \begin{itemize}
+        \item kada se radi union, neka koren manjeg stabla pokaže na
+          koren većeg
+        \item $O(n\log n)$ vreme za izvođenje $n$ union-find operacija
+        \begin{itemize}
+          \item svaki put kada pratimo referencu, idemo prema stablu
+            koje je bar duplo veće od trenutnog
+          \item prema tome, pratimo najviše $O(\log n)$ referenci za
+            svaki find
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{5cm}
+      \begin{center}
+        \includegraphics[width=4.5cm]{asp-14-pic80.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Recepti za union-find}
+  \begin{itemize}
+    \item \myred{kompresija putanje}: nakon find, neka sve reference
+      čvorova koje smo upravo obišli pokazuju na koren
+    \end{itemize}
+  \begin{center}
+    \includegraphics[width=8cm]{asp-14-pic81.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Particija u Pythonu $_1$}
+\begin{minted}[linenos=false]{python}
+class Partition:
+  class Position:
+    __slots__ = '_container', '_element', '_size', '_parent'
+
+    def __init__(self, container, e):
+      """Create a new position that is the leader of its own group."""
+      self._container = container  # reference to Partition instance
+      self._element = e
+      self._size = 1
+      self._parent = self          # convention for a group leader
+
+    def element(self):
+      """Return element stored at this position."""
+      return self._element
+
+  def _validate(self, p):
+    if not isinstance(p, self.Position):
+      raise TypeError('p must be proper Position type')
+    if p._container is not self:
+      raise ValueError('p does not belong to this container')
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Particija u Pythonu $_2$}
+\begin{minted}[linenos=false]{python}
+  def make_group(self, e):
+    """Makes a new group containing element e, and returns its Position."""
+    return self.Position(self, e)
+
+  def find(self, p):
+    """Finds the group containging p and return the position of its leader."""
+    self._validate(p)
+    if p._parent != p:
+      p._parent = self.find(p._parent)  # overwrite p._parent after recursion
+    return p._parent
+    
+  def union(self, p, q):
+    """Merges the groups containg elements p and q (if distinct)."""
+    a = self.find(p)
+    b = self.find(q)
+    if a is not b:                      # only merge if different groups
+      if a._size > b._size:
+        b._parent = a
+        a._size += b._size
+      else:
+        a._parent = b
+        b._size += a._size
+\end{minted}
 \end{frame}
 
 \end{document}
