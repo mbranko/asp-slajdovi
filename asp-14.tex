@@ -894,7 +894,7 @@ def DFS(g, u, discovered):
     \begin{column}[t]{6cm}
       \begin{algorithmic}
         \STATE \myred{BFS}($G$)
-s        \FORALL{$u\in G$.vertices()}
+        \FORALL{$u\in G$.vertices()}
           \STATE setLabel($u$, {\scriptsize UNEXPLORED})
         \ENDFOR
         \FORALL{$e\in G$.edges()}
@@ -1001,7 +1001,7 @@ def BFS(g, s, discovered):
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Performanse BFS -- TODO}
+  \frametitle{Performanse BFS}
   \begin{itemize}
     \item stavljanje labele na čvor/granu traje $O(1)$
     \item svaki čvor se označi \textbf{dva} puta, jednom kao {\scriptsize 
@@ -1014,6 +1014,517 @@ def BFS(g, s, discovered):
     \item BFS traje $O(n+m)$ ako je graf predstavljen listom suseda
     $$\sum_{v}deg(v)=2m$$
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Primene BFS}
+  \begin{itemize}
+    \item možemo prilagoditi BFS za rešavanje sledećih problema u 
+      trajanju $O(n+m)$:
+    \begin{itemize}
+      \item određivanje povezanih komponenti
+      \item određivanje pokrivajuće šume
+      \item pronalaženje proste petlje ili je graf šuma
+      \item pronalaženje najkraće putanje između dva čvora, ili ne 
+        postoji
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{DFS vs BFS}
+  \begin{center}
+    \begin{tabular}{l|c|c}
+      \textbf{primena} & \textbf{DFS} & \textbf{BFS} \\ \hline
+      pokrivajuća šuma, &  &  \\
+      povezane komponente, & $\checkmark$ & $\checkmark$ \\
+      putanje, petlje &  &  \\ \hline
+      najkraći put &  & $\checkmark$ \\ \hline
+      dvopovezane komponente & $\checkmark$ & \\
+    \end{tabular}
+    \includegraphics[width=10cm]{asp-14-pic26.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{DFS vs BFS}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      {\scriptsize BACK} grana $(v,w)$
+      \begin{itemize}
+        \item $w$ je predak od $v$ u stablu koje čine {\scriptsize 
+          DISCOVERY} grane
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      {\scriptsize CROSS} grana $(v,w)$
+      \begin{itemize}
+        \item $w$ je na istom nivou ili na sledećem nivou u odnosu na 
+          $v$
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-14-pic26.png}
+  \end{center}
+\end{frame}
+
+\section[Usmereni]{Usmereni graf}
+
+\begin{frame}[fragile]
+  \frametitle{Usmereni graf}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item \myred{usmereni graf} (directed graph, ,,digraph``) je 
+          graf čije su sve grane usmerene
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=5cm]{asp-14-pic28.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Osobine usmerenog grafa}
+  \begin{itemize}
+    \item graf $G=(V,E)$ takav da
+    \begin{itemize}
+      \item svaka grana je usmerena
+      \item grana $(a,b)$ ide od $a$ ka $b$, i ne ide od $b$ ka $a$
+    \end{itemize}
+    \item ako je $G$ prost: $m\leq n(n-1)$
+    \item ako čuvamo ulazne i izlazne grane u posebnim listama, njihovo
+      listanje traje proporcionalno njihovom broju
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Primene usmerenog grafa}
+  \begin{itemize}
+    \item \myred{raspoređivanje zadataka} (scheduling) 
+    \item grana $(a,b)$ označava da se zadatak $a$ mora uraditi pre nego
+      što počne zadatak $b$
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-14-pic29.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{DFS za usmereni graf}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item biće četiri vrste grana:
+        \begin{itemize}
+          \item discovery
+          \item back
+          \item forward
+          \item cross
+        \end{itemize}
+        \item DFS za usmereni graf polazeći od čvora $s$ određuje
+          čvorove \myred{dostupne} iz $s$ 
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=5cm]{asp-14-pic30.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Dostupnost}
+  \begin{itemize}
+    \item DFS \myred{stablo} sa korenom u $v$: čvorovi dostupni iz $v$
+      duž usmerenih grana 
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-14-pic31.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Jaka povezanost}
+  \begin{itemize}
+    \item iz svakog čvora se može stići do svakog drugog čvora
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=6cm]{asp-14-pic32.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Jaka povezanost: algoritam}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item izaberi čvor $v$ iz $G$
+        \item uradi DFS iz $v$
+        \begin{itemize}
+          \item ako postoji $w$ koji nije obiđen, ispiši ,,ne``
+        \end{itemize}
+        \item neka je $G'$ dobijen okretanjem grana u $G$
+        \item uradi DFS iz $v$ u $G'$
+        \begin{itemize}
+          \item ako postoji $w$ koji nije obiđen, ispiši ,,ne``
+          \item inače ispiši ,,da``
+        \end{itemize}
+        \item vreme izvršavanja: $O(n+m)$
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=5cm]{asp-14-pic33.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Jako povezana komponenta}
+  \begin{itemize}
+    \item maksimalni podgraf takav da su iz svakog čvora dostupni svi
+      drugi čvorovi
+    \item takođe traje $O(n+m)$ pomoću DFS ali je složenije
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=8cm]{asp-14-pic34.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Tranzitivno zatvorenje}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item za dati usmereni graf $G$, \myred{tranzitivno zatvorenje} 
+          od $G$ je usmereni graf $G^{*}$ takav da
+        \begin{itemize}
+          \item $G^{*}$ ima iste čvorove kao $G$
+          \item ako $G$ ima putanju od $u$ do $v$ ($u\neq v$), $G^{*}$ 
+            ima granu od $u$ do $v$
+        \end{itemize}
+        \item tranzitivno zatvorenje daje informaciju o dostupnosti
+          unutar usmerenog grafa
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=4cm]{asp-14-pic35.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Izračunavanje tranzitivnog zatvorenja}
+  \begin{itemize}
+    \item možemo raditi DFS iz svakog čvora -- traje $O(n(n+m))$
+    \item možemo koristiti dinamičko programiranje -- Floyd-Warshall 
+      algoritam
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Floyd-Warshall algoritam}
+  \begin{itemize}
+    \item ideja \#1: označi čvorove brojevima $1, 2, \ldots, n$
+    \item ideja \#2: razmatramo putanje koje imaju samo čvorove $1, 2, 
+      \ldots, k$ kao međučvorove
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-14-pic36.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Floyd-Warshall algoritam}
+  \begin{itemize}
+    \item numeriši čvorove $v_1 \ldots v_n$
+    \item izračunaj grafove $G_0 \ldots G_n$ 
+    \begin{itemize}
+      \item $G_0 = G$
+      \item $G_k$ ima granu $(v_{i},v_{j})$ ako $G$ ima putanju 
+        $v_{i}\rightarrow v_{j}$ sa međučvorovima u $\{v_{1}\ldots 
+        v_{k}\}$
+    \end{itemize}
+    \item na kraju će biti $G_{n} = G^{*}$
+    \item u fazi $k$, $G_{k}$ se računa iz $G_{k-1}$
+    \item vreme je $O(n^3)$ ako \texttt{areAdjacent} je $O(1)$
+      (koristi se matrica incidencije)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink=10]
+  \frametitle{Floyd-Warshall algoritam}
+  \begin{algorithmic}
+    \STATE \myred{FloydWarshall}($G$)
+    \STATE $i \leftarrow 1$
+    \FORALL{$v \in G$.vertices()}
+      \STATE označi $v$ kao $v_{i}$
+      \STATE $i \leftarrow i+1$
+    \ENDFOR
+    \STATE $G_{0} \leftarrow G$
+    \FOR{$k \leftarrow 1$ \TO $n$}
+      \STATE $G_{k} \leftarrow G_{k-1}$
+      \FOR{$i \leftarrow 1$ \TO $n (i \neq k)$}
+        \FOR{$j \leftarrow 1$ \TO $n (j \neq i,k)$}
+          \IF{$G_{k-1}$.areAdjacent($v_{i},v_{k}$) $\land G_{k-1}$.areAdjacent($v_{k},v_{j}$)}
+            \IF{$\neg G_{k-1}$.areAdjacent($v_{i},v_{j}$)}
+              \STATE $G_{k}$.insertEdge($v_{i},v_{j},k$)
+            \ENDIF
+          \ENDIF
+        \ENDFOR
+      \ENDFOR
+    \ENDFOR
+    \RETURN $G_{n}$
+  \end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile,shrink=23]
+  \frametitle{Floyd-Warshall u Pythonu}
+\begin{minted}[linenos=false]{python}
+def floyd_warshall(g):
+  """Return a new graph that is the transitive closure of g."""
+  closure = deepcopy(g)
+  verts = list(closure.vertices())  # make indexable list
+  n = len(verts)
+  for k in range(n):
+    for i in range(n):
+      # verify that edge (i,k) exists in the partial closure
+      if i != k and closure.get_edge(verts[i],verts[k]) is not None:
+        for j in range(n):
+          # verify that edge (k,j) exists in the partial closure
+          if i != j != k and closure.get_edge(verts[k],verts[j]) is not None:
+            # if (i,j) not yet included, add it to the closure
+            if closure.get_edge(verts[i],verts[j]) is None:
+              closure.insert_edge(verts[i],verts[j])
+  return closure
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Floyd-Warshall primer $_1$}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-14-pic37.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Floyd-Warshall primer $_2$}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-14-pic38.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Floyd-Warshall primer $_3$}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-14-pic39.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Floyd-Warshall primer $_4$}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-14-pic40.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Floyd-Warshall primer $_5$}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-14-pic41.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Floyd-Warshall primer $_6$}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-14-pic42.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Floyd-Warshall primer $_7$}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-14-pic43.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Floyd-Warshall primer $_8$}
+  \begin{center}
+    \includegraphics[width=10cm]{asp-14-pic44.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko uređenje usmerenog grafa}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item \myred{usmereni aciklični graf} (DAG) je aciklični graf 
+          koji nema petlje
+        \item topološko uređenje je numerisanje $v_{1} \ldots v_{n}$
+          takvo da za svaku granu $(v_{i},v_{j})$ važi $i<j$
+        \item primer: u grafu raspodele zadataka topološko uređenje je
+          sekvenca zadataka koji ispunjavaju uslove prethođenja
+        \item usmereni graf ima topološko uređenje akko je acikličan
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \hfill DAG $G$ \\
+        \includegraphics[width=4cm]{asp-14-pic45.png} \\ 
+        \hfill topološko uređenje $G$ \\
+        \includegraphics[width=4.5cm]{asp-14-pic46.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko sortiranje}
+  \begin{itemize}
+    \item numeriši čvorove tako da $(u,v) \in E$ implicira $u<v$ 
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=7.5cm]{asp-14-pic47.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Algoritam za topološko sortiranje}
+  \begin{algorithmic}
+    \STATE \myred{TopologicalSort}($G$)
+    \STATE $H \leftarrow G$.copy()
+    \STATE $n \leftarrow G$.numVertices()
+    \WHILE{$\neg H$.isEmpty()}
+      \STATE $v$ je čvor bez izlaznih grana
+      \STATE označi $v$ sa $n$
+      \STATE $n \leftarrow n-1$
+      \STATE $H$.remove($v$)
+    \ENDWHILE
+  \end{algorithmic}
+  \hfill vreme je $O(n+m)$
+\end{frame}
+
+\renewcommand{\algorithmiccomment}[1]{\{\myred{#1}\}}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko sortiranje pomoću BFS}
+  {\small
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{algorithmic}
+        \STATE \myred{topologicalDFS}($G$)
+        \STATE $n \leftarrow G$.numVertices()
+        \FORALL{$u\in G$.vertices()}
+          \STATE setLabel($u$, {\scriptsize UNEXPLORED})
+        \ENDFOR
+        \FORALL{$v\in G$.vertices()}
+          \IF{label($v$) = {\scriptsize UNEXPLORED}}
+            \STATE topologicalDFS($G,v$)
+          \ENDIF
+        \ENDFOR
+      \end{algorithmic}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{algorithmic}
+        \STATE \myred{toplogicalDFS}($G,v$)
+        \STATE setLabel($v$, {\scriptsize VISITED})
+        \FORALL{$e \in G$.outEdges($v$)}
+          \STATE $w \leftarrow$ opposite($v,e$)
+          \IF{label($w$) = {\scriptsize UNEXPLORED}}
+            \STATE \COMMENT{$e$ je {\scriptsize DISCOVERY}}
+            \STATE topologicalDFS($G,w$) 
+          \ELSE
+            \STATE \COMMENT{$e$ je {\scriptsize FORWARD} ili {\scriptsize CROSS}}
+            \STATE označi $v$ brojem $n$ 
+          \ENDIF
+        \ENDFOR{}
+        \STATE $n \leftarrow n-1$
+      \end{algorithmic}
+    \end{column}
+  \end{columns}
+  }
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko sortiranje: primer $_1$}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-14-pic48.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko sortiranje: primer $_2$}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-14-pic49.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko sortiranje: primer $_3$}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-14-pic50.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko sortiranje: primer $_4$}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-14-pic51.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko sortiranje: primer $_5$}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-14-pic52.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko sortiranje: primer $_6$}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-14-pic53.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko sortiranje: primer $_7$}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-14-pic54.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko sortiranje: primer $_8$}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-14-pic55.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko sortiranje: primer $_9$}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-14-pic56.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Topološko sortiranje: primer $_{10}$}
+  \begin{center}
+    \includegraphics[width=7cm]{asp-14-pic57.png}
+  \end{center}
 \end{frame}
 
 \end{document}
