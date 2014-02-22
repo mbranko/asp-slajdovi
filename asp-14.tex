@@ -781,34 +781,239 @@ def DFS(g, u, discovered):
   \begin{columns}
     \begin{column}[t]{6cm}
       \begin{itemize}
-        \item DFS se može upotrebiti za pronalaženje putanje između dva
-          čvora $u$ i $z$
+        \item DFS se može upotrebiti za pronalaženje \textbf{putanje} 
+          između dva čvora $u$ i $z$
         \item pozivamo DFS($G,u$) sa $u$ kao početnim čvorom
         \item na steku $S$ čuvamo putanju od početnog do tekućeg čvora
         \item kada dođemo do $z$ na steku je cela putanja
       \end{itemize}
     \end{column}
     \begin{column}[t]{6cm}
-      \myred{DFS}($G,v$)
       \begin{algorithmic}
-        \REQUIRE graf $G$ i početni čvor $v$
-        \ENSURE oznake na granama: {\scriptsize DISCOVERY} ili {\scriptsize BACK}
+        \STATE \myred{pathDFS}($G,v,z$)
         \STATE setLabel($v$, {\scriptsize VISITED})
+        \STATE $S$.push($v$)
+        \IF{$v=z$}
+          \RETURN $S$.elements()
+        \ENDIF
         \FORALL{$e\in G$.incidentEdges($v$)}
           \IF{label($e$) = {\scriptsize UNEXPLORED}}
             \STATE $w \leftarrow$ opposite($v,e$)
             \IF{label($e$) = {\scriptsize UNEXPLORED}}
               \STATE setLabel($e$, {\scriptsize DISCOVERY})
-              \STATE DFS($G, w$)
+              \STATE $S$.push($e$)
+              \STATE pathDFS($G, w$)
+              \STATE $S$.pop($e$)
             \ELSE
               \STATE setLabel($e$, {\scriptsize BACK})
             \ENDIF
           \ENDIF
         \ENDFOR
+        \STATE $S$.pop($v$)
       \end{algorithmic}
     \end{column}
   \end{columns}
   }
+\end{frame}
+
+\begin{frame}[fragile,shrink=3]
+  \frametitle{DFS za pronalaženje petlje}
+  {\footnotesize
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item DFS se može upotrebiti za pronalaženje \textbf{petlje} 
+        \item na steku $S$ čuvamo putanju od početnog do tekućeg čvora
+        \item čim naiđemo na {\scriptsize BACK} granu $(v,w)$ vraćamo
+          petlju kao sadržaj steka od vrha do čvora $w$
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{algorithmic}
+        \STATE \myred{cycleDFS}($G,v,z$)
+        \STATE setLabel($v$, {\scriptsize VISITED})
+        \STATE $S$.push($v$)
+        \FORALL{$e\in G$.incidentEdges($v$)}
+          \IF{label($e$) = {\scriptsize UNEXPLORED}}
+            \STATE $w \leftarrow$ opposite($v,e$)
+            \STATE $S$.push($w$)
+            \IF{label($e$) = {\scriptsize UNEXPLORED}}
+              \STATE setLabel($e$, {\scriptsize DISCOVERY})
+              \STATE pathDFS($G, w$)
+              \STATE $S$.pop($e$)
+            \ELSE
+              \STATE $T \leftarrow$ new Stack
+              \REPEAT
+                \STATE $o \leftarrow S$.pop()
+                \STATE $T$.push($o$)
+              \UNTIL{$o=w$}
+              \RETURN $T$.elements()
+            \ENDIF
+          \ENDIF
+        \ENDFOR
+        \STATE $S$.pop($v$)
+      \end{algorithmic}
+    \end{column}
+  \end{columns}
+  }
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Obilazak grafa po širini}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item breadth-first-search (\myred{BFS}) je opšti metod za 
+        obilazak grafa
+        \begin{itemize}
+          \item obilazi sve čvorove i grane
+          \item određuje da li je graf povezan
+          \item određuje povezane komponente grafa
+          \item određuje pokrivajuću šumu grafa
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item BFS na grafu sa $n$ čvorova i $m$ grana traje $O(n+m)$
+        \item može se proširiti za rešavanje drugih problema
+        \begin{itemize}
+          \item nađi najkraću putanju između dva čvora
+          \item nađi prostu petlju
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile,shrink=2]
+  \frametitle{BFS algoritam}
+  {\footnotesize
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{algorithmic}
+        \STATE \myred{BFS}($G$)
+s        \FORALL{$u\in G$.vertices()}
+          \STATE setLabel($u$, {\scriptsize UNEXPLORED})
+        \ENDFOR
+        \FORALL{$e\in G$.edges()}
+          \STATE setLabel($e$, {\scriptsize UNEXPLORED})
+        \ENDFOR
+        \FORALL{$v\in G$.vertices()}
+          \IF{label($v$) = {\scriptsize UNEXPLORED}}
+            \STATE BFS($G,v$)
+          \ENDIF
+        \ENDFOR
+      \end{algorithmic}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{algorithmic}
+        \STATE \myred{BFS}($G,s$)
+        \STATE $L_{0} \leftarrow nova sekvenca$
+        \STATE $L_{0}$.addLast($s$)
+        \STATE setLabel($s$, {\scriptsize VISITED})
+        \STATE $i \leftarrow 0$
+        \WHILE{$\neg L_{i}$.isEmpty()}
+          \STATE $L_{i+1} \leftarrow $ nova sekvenca
+          \FORALL{$v \in L$.elements()}
+            \FORALL{$e \in G$.incidentEdges($v$)}
+              \IF{label($e$) = {\scriptsize UNEXPLORED}}
+                \STATE $w \leftarrow$ opposite($v,e$)
+                \IF{label($e$) = {\scriptsize UNEXPLORED}}
+                  \STATE setLabel($e$, {\scriptsize DISCOVERY})
+                  \STATE setLabel($w$, {\scriptsize VISITED})
+                  \STATE $L_{i+1}$.addLast($w$)
+                \ELSE
+                  \STATE setLabel($e$, {\scriptsize CROSS})
+                \ENDIF
+              \ENDIF
+            \ENDFOR
+          \ENDFOR
+          $i \leftarrow i + 1$
+        \ENDWHILE
+      \end{algorithmic}
+    \end{column}
+  \end{columns}
+  }
+\end{frame}
+
+\begin{frame}[fragile,shrink=20]
+  \frametitle{BFS u Pythonu}
+\begin{minted}[linenos=false]{python}
+def BFS(g, s, discovered):
+  level = [s]        # first level includes only s
+  while len(level) > 0:
+    next_level = []  # prepare to gather newly found vertices
+    for u in level:
+      for e in g.incident_edges(u): # for every outgoing edge from u
+        v = e.opposite(u)
+        if v not in discovered: # v is an unvisited vertex
+          discovered[v] = e     # e is the tree edge that discovered v
+          next_level.append(v)  # v will be considered in next pass
+    level = next_level          # relabel 'next' level to become current
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{BFS primer}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic22.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{BFS primer (još)}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic23.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{BFS primer (još još)}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-14-pic24.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Osobine BFS}
+  $G_{s}$: povezana komponenta od $s$
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item[1] BFS($G,v$) obilazi sve čvorove i grane od $G_{s}$
+        \item[2] grane označene kao {\scriptsize DISCOVERY} čine 
+          pokrivajuće stablo $T_{s}$ za $G_{s}$
+        \item[3] za svaki čvor u $L_{i}$
+        \begin{itemize}
+          \item putanja iz $T_{s}$ od $s$ do $v$ ima $i$ čvorova
+          \item svaka putanja od $s$ do $v$ u $G_{s}$ ima bar $i$ čvorova
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=5cm]{asp-14-pic25.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Performanse BFS -- TODO}
+  \begin{itemize}
+    \item stavljanje labele na čvor/granu traje $O(1)$
+    \item svaki čvor se označi \textbf{dva} puta, jednom kao {\scriptsize 
+      UNEXPLORED}, drugi put kao {\scriptsize VISITED}
+    \item svaka grana se označi \textbf{dva} puta, jednom kao {\scriptsize 
+      UNEXPLORED}, drugi put kao {\scriptsize DISCOVERY} ili 
+      {\scriptsize CROSS}
+    \item svaki čvor se jednom dodaje u sekvencu $L_{i}$
+    \item metoda \texttt{incident\_edges} se poziva jednom za svaki čvor
+    \item BFS traje $O(n+m)$ ako je graf predstavljen listom suseda
+    $$\sum_{v}deg(v)=2m$$
+  \end{itemize}
 \end{frame}
 
 \end{document}
