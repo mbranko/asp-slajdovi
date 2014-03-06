@@ -10,11 +10,13 @@
 \usepackage{xltxtra}
 \usepackage{polyglossia}
 \usepackage{minted}
-\usepackage{algorithmic}
+\usepackage[noend]{algorithmic}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\algorithmiccomment}[1]{\hfill \{\myred{#1}\}}
 \usepackage{xcolor,colortbl}
 \usepackage{textcomp}
+\usepackage{unicode-math}
 %\setdefaultlanguage[script=Latin]{serbian}
 
 \title{Analiza algoritama}
@@ -117,6 +119,7 @@ elapsed = end_time - start_time
     \item primer: pronalaženje najvećeg broja u nizu
   \end{itemize}
 \begin{algorithmic}
+\STATE \myred{arrayMax}($A,n$)
 \REQUIRE $A$: niz celih brojeva
 \REQUIRE $n$: dužina niza
 \STATE $currentMax \leftarrow A[0]$
@@ -272,7 +275,7 @@ elapsed = end_time - start_time
   \end{itemize}
   \begin{center}
     \begin{tabular}{l|r}
-      \textbf{Algoritam} \textit{arrayMax(A, n)} & \textbf{br. operacija} \\ \hline
+      \textbf{Algoritam} \textit{arrayMax($A, n$)} & \textbf{br. operacija} \\ \hline
       $currentMax \leftarrow A[0]$ & $2$ \\
       \textbf{for} $i \leftarrow 1$ \textbf{to} $n - 1$ \textbf{do} & $2n$ \\
       \ \ \textbf{if} $A[i] > currentMax$ \textbf{then} & $2(n-1)$ \\
@@ -296,7 +299,7 @@ elapsed = end_time - start_time
     \item tada je
     \begin{itemize}
       \item $a(8n-2) \le T(n) \le b(8n-2)$
-      \item $\Rightarrow$ T(n) je ograničena sa dve linearne funkcije!
+      \item $\Rightarrow T(n)$ je ograničena sa dve linearne funkcije!
     \end{itemize}
   \end{itemize}
 }
@@ -449,11 +452,11 @@ elapsed = end_time - start_time
     \end{itemize}
     \item koristimo najsporiju moguću klasu funkcija
     \begin{itemize}
-      \item kažemo ,,$2n$ je O(n)`` umesto ,,$2n$ je $O(n^2)$``
+      \item kažemo ,,$2n$ je $O(n)$`` umesto ,,$2n$ je $O(n^2)$``
     \end{itemize}
     \item koristimo najjednostavniji izraz koji predstavlja klasu
     \begin{itemize}
-      \item kažemo ,,$3n+5$ je O(n)`` umesto ,,$3n+5$ je $O(3n)$``
+      \item kažemo ,,$3n+5$ je $O(n)$`` umesto ,,$3n+5$ je $O(3n)$``
     \end{itemize}
   \end{itemize}
 }

@@ -10,11 +10,13 @@
 \usepackage{xltxtra}
 \usepackage{polyglossia}
 \usepackage{minted}
-\usepackage{algorithmic}
+\usepackage[noend]{algorithmic}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\algorithmiccomment}[1]{\hfill \{\myred{#1}\}}
 \usepackage{xcolor,colortbl}
 \usepackage{textcomp}
+\usepackage{unicode-math}
 %\setdefaultlanguage[script=Latin]{serbian}
 
 \title{Rekurzija}
@@ -216,6 +218,7 @@ def binary_search(data, target, low, high):
     \end{itemize}
   \end{itemize}
 }
+
 \begin{frame}[fragile]
   \frametitle{Primer linearne rekurzije}
 \myred{LinearSum}($A$, $n$)
@@ -230,12 +233,14 @@ def binary_search(data, target, low, high):
 \ENDIF
 \end{algorithmic}
 \end{frame}
+
 \frame{
   \frametitle{Primer linearne rekurzije}
   \begin{center}
     \includegraphics[width=8cm]{asp-02-pic06.png}
   \end{center}
 }
+
 \begin{frame}[fragile]
   \frametitle{Obrtanje redosleda u nizu}
 \myred{ReverseArray}($A$, $i$, $j$)
@@ -279,7 +284,7 @@ def reverse(S, start, stop):
   \begin{itemize}
     \item funkciju za stepenovanje $p(x,n) = x^n$ možemo definisati rekurzivno:
   \end{itemize}
-  $$ p(x,n) = \left\{ \begin{array}{l l} 1 & \quad \text{ako $n=0$} \\x\cdot p(x, n-1) & \quad \text{inače}\end{array}\right. $$
+  $$ p(x,n) = \left\{ \begin{array}{l l} 1 & \quad \text{ako} n=0 \\x\cdot p(x, n-1) & \quad \text{inače}\end{array}\right. $$
   \begin{itemize}
     \item na ovaj način ćemo dobiti funkciju koja radi u $O(n)$ vremenu (jer pravimo $n$ poziva)
     \item može li brže?
@@ -291,14 +296,13 @@ def reverse(S, start, stop):
   \begin{itemize}
     \item možemo napraviti brži linearno rekurzivan algoritam pomoću ponavljanog kvadriranja:
   \end{itemize}
-  $$ p(x,n) = \left\{ \begin{array}{l l} 1 & \quad \text{ako je $x=0$} \\x\cdot p(x, \frac{n-1}{2})^2 & \quad \text{ako je $x>0$ neparan}\\p(x,n/2)^2 & \quad
-  \text{ako je $x>0$ paran} \end{array}\right. $$
+  $$ p(x,n) = \left\{ \begin{array}{l l} 1 & \quad \text{ako je} x=0 \\x\cdot p(x, \frac{n-1}{2})^2 & \quad \text{ako je} x>0 neparan\\p(x,n/2)^2 & \quad \text{ako je} x>0 paran \end{array}\right. $$
   \begin{itemize}
     \item na primer: \\
-    $ 2^4 =  2^{(4/2)}^2 = (2^{4/2})^2 = (2^2)^2 = 4^2 = 16 $ \\
-    $ 2^5  =  2^{1+(4/2)}^2 = 2(2^{4/2})^2 = 2(2^2)^2 = 2(4^2) = 32 $ \\
-    $ 2^6  = 2^{(6/2)2} = (2^{6/2})2 = (2^3)^2 = 8^2 = 64 $ \\
-    $ 2^7  = 2^{1+(6/2)}^2 = 2(2^{6/2})^2 = 2(2^3)^2 = 2(8^2) = 128$
+    $ 2^4 = 2^{(4/2)2} = (2^{4/2})^2 = (2^2)^2 = 4^2 = 16 $ \\
+    $ 2^5 = 2^{1+(4/2)2} = 2(2^{4/2})^2 = 2(2^2)^2 = 2(4^2) = 32 $ \\
+    $ 2^6 = 2^{(6/2)2} = (2^{6/2})^2 = (2^3)^2 = 8^2 = 64 $ \\
+    $ 2^7 = 2^{1+(6/2)2} = 2(2^{6/2})^2 = 2(2^3)^2 = 2(8^2) = 128$
   \end{itemize}
 \end{frame}
 
