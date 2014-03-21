@@ -202,7 +202,7 @@ Novom Sadu}
 \end{frame}
 
 \begin{frame}[fragile,shrink=10]
-  \frametitle{Primer klase $_{(deo 1)}$}
+  \frametitle{Primer klase $_{1}$}
 \begin{minted}[linenos=false]{python}
 class CreditCard:
   """Predstavlja bankarsku kreditnu karticu."""
@@ -226,7 +226,7 @@ class CreditCard:
 \end{frame}
 
 \begin{frame}[fragile,shrink=10]
-  \frametitle{Primer klase $_{(deo 2)}$}
+  \frametitle{Primer klase $_{2}$}
 \begin{minted}[linenos=false]{python}
   def get_customer(self):
     """Vraća ime klijenta."""
@@ -251,7 +251,7 @@ class CreditCard:
 \end{frame}
 
 \begin{frame}[fragile,shrink=10]
-  \frametitle{Primer klase $_{(deo 3)}$}
+  \frametitle{Primer klase $_{3}$}
 \begin{minted}[linenos=false]{python}
   def charge(self, price):
     """Naplati datu cenu na kartice uz poštovanje limita.
@@ -304,7 +304,7 @@ cc = CreditCard('Žika Žikić',
   \begin{itemize}
     \item iterator za bilo kakvu kolekciju podataka omogućava da se svaki element kolekcije dobije tačno jednom
     \item potrebno je napisati metodu \texttt{\_\_next\_\_} koja vraća sledeći element kolekcije 
-    \item ili izaziva izuzetak \texttt{StopIteration} ako nema više elemenata \\ \\
+    \item ili izaziva izuzetak \texttt{StopIteration} ako nema više elemenata \\ \ \\
     \item umesto \texttt{\_\_next\_\_} mogu se napraviti \\ \texttt{\_\_len\_\_} i \texttt{\_\_getitem\_\_}
   \end{itemize}
 \end{frame}
@@ -346,7 +346,7 @@ class Range:
     \item \myred{nasleđivanje} je mehanizam za modularnu i hijerarhijsku organizaciju
     \item omogućava da se nova klasa definiše pomoću postojeće kao početne tačke
     \item postojeća klasa se obično zove \textbf{bazna}, \textbf{roditeljska} ili \texttt{super}klasa
-    \item nova klasa se obično zove \textbf{potklasa}, \textbf{dete}-klasa ili \textbf{naslednik} \\ \\
+    \item nova klasa se obično zove \textbf{potklasa}, \textbf{dete}-klasa ili \textbf{naslednik} \\ \ \\
     \item postoji dva načina da se potklasa učini različitom od roditelja
     \begin{itemize}
       \item potklasa može da promeni ponašanje tako što će imati novu implementaciju neke nasleđene (postojeće) metode

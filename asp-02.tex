@@ -38,7 +38,7 @@ Novom Sadu}
     \item klasičan primer: faktorijel \\
     $$n! = 1 \cdot 2 \cdot 3 \cdot \ldots (n-1)\cdot n$$
     \item rekurzivna definicija: \\
-    $$ n! = \left\{\begin{array}{rl} 1 & \mbox{ ako n=0} \\ n(n-1)! &\mbox{ ina\v{c}e} \end{array} \right. $$
+    $$ n! = \left\{\begin{array}{cl} 1 & \text{ako } n=0 \\ n(n-1)! &\text{ina\v{c}e} \end{array} \right. $$
   \end{itemize}
 }
 \begin{frame}[fragile]
@@ -284,7 +284,7 @@ def reverse(S, start, stop):
   \begin{itemize}
     \item funkciju za stepenovanje $p(x,n) = x^n$ možemo definisati rekurzivno:
   \end{itemize}
-  $$ p(x,n) = \left\{ \begin{array}{l l} 1 & \quad \text{ako} n=0 \\x\cdot p(x, n-1) & \quad \text{inače}\end{array}\right. $$
+  $$ p(x,n) = \left\{ \begin{array}{c l} 1 & \quad \text{ako } n=0 \\x\cdot p(x, n-1) & \quad \text{inače}\end{array}\right. $$
   \begin{itemize}
     \item na ovaj način ćemo dobiti funkciju koja radi u $O(n)$ vremenu (jer pravimo $n$ poziva)
     \item može li brže?
@@ -296,7 +296,7 @@ def reverse(S, start, stop):
   \begin{itemize}
     \item možemo napraviti brži linearno rekurzivan algoritam pomoću ponavljanog kvadriranja:
   \end{itemize}
-  $$ p(x,n) = \left\{ \begin{array}{l l} 1 & \quad \text{ako je} x=0 \\x\cdot p(x, \frac{n-1}{2})^2 & \quad \text{ako je} x>0 neparan\\p(x,n/2)^2 & \quad \text{ako je} x>0 paran \end{array}\right. $$
+  $$ p(x,n) = \left\{ \begin{array}{c l} 1 & \quad \text{ako je } x=0 \\x\cdot p(x, \frac{n-1}{2})^2 & \quad \text{ako je } x>0 \text{ neparan}\\p(x,n/2)^2 & \quad \text{ako je } x>0 \text{ paran} \end{array}\right. $$
   \begin{itemize}
     \item na primer: \\
     $ 2^4 = 2^{(4/2)2} = (2^{4/2})^2 = (2^2)^2 = 4^2 = 16 $ \\
