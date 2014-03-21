@@ -209,39 +209,44 @@ primes = array('i', [2, 3, 5, 7, 11, 13, 17, 19])
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile,shrink=20]
-  \frametitle{Implementacija u Pythonu}
+\begin{frame}[fragile,shrink=15]
+  \frametitle{Implementacija u Pythonu $_1$}
 \begin{minted}[linenos=false]{python}
 class DynamicArray:
   def __init__(self):
-    self._n = 0                                 # stvarni broj elemenata
-    self._capacity = 1                          # kapacitet niza
-    self._A = self._make_array(self._capacity)  # zauzimanje niza u memoriji
-  
+    self._n = 0                # stvarni broj elemenata
+    self._capacity = 1         # kapacitet niza
+    self._A = self._make_array(self._capacity) # zauzimanje niza
+                                               # u memoriji
   def __len__(self):
-    return self._n                              # vrati broj elemenata
+    return self._n             # vrati broj elemenata
     
   def __getitem__(self, k):
     if not 0 <= k < self._n:
       raise IndexError('invalid index')
-    return self._A[k]                           # dobavi element po indeksu
-    
+    return self._A[k]          # dobavi element po indeksu
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile,shrink=15]
+  \frametitle{Implementacija u Pythonu $_2$}
+\begin{minted}[linenos=false]{python}
   def append(self, obj):
-    if self._n == self._capacity:               # da li je niz popunjen?
-      self._resize(2 * self._capacity)          # udvostruči mu kapacitet
+    if self._n == self._capacity:       # da li je niz popunjen?
+      self._resize(2 * self._capacity)  # udvostruči mu kapacitet
     self._A[self._n] = obj
     self._n += 1
     
   def _resize(self, c):
-    B = self._make_array(c)                     # novi (veći) niz
-    for k in range(self._n):                    # prepiši sve vrednosti u njega
+    B = self._make_array(c)             # novi (veći) niz
+    for k in range(self._n):            # prepiši vrednosti u njega
       B[k] = self._A[k]
     self._A = B
     self._capacity = c
     
   def _make_array(self, c):
     import ctypes
-    return (c * ctypes.py_object)()             # pogledaj dokumentaciju za ctypes
+    return (c * ctypes.py_object)()     # pogledaj dok za ctypes
 \end{minted}
 \end{frame}
 
