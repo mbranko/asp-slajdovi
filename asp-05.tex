@@ -10,11 +10,12 @@
 \usepackage{xltxtra}
 \usepackage{polyglossia}
 \usepackage{minted}
-\usepackage{algorithmic}
+\usepackage[noend]{algorithmic}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 \usepackage{xcolor,colortbl}
 \usepackage{textcomp}
+\usepackage{unicode-math}
 %\setdefaultlanguage[script=Latin]{serbian}
 
 \title{Stekovi}
@@ -205,16 +206,14 @@ class ArrayStack:
 \ENSURE True akko su zagrade ispravno napisane
 \STATE Neka je $S$ prazan stek
 \FOR{$i \leftarrow 0$ \TO $n-1$}
-  \IF{X[i] je otvorena zagrada}
-    \STATE S.push(X[i])
-  \ELSE 
-    \IF{X[i] je zatvorena zagrada}
-      \IF{$S$ je prazan}
-        \RETURN False \COMMENT{\myred{nema odgovarajuće otvorene zagrade}}
-      \ENDIF
-      \IF{S.pop() ne odgovara vrsti zagrade od $X[i]$}
-        \RETURN False \COMMENT{\myred{pogrešna vrsta zagrade}}
-      \ENDIF
+  \IF{$X[i]$ je otvorena zagrada}
+    \STATE $S$.push($X[i]$)
+  \ELSIF{$X[i]$ je zatvorena zagrada}
+    \IF{$S$ je prazan}
+      \RETURN False \COMMENT{\myred{nema odgovarajuće otvorene zagrade}}
+    \ENDIF
+    \IF{$S$.pop() ne odgovara vrsti zagrade od $X[i]$}
+      \RETURN False \COMMENT{\myred{pogrešna vrsta zagrade}}
     \ENDIF
   \ENDIF
 \ENDFOR
@@ -323,15 +322,17 @@ def is_matched_html(raw):
   \frametitle{Primer: izračunavanje aritmetičkih izraza}
 \myred{doOp}()
 \begin{algorithmic}
-\STATE $x \leftarrow$ vals.pop()
-\STATE $y \leftarrow$ vals.pop()
-\STATE $op \leftarrow$ ops.pop()
-\STATE vals.push(y \myred{op} x)
+\STATE $x \leftarrow vals$.pop()
+\STATE $y \leftarrow vals$.pop()
+\STATE $op \leftarrow ops$.pop()
+\STATE $vals$.push($y$ \myred{op} $x$)
 \end{algorithmic}
-\\ \ \\
+
+\ %
+
 \myred{repeatOps}(refOp)
 \begin{algorithmic}
-\WHILE{vals.size() $> 1\,\, \land$ prec(refOp) $\leq$ prec(ops.top())}
+\WHILE{$vals$.size() $> 1\,\, \land$ prec($refOp$) $\leq$ prec($ops$.top())}
   \STATE doOp()
 \ENDWHILE
 \end{algorithmic}
@@ -345,14 +346,14 @@ def is_matched_html(raw):
 \ENSURE vrednost izraza
 \WHILE{ima novi token $z$}
   \IF{$z$ je broj}
-    \STATE vals.push($z$)
+    \STATE $vals$.push($z$)
   \ELSE
     \STATE repeatOps($z$)
-    \STATE ops.push($z$)
+    \STATE $ops$.push($z$)
   \ENDIF
 \ENDWHILE
 \STATE repeatOps(\$)
-\RETURN vals.top()
+\RETURN $vals$.top()
 \end{algorithmic}
 \end{frame}
 
@@ -418,15 +419,15 @@ def is_matched_html(raw):
 \STATE $S \leftarrow$ novi niz od $n$ celih brojeva
 \STATE $A \leftarrow$ novi prazan stek
 \FOR{$i\leftarrow 0$ \TO $n-1$}
-  \WHILE{$\neg$ A.is\_empty()\, $\land\, X$[A.top()]$\leq X[i]$}
-    \STATE A.pop()
+  \WHILE{$\neg$ $A$.is\_empty()\, $\land\, X$[$A$.top()]$\leq X[i]$}
+    \STATE $A$.pop()
   \ENDWHILE
-  \IF{A.is\_empty()}
+  \IF{$A$.is\_empty()}
     \STATE $S[i]\leftarrow i+1$
   \ELSE
     \STATE $S[i]\leftarrow i-A$.top()
   \ENDIF
-  \STATE A.push($i$)  
+  \STATE $A$.push($i$)  
 \ENDFOR
 \RETURN $S$
 \end{algorithmic}
