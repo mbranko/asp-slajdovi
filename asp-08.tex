@@ -10,11 +10,12 @@
 \usepackage{xltxtra}
 \usepackage{polyglossia}
 \usepackage{minted}
-\usepackage{algorithmic}
+\usepackage[noend]{algorithmic}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 \usepackage{xcolor,colortbl}
 \usepackage{textcomp}
+\usepackage{unicode-math}
 %\setdefaultlanguage[script=Latin]{serbian}
 
 \title{Stabla}
@@ -99,9 +100,9 @@ Novom Sadu}
 \begin{minted}[linenos=false]{python}
 class TreeNode:
   def __init__(self):
-    self.element = None
-    self.parent = None
-    self.children = []
+    self._element = None
+    self._parent = None
+    self._children = []
   
   def __eq__(self, other):
     return self == other:
@@ -110,10 +111,10 @@ class TreeNode:
     return self != other
   
   def is_root(self):
-    return self.parent == None
+    return self._parent == None
     
   def is_leaf(self):
-    return size(self.children) == 0
+    return len(self._children) == 0
 \end{minted}
 \end{frame}
 
@@ -128,10 +129,10 @@ class Tree:
     return self._root == None
     
   def depth(self, node):
-    if node.parent is None:
+    if node._parent is None:
       return 0
     else:
-      return 1 + self.depth(node.parent)
+      return 1 + self.depth(node._parent)
 \end{minted}
 \end{frame}
 
@@ -192,11 +193,11 @@ class Tree:
     
   def _preorder(self, node, func):
     func(node)
-    for child in node.children:
+    for child in node._children:
       self._preorder(child, func)
   
   def _postorder(self, node, func):
-    for child in node.children:
+    for child in node._children:
       self._postorder(child, func)
     func(node)
 \end{minted}
@@ -305,15 +306,15 @@ class Tree:
 \begin{frame}[fragile]
   \frametitle{Binarno stablo u memoriji / pomoću niza}
 \begin{columns}
-  \begin{column}[c]{6cm}
+  \begin{column}[c]{7cm}
   \begin{itemize}
     \item \myred{rang} čvora: 
     \begin{itemize}
-      \item $rank(root) = 1$
-      \item za levo dete: $rank(node) = 2\cdot rank(parent)$
-      \item za desno dete: $rank(node) = 2\cdot rank(parent) + 1$
+      \item $\text{rang}(root) = 1$
+      \item za levo dete: $\text{rang}(node) = 2\cdot \text{rang}(parent)$
+      \item za desno dete: $\text{rang}(node) = 2\cdot \text{rang}(parent) + 1$
     \end{itemize}
-    \item čvor $v$ se smešta u $A[rang(v)]$
+    \item čvor $v$ se smešta u $A[\text{rang}(v)]$
   \end{itemize}
   \end{column}
   \begin{column}[c]{5cm}
