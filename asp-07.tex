@@ -10,11 +10,12 @@
 \usepackage{xltxtra}
 \usepackage{polyglossia}
 \usepackage{minted}
-\usepackage{algorithmic}
+\usepackage[noend]{algorithmic}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 \usepackage{xcolor,colortbl}
 \usepackage{textcomp}
+\usepackage{unicode-math}
 %\setdefaultlanguage[script=Latin]{serbian}
 
 \title{Liste}
@@ -71,8 +72,8 @@ Novom Sadu}
 \begin{minted}[linenos=false]{python}
 class Node:
   def __init__(self, element, next):
-    self.element = element
-    self.next = next
+    self._element = element
+    self._next = next
 \end{minted}
   \begin{center}
     \includegraphics[width=3cm]{asp-07-pic01.png}
@@ -197,11 +198,10 @@ class SingleList:
   def add_last(self, elem):
     newest = Node(elem, None)
     if self._tail is not None:
-      self._tail.next = newest
+      self._tail._next = newest
     self._tail = newest
     if self._head is None:     # ako je bila prazna
       self._head = newest      # sada ima jedan element
-      
 \end{minted}
 \end{frame}
 
@@ -213,7 +213,7 @@ class SingleList:
       return
     if self._head == self._tail:
       self._head = self._tail = None
-    self._head = self._head.next
+    self._head = self._head._next
     
   def remove_last(self):
     if self._tail is None:
@@ -221,9 +221,9 @@ class SingleList:
     if self._head == self._tail:
       self._head = self._tail = None
     current = self._head
-    while current.next != self._tail:
-      current = current.next
-    current.next = None
+    while current._next != self._tail:
+      current = current._next
+    current._next = None
     self._tail = current
 \end{minted}
 \end{frame}
@@ -233,13 +233,13 @@ class SingleList:
 \begin{minted}[linenos=false]{python}
   def get_first(self):
     if self._head is not None:
-      return self._head.element
+      return self._head._element
     else:
       return None
         
   def get_last(self):
     if self._tail is not None:
-      return self._tail.element
+      return self._tail._element
     else:
       return None
   
@@ -265,9 +265,9 @@ class SingleList:
 \begin{minted}[linenos=false]{python}
 class Node2:
   def __init__(self, element, prev, next):
-    self.element = element
-    self.prev = prev
-    self.next = next
+    self._element = element
+    self._prev = prev
+    self._next = next
 \end{minted}
 \end{frame}
 
@@ -316,28 +316,28 @@ class Node2:
 \begin{minted}[linenos=false]{python}
 class DoubleList:
   def __init__(self):
-    self._head = Node2(None, None, None)
-    self._tail = Node2(None, None, None)
-    self._head.next = self._tail
-    self._tail.prev = self.head
-  
+    self._head = self.Node2(None, None, None)
+    self._tail = self.Node2(None, None, None)
+    self._head._next = self._tail
+    self._tail._prev = self._head
+
   def is_empty(self):
     return self._head.next == self._tail
     
   def insert_before(self, element, successor):
-    newest = Node2(element, successor.prev, successor)
-    successor.prev.next = newest
-    successor.prev = newest
+    newest = self.Node2(element, successor._prev, successor)
+    successor._prev._next = newest
+    successor._prev = newest
     return newest
     
   def delete(self, node):
     if self.is_empty():
       return
-    predecessor = node.prev
-    successor = node.next
-    predecessor.next = succesor
-    element = node.element
-    node.prev = node.next = node.element = None
+    predecessor = node._prev
+    successor = node._next
+    predecessor._next = succesor
+    element = node._element
+    node._prev = node._next = node._element = None
     return element
 \end{minted}
 \end{frame}
