@@ -322,7 +322,7 @@ class DoubleList:
     self._tail._prev = self._head
 
   def is_empty(self):
-    return self._head.next == self._tail
+    return self._head._next == self._tail
     
   def insert_before(self, element, successor):
     newest = self.Node2(element, successor._prev, successor)
