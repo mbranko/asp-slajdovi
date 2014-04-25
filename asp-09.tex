@@ -10,11 +10,13 @@
 \usepackage{xltxtra}
 \usepackage{polyglossia}
 \usepackage{minted}
-\usepackage{algorithmic}
+\usepackage[noend]{algorithmic}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\algorithmiccomment}[1]{\hfill \{\myred{#1}\}}
 \usepackage{xcolor,colortbl}
 \usepackage{textcomp}
+\usepackage{unicode-math}
 %\setdefaultlanguage[script=Latin]{serbian}
 
 \title{Red sa prioritetom, heap, adaptivni RSP}
@@ -320,8 +322,8 @@ class SortedPriorityQueue:
     \item mesto za novi poslednji čvor se može naći prolaskom kroz putanju od
     $O(\log n)$ čvorova
     \begin{itemize}
-      \item idi prema gore dok ne dođeš do korena ili levog deteta
-      \item ako si došao do levog deteta, idi na desno dete
+      \item idi prema gore dok ne dođeš do korena ili nečijeg levog deteta
+      \item ako si došao do nečijeg levog deteta, idi na desno dete
       \item idi prema dole levo dok ne dođeš do lista
     \end{itemize}
     \item sličan je i algoritam prilikom uklanjanja
@@ -452,7 +454,7 @@ class HeapPriorityQueue:
     \begin{column}[c]{6cm}
       \begin{itemize}
         \item možemo da napravimo heap sa $n$ ključeva pomoću bottom-up
-        spajanja u $\log n$ koraka
+        spajanja u $O(\log n)$ koraka
         \item u $i$-tom koraku, par heapova sa $2^i-1$ ključeva se spajaju u
         heap sa $2^{i+1}-1$ ključeva
         \end{itemize}
@@ -501,7 +503,7 @@ class HeapPriorityQueue:
     \item svaki čvor se obiđe u najviše dve putanje
     \item ukupan broj čvorova u putanjama je $O(n)$
     \item bottom-up konstrukcija heapa radi u $O(n)$ vremenu
-    \item bottom-up konstrukcija je brža nego $n$ dodavanja
+    \item bottom-up konstrukcija heapa je brža nego $n$ dodavanja u heap sa upheap korekcijom
   \end{itemize}
   \begin{center}
     \includegraphics[width=10cm]{asp-09-pic18.png}
