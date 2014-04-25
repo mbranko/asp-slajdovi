@@ -10,11 +10,13 @@
 \usepackage{xltxtra}
 \usepackage{polyglossia}
 \usepackage{minted}
-\usepackage{algorithmic}
+\usepackage[noend]{algorithmic}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\algorithmiccomment}[1]{\hfill \{\myred{#1}\}}
 \usepackage{xcolor,colortbl}
 \usepackage{textcomp}
+\usepackage{unicode-math}
 %\setdefaultlanguage[script=Latin]{serbian}
 
 
@@ -234,21 +236,6 @@ class UnsortedTableMap(MapBase):
   \begin{itemize}
     \item operacije su $O(1)$  
   \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Hash tabela}
-  \begin{itemize}
-    \item šta ako je $N >> n$ ?  
-    \item šta ako ključevi nisu celi brojevi?
-    \item pretvorićemo ključeve u cele brojeve pomoću \myred{hash funkcije}
-    \item dobra hash funkcija će ravnomerno distribuirati ključeve u $[0,N-1]$
-    \item ali može biti duplikata
-    \item duplikate ćemo čuvati u ,,kantama`` -- tzv. \myred{bucket array}
-  \end{itemize}
-  \begin{center}
-    \includegraphics[width=10cm]{asp-10-pic05.pdf}
-  \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -882,8 +869,6 @@ class ProbeHashMap(HashMapBase):
       \end{center}
     \end{column}
   \end{columns}
-  \begin{itemize}
-  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
