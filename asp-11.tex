@@ -422,8 +422,7 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
 \begin{frame}[fragile]
   \frametitle{AVL stablo: uklanjanje}
   \begin{itemize}
-    \item uklanja se uvek čvor koji ima 0 ili 1 dete
-    \item time se može narušiti balans AVL stabla
+    \item uklanjanjem se može narušiti balans AVL stabla
     \item i ovde radimo restrukturiranje posle uklanjanja
     \item primer: uklanjamo 32
   \end{itemize}
@@ -626,7 +625,7 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
   \frametitle{Splay stablo: performanse}
   \begin{itemize}
     \item zig-zig, zig-zag i zig su $O(1)$
-    \item splaying čvora $p$ je $(d)$ gde je $d$ dubina čvora $p$
+    \item splaying čvora $p$ je $O(d)$ gde je $d$ dubina čvora $p$
     \item tj. isto koliko je potrebno i za navigaciju od korena do $p$ \\ \ \\
     \item u najgorem slučaju, pretraga, dodavanje i uklanjanje su $O(h)$ gde je $h$ visina stabla
     \item stablo nije balansirano $\Rightarrow$ može biti $h=n$
@@ -785,7 +784,6 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
     \item da li je jedan od najbliže braće 3-čvor ili 4-čvor?
     \item radimo \textbf{transfer}:
     \begin{itemize}
-      \item premeštamo dete brata u $w$
       \item premeštamo ključ iz brata u roditelja
       \item ključ iz roditelja u $w$
     \end{itemize}
@@ -918,13 +916,13 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
     \item u poređenju sa (2,4) stablom, RB stablo ima
     \begin{itemize}
       \item jednake $O(\log n)$ performanse
-      \item jednostavniju implementaciju sa samo jednim tipom čvora
+      \item jednostavniju implementaciju
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Crveno-crno stablo i (2,4) stablo}
+  \frametitle{(2,4) stablo i crveno-crno stablo}
   \begin{center}
     \includegraphics[width=7cm]{asp-11-pic30.pdf} \\
     \includegraphics[width=7cm]{asp-11-pic38.pdf}
@@ -936,10 +934,10 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
   \begin{itemize}
     \item \myred{crveno-}crno \myred{stablo} je binarno stablo sa osobinama
     \begin{itemize}
-      \item koren je crn
-      \item svaki list je crn
-      \item deca crvenog čvora su crna
-      \item svi listovi imaju istu \textbf{crnu dubinu} $\Leftrightarrow$ sve putanje od korena do lista sadrže isti broj crnih čvorova
+      \item koren je \textbf{crn}
+      \item svaki list je \textbf{crn}
+      \item deca \textbf{\myred{crvenog}} čvora su \textbf{crna}
+      \item svi listovi imaju istu \textbf{crnu dubinu} $\Leftrightarrow$ sve putanje od korena do lista sadrže isti broj \textbf{crnih} čvorova
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -1002,21 +1000,6 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
     \begin{itemize}
       \item ako nema dece sve je OK
       \item ako mu je dete crveno: pomeramo dete na mesto uklonjenog roditelja i bojimo crno
-      \item ako mu je dete crno: gubimo jedan crni čvor na putanji, narušava se crna dubina
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Crveno-crno stablo: uklanjanje}
-  \begin{itemize}
-    \item uklanjanje na isti način kao za binarno stablo 
-    \item $\Rightarrow$ uklanja se čvor koji ima najviše jedno dete
-    \item ako je uklonjeni čvor bio crven sve je OK (ne menja se crna dubina)
-    \item ako je uklonjeni čvor bio crn:
-    \begin{itemize}
-      \item ako nema dece sve je OK
-      \item ako mu je dete crveno: pomeramo dete na mesto uklonjenog roditelja i bojimo crno
       \item ako mu je dete crno: gubimo jedan crni čvor na putanji, narušava se crna dubina u tom podstablu
     \end{itemize}
   \end{itemize}
@@ -1027,7 +1010,7 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
   \begin{itemize}
     \item uklonjeni crni čvor je bio koren podstabla $T_{\text{light}}$
     \item gledamo šta se nalazi u podstablu njegovog brata $y$ 
-    \item (brat mora da postoji jer je inače narušena crna dubina)
+    \item (brat mora da postoji jer bi inače bila narušena crna dubina)
   \end{itemize}
   \begin{center}
     \includegraphics[width=5cm]{asp-11-pic41.pdf}
@@ -1035,7 +1018,7 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Korekcija crne dubine}
+  \frametitle{Korekcija crne dubine 1: brat je crn i ima crveno dete}
   \begin{itemize}
     \item \textbf{slučaj 1}: brat $y$ je crn i ima crveno dete $x$
     \item radimo \textbf{tri-node restructuring}
@@ -1048,7 +1031,7 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Korekcija crne dubine}
+  \frametitle{Korekcija crne dubine 2: brat je crn i ima dva crna deteta}  
   \begin{itemize}
     \item \textbf{slučaj 2}: brat $y$ je crn i oba deteta su mu crna ili ih nema
     \item radimo \textbf{recoloring}
@@ -1061,7 +1044,7 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Korekcija crne dubine}
+  \frametitle{Korekcija crne dubine 3: brat je crven}
   \begin{itemize}
     \item \textbf{slučaj 3}: brat $y$ je crven
     \item radimo \textbf{rotaciju} pa \textbf{recoloring}
