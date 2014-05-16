@@ -531,7 +531,7 @@ def inplace_quick_sort(S, a, b):
   \begin{itemize}
     \item visina stabla odlučivanja je donja granica za vreme sortiranja
     \item svaka permutacija ulaza vodi do posebnog lista
-    \item stablo ima $n!$ listova $\Rightarrow$ visina stabla je barem $O(n!)$
+    \item stablo ima $n!$ listova $\Rightarrow$ visina stabla je barem $O(\log(n!))$
   \end{itemize}
   \begin{center}
     \includegraphics[width=8cm]{asp-12-pic30.pdf}
@@ -541,7 +541,7 @@ def inplace_quick_sort(S, a, b):
 \begin{frame}[fragile]
   \frametitle{Granica brzine}
   \begin{itemize}
-    \item svaki algoritam koji se zasniva na poređenju je barem $O(n!)$
+    \item svaki algoritam koji se zasniva na poređenju je barem $O(\log(n!))$
     \item prema tome, vreme izvšavanja svakog algoritma je najmanje
     $$\log n! \geq \log \left(\frac{n}{2}\right)^{\frac{n}{2}} = \frac{n}{2}\log\frac{n}{2}$$
     \item tj. svaki ovakav algoritam je $\Omega(n\log n)$
@@ -650,9 +650,9 @@ def inplace_quick_sort(S, a, b):
 
 \begin{frame}[fragile,shrink]
   \frametitle{Leksikografsko sortiranje: primer}
-(7, 4, 6) (5, 1, 5) (2, 4, 6) (2, 1, 4) (3, 2, 4)
-(2, 1, \myred{4}) (3, 2, \myred{4}) (5, 1, \myred{5}) (7, 4, \myred{6}) (2, 4, \myred{6})
-(2, \myred{1}, 4) (5, \myred{1}, 5) (3, \myred{2}, 4) (7, \myred{4}, 6) (2, \myred{4}, 6)
+(7, 4, 6) (5, 1, 5) (2, 4, 6) (2, 1, 4) (3, 2, 4) \\
+(2, 1, \myred{4}) (3, 2, \myred{4}) (5, 1, \myred{5}) (7, 4, \myred{6}) (2, 4, \myred{6}) \\
+(2, \myred{1}, 4) (5, \myred{1}, 5) (3, \myred{2}, 4) (7, \myred{4}, 6) (2, \myred{4}, 6) \\
 (\myred{2}, 1, 4) (\myred{2}, 4, 6) (\myred{3}, 2, 4) (\myred{5}, 1, 5) (\myred{7}, 4, 6)
 \end{frame}
 
