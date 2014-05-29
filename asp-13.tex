@@ -77,6 +77,8 @@ Novom Sadu}
   \end{itemize}
 \end{frame}
 
+\section[GS]{Gruba sila}
+
 \begin{frame}[fragile]
   \frametitle{Nalaženje podstringa grubom silom}
   \begin{itemize}
@@ -85,7 +87,6 @@ Novom Sadu}
     \begin{itemize}
       \item ne pronađe poklapanje
       \item ne testiraju sve pozicije
-      \item \myred{sufiks} od $P$ je podstring tipa $P[i..m-1]$
     \end{itemize}
     \item gruba sila radi u $O(nm)$ vremenu
     \item primer najgoreg slučaja:
@@ -136,12 +137,14 @@ def find_brute_force(T, P):
 \end{minted}
 \end{frame}
 
+\section[BM]{Boyer-Moore}
+
 \begin{frame}[fragile]
   \frametitle{Boyer-Moore}
   \begin{itemize}
     \item \myred{Boyer-Moore} algoritam se zasniva na dve heuristike
     \begin{itemize}
-      \item \myred{ogledalo}: traži $P$ u $T$ unazad
+      \item \myred{ogledalo}: poredi $P$ sa podsekvencom u $T$ idući unazad
       \item \myred{skok}: ako se razlika otkrije u $T[i]=c$
       \begin{itemize}
         \item ako $P$ sadrži $c$, pomeri $P$ tako da se $T[i]$ poklopi sa
@@ -156,13 +159,13 @@ def find_brute_force(T, P):
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{BM: funkcija poslednjeg pojavljivanja}
+  \frametitle{Boyer-Moore: funkcija poslednjeg pojavljivanja}
   \begin{itemize}
-    \item Boyer-Moore algoritam formira \myred{last occurence} funkciju $L$ koja
-    mapira $\Sigma$ na cele brojeve gde je $L(c)$ definisano kao
+    \item \myred{Boyer-Moore} algoritam formira \myred{last occurence} funkciju $L$ koja
+    mapira alfabet $\Sigma$ na cele brojeve gde je $L(c)$ definisano kao
     \begin{itemize}
       \item najveći indeks $i$ takav da $P[i]=c$
-      \item -1 ako takvog indeksa nema
+      \item $-1$ ako takvog indeksa nema
     \end{itemize}
     \item primer: $\Sigma = \{a,b,c,d\} \quad P = abacab$
   \end{itemize}
@@ -183,8 +186,8 @@ def find_brute_force(T, P):
   \myred{BoyerMooreMatch}($T, P, \Sigma$)
   \begin{algorithmic}
     \STATE $L \leftarrow$ lastOccurence($P,\Sigma$)
-    \STATE $i \leftarrow m-1$
-    \STATE $j \leftarrow m-1$
+    \STATE $i \leftarrow m-1$ \COMMENT{indeks u $T$}
+    \STATE $j \leftarrow m-1$ \COMMENT{indeks u $P$}
     \REPEAT
       \IF{$T[i]=P[j]$}
         \IF{$j=0$}
@@ -194,8 +197,8 @@ def find_brute_force(T, P):
           \STATE $j \leftarrow j-1$
         \ENDIF
       \ELSE
-        \STATE $l \leftarrow L[T[i]]$ \COMMENT{skok}
-        \STATE $i \leftarrow i + m - \min(j, 1+l)$
+        \STATE $l \leftarrow L[T[i]]$ \COMMENT{indeks poslednjeg pojavljivanja}
+        \STATE $i \leftarrow i + m - \min(j, 1+l)$ \COMMENT{dva slučaja za skok}
         \STATE $j \leftarrow m-1$
       \ENDIF
     \UNTIL{$i>n-1$}
@@ -268,6 +271,8 @@ def find_boyer_moore(T, P):
 \end{minted}
 \end{frame}
 
+\section[KMP]{Knuth-Morris-Pratt}
+
 \begin{frame}[fragile]
   \frametitle{Knuth-Morris-Pratt}
   \begin{columns}
@@ -339,7 +344,7 @@ def find_boyer_moore(T, P):
               \STATE $j \leftarrow j+1$
             \ENDIF
           \ELSE
-            \IF{}
+            \IF{$j>0$}
               \STATE $j \leftarrow F[j-1]$
             \ELSE
               \STATE $i \leftarrow i + 1$
@@ -380,7 +385,7 @@ def find_boyer_moore(T, P):
             \STATE $i \leftarrow i+1$
             \STATE $j \leftarrow j+1$
           \ELSIF{$j>0$}
-            \STATE \COMMENT{koristi fF da pomeriš $P$}
+            \STATE \COMMENT{koristi $F$ da pomeriš $P$}
             \STATE $j \leftarrow F[j-1]$
           \ELSE
             \STATE $F[0] \leftarrow 0$ \COMMENT{nema poklapanja}
@@ -456,7 +461,7 @@ def compute_kmp_fail(P):
         \item \myred{dinamičko programiranje} je pristup dizajnu algoritama
         \item prvo primer: množenje matrica
         $$ C[i,j] = \sum_{k=0}^{e-1} A[i,k]\cdot B[k,j]$$
-        \item vreme je $O(def)$
+        \item vreme je $O(d\cdot e\cdot f)$
       \end{itemize}
     \end{column}
     \begin{column}[t]{6cm}
@@ -509,8 +514,8 @@ def compute_kmp_fail(P):
     \begin{itemize}
       \item $A$ je $10\times 5$
       \item $B$ je $5\times 10$
-      \item $A$ je $10\times 5$
-      \item $B$ je $5\times 10$
+      \item $C$ je $10\times 5$
+      \item $D$ je $5\times 10$
       \item ideja \#1 daje $(A\cdot B)\cdot (C\cdot D)$, \\ tj. 500+1000+500 = 2000 operacija
       \item $A\cdot ((B\cdot C)\cdot D)$ je 500+250+250 = 1000 operacija
     \end{itemize}
@@ -951,6 +956,15 @@ def LCS_solution(X, Y, L):
     \end{itemize}
     \item \textbf{cilj}: izaberi elemente sa maksimalnom ukupnom 
     vrednošću ali ukupnom težinom ne većom od $W$
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=5cm]{asp-13-pic28.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Problem ranca}
+  \begin{itemize}
     \item ako je moguće uzeti razlomljene količine elemenata:
     \begin{itemize}
       \item $x_{i}$ je količina elementa $i$
