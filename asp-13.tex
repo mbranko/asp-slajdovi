@@ -599,7 +599,7 @@ def compute_kmp_fail(P):
       \FOR{$i \leftarrow 0$ \TO $n-b-1$}
         \STATE $j \leftarrow i+b$
         \STATE $N_{i,j} \leftarrow +\infty$
-        \FOR{$k \leftarrow j-1$ \TO $j-1$}
+        \FOR{$k \leftarrow i$ \TO $j-1$}
           \STATE $N_{i,j} \leftarrow \min_{k} \{ N_{i,k} + N_{k+1,j} + d_{i} d_{k+1} d_{j+1}\}$
         \ENDFOR
       \ENDFOR
