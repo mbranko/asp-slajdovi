@@ -225,22 +225,27 @@ Novom Sadu}
     \begin{column}[t]{7.5cm}
       \begin{itemize}
         \item suma stepena čvorova
-        $$\sum_{v}deg(v)=2m$$ 
-        \item u neusmerenom grafu bez petlji i 
-        \begin{itemize}
-          \item s vi čvorovi i grane su različiti
-        \end{itemize}
-        \item primeri
-        \begin{itemize}
-          \item $C_{1}=(V,b,X,g,Y,f,W,c,U,a,V)$ je prosta
-          \item $C_{2}=(U,c,W,e,X,g,Y,f,W,d,V,a,U)$ nije prosta
-        \end{itemize}
+        $$\sum_{v}deg(v)=2m$$
+        (svaka grana se broji dva puta)
+        \item u neusmerenom grafu bez petlji i višestrukih grana
+        $$m < n(n-1)/2$$
+        (svaki čvor ima stepen najviše $n-1$)
       \end{itemize}
     \end{column}
     \begin{column}[t]{4.5cm}
+      \begin{itemize}
+        \item $n$ -- broj čvorova
+        \item $m$ -- broj grana
+        \item $deg(v)$ -- stepen čvora
+      \end{itemize}
       \begin{center}
-        \includegraphics[width=4.5cm]{asp-14-pic06.png}
+        \includegraphics[width=2cm]{asp-14-pic07.png}
       \end{center}
+      \begin{itemize}
+        \item $n=4$
+        \item $m=6$
+        \item $deg(v)=3$
+      \end{itemize}
     \end{column}
   \end{columns}
 \end{frame}
@@ -291,7 +296,7 @@ Novom Sadu}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Lista čvorova i lista grana}
+  \frametitle{Implementacija$_1$: Lista čvorova i lista grana}
   \begin{columns}
     \begin{column}[t]{6cm}
       \begin{itemize}
@@ -321,7 +326,7 @@ Novom Sadu}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Lista suseda}
+  \frametitle{Implementacija$_2$: Lista suseda}
   \begin{columns}
     \begin{column}[t]{6cm}
       \begin{itemize}
@@ -340,7 +345,7 @@ Novom Sadu}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Matrica incidencije}
+  \frametitle{Implementacija$_3$: Matrica incidencije}
   \begin{columns}
     \begin{column}[t]{6cm}
       \begin{itemize}
@@ -656,8 +661,8 @@ class Graph:
   {\footnotesize
   \begin{columns}
     \begin{column}[t]{6cm}
-      \myred{DFS}($G$)
       \begin{algorithmic}
+        \STATE \myred{DFS}($G$)
         \REQUIRE graf $G$
         \ENSURE oznake na granama: {\scriptsize DISCOVERY} ili {\scriptsize BACK}
         \FORALL{$u\in G$.vertices()}
@@ -674,15 +679,15 @@ class Graph:
       \end{algorithmic}
     \end{column}
     \begin{column}[t]{6cm}
-      \myred{DFS}($G,v$)
       \begin{algorithmic}
+        \STATE \myred{DFS}($G,v$)
         \REQUIRE graf $G$ i početni čvor $v$
         \ENSURE oznake na granama: {\scriptsize DISCOVERY} ili {\scriptsize BACK}
         \STATE setLabel($v$, {\scriptsize VISITED})
         \FORALL{$e\in G$.incidentEdges($v$)}
           \IF{label($e$) = {\scriptsize UNEXPLORED}}
             \STATE $w \leftarrow$ opposite($v,e$)
-            \IF{label($e$) = {\scriptsize UNEXPLORED}}
+            \IF{label($w$) = {\scriptsize UNEXPLORED}}
               \STATE setLabel($e$, {\scriptsize DISCOVERY})
               \STATE DFS($G, w$)
             \ELSE
@@ -799,7 +804,7 @@ def DFS(g, u, discovered):
         \FORALL{$e\in G$.incidentEdges($v$)}
           \IF{label($e$) = {\scriptsize UNEXPLORED}}
             \STATE $w \leftarrow$ opposite($v,e$)
-            \IF{label($e$) = {\scriptsize UNEXPLORED}}
+            \IF{label($w$) = {\scriptsize UNEXPLORED}}
               \STATE setLabel($e$, {\scriptsize DISCOVERY})
               \STATE $S$.push($e$)
               \STATE pathDFS($G, w$)
@@ -837,7 +842,7 @@ def DFS(g, u, discovered):
           \IF{label($e$) = {\scriptsize UNEXPLORED}}
             \STATE $w \leftarrow$ opposite($v,e$)
             \STATE $S$.push($w$)
-            \IF{label($e$) = {\scriptsize UNEXPLORED}}
+            \IF{label($w$) = {\scriptsize UNEXPLORED}}
               \STATE setLabel($e$, {\scriptsize DISCOVERY})
               \STATE pathDFS($G, w$)
               \STATE $S$.pop($e$)
@@ -910,17 +915,17 @@ def DFS(g, u, discovered):
     \begin{column}[t]{6cm}
       \begin{algorithmic}
         \STATE \myred{BFS}($G,s$)
-        \STATE $L_{0} \leftarrow nova sekvenca$
+        \STATE $L_{0} \leftarrow [\,]$
         \STATE $L_{0}$.addLast($s$)
         \STATE setLabel($s$, {\scriptsize VISITED})
         \STATE $i \leftarrow 0$
         \WHILE{$\neg L_{i}$.isEmpty()}
-          \STATE $L_{i+1} \leftarrow $ nova sekvenca
-          \FORALL{$v \in L$.elements()}
+          \STATE $L_{i+1} \leftarrow [\,]$
+          \FORALL{$v \in L_i$.elements()}
             \FORALL{$e \in G$.incidentEdges($v$)}
               \IF{label($e$) = {\scriptsize UNEXPLORED}}
                 \STATE $w \leftarrow$ opposite($v,e$)
-                \IF{label($e$) = {\scriptsize UNEXPLORED}}
+                \IF{label($w$) = {\scriptsize UNEXPLORED}}
                   \STATE setLabel($e$, {\scriptsize DISCOVERY})
                   \STATE setLabel($w$, {\scriptsize VISITED})
                   \STATE $L_{i+1}$.addLast($w$)
@@ -1040,7 +1045,7 @@ def BFS(g, s, discovered):
       povezane komponente, & $\checkmark$ & $\checkmark$ \\
       putanje, petlje &  &  \\ \hline
       najkraći put &  & $\checkmark$ \\ \hline
-      dvopovezane komponente & $\checkmark$ & \\
+      bipovezane komponente & $\checkmark$ & \\
     \end{tabular}
     \includegraphics[width=10cm]{asp-14-pic26.png}
   \end{center}
@@ -1096,7 +1101,7 @@ def BFS(g, s, discovered):
       \item svaka grana je usmerena
       \item grana $(a,b)$ ide od $a$ ka $b$, i ne ide od $b$ ka $a$
     \end{itemize}
-    \item ako je $G$ prost: $m\leq n(n-1)$
+    \item ako je $G$ prost (nema petlji i višestrukih grana): $$m\leq n(n-1)$$
     \item ako čuvamo ulazne i izlazne grane u posebnim listama, njihovo
       listanje traje proporcionalno njihovom broju
   \end{itemize}
