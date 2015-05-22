@@ -569,7 +569,7 @@ def compute_kmp_fail(P):
     \begin{itemize}
       \item $A_{i}$ je dimenzije $d_{i}\times d_{i+1}$
       \item karakteristična jednačina za $N_{i,j}$ je:
-      $$ N_{i,j} = \min_{i\leq k<j}\{ N_{i,k} + N_{k+1,j} + d_{i} d_{k+1} d_{j+1}\}$$
+      $$ N_{i,j} = min_{i\leq k<j}\{ N_{i,k} + N_{k+1,j} + d_{i} d_{k+1} d_{j+1}\}$$
     \end{itemize}
     \item potproblemi nisu nezavisni, nego se \myred{preklapaju}
   \end{itemize}
@@ -600,7 +600,7 @@ def compute_kmp_fail(P):
         \STATE $j \leftarrow i+b$
         \STATE $N_{i,j} \leftarrow +\infty$
         \FOR{$k \leftarrow i$ \TO $j-1$}
-          \STATE $N_{i,j} \leftarrow \min_{k} \{ N_{i,k} + N_{k+1,j} + d_{i} d_{k+1} d_{j+1}\}$
+          \STATE $N_{i,j} \leftarrow min_{k} \{ N_{i,k} + N_{k+1,j} + d_{i} d_{k+1} d_{j+1}\}$
         \ENDFOR
       \ENDFOR
     \ENDFOR
@@ -719,7 +719,7 @@ def matrix_chain(d):
     \item sada definišemo $L[i,j]$ u opštem slučaju:
     \begin{itemize}
       \item ako je $x_{i}=y_{j}$ onda $L[i,j] = L[i-1,j-1]+1$ \\ (imamo poklapanje)
-      \item ako je $x_{i}\neq y_{j}$ onda $L[i,j] = \max\{L[i-1,j], L[i,j-1]\}$ \\ (nemamo poklapanje)
+      \item ako je $x_{i}\neq y_{j}$ onda $L[i,j] = max\{L[i-1,j], L[i,j-1]\}$ \\ (nemamo poklapanje)
     \end{itemize}
   \end{itemize}
   \begin{center}
@@ -744,7 +744,7 @@ def matrix_chain(d):
         \IF{$x_{i} = y_{j}$}
           \STATE $L[i,j] \leftarrow L[i-1,j-1]+1$
         \ELSE
-          \STATE $L[i,j] \leftarrow \max\{L[i-1,j], L[i,j-1]\}$
+          \STATE $L[i,j] \leftarrow max\{L[i-1,j], L[i,j-1]\}$
         \ENDIF
       \ENDFOR
     \ENDFOR
@@ -989,14 +989,14 @@ def LCS_solution(X, Y, L):
     \item pohlepni izbor: izaberi element sa najvećom vrednošću (cena/težina)
     \begin{itemize}
       \item pošto je $\sum_{i\in S}b_{i}(x_{i}/w_{i}) = \sum_{i\in S}(b_{i}/w_{i})x_{i}$
-      \item radi u $O(n\log n)$ vremenu
+      \item radi u $O(n log n)$ vremenu
     \end{itemize}
     \item \textbf{korektnost}: pretpostavimo da postoji bolje rešenje
     \begin{itemize}
       \item postoji element $i$ sa većom vrednošću od izabranog elementa 
       $j$ ali je $x_{i}<w_{i}$ i $v_{i}<v_{j}$
       \item ako zamenimo $i$ sa $j$ dobićemo bolje rešenje
-      \item koliko od $i$: $\min\{w_{i}-x_{i},x_{j}\}$
+      \item koliko od $i$: $min\{w_{i}-x_{i},x_{j}\}$
       \item dakle, nema boljeg rešenja od pohlepnog
     \end{itemize}
   \end{itemize}
@@ -1015,8 +1015,8 @@ def LCS_solution(X, Y, L):
     \STATE $w \leftarrow 0$ \COMMENT{ukupna težina}
     \WHILE{$w<W$}
       \STATE ukloni element $i$ sa najvećim $v_{i}$
-      \STATE $x_{i} \leftarrow \min\{w_{i}, W-w\}$
-      \STATE $w \leftarrow w + \min\{w_{i}, W-w\}$ 
+      \STATE $x_{i} \leftarrow min\{w_{i}, W-w\}$
+      \STATE $w \leftarrow w + min\{w_{i}, W-w\}$ 
     \ENDWHILE
   \end{algorithmic}    
 \end{frame}
@@ -1042,12 +1042,12 @@ def LCS_solution(X, Y, L):
     \item pohlepni izbor: razmatraćemo zadatke po vremenu početka i
     koristiti što manje mašina za ovaj redosled
     \begin{itemize}
-      \item vreme izvršavanja $O(n\log n)$
+      \item vreme izvršavanja $O(n log n)$
     \end{itemize}
     \item \textbf{korektnost}: pretpostavimo da postoji bolji raspored
     \begin{itemize}
       \item možemo koristiti $k-1$ mašina
-      \item alogritam koristi $k$
+      \item algoritam koristi $k$
       \item neka je $i$ prvi zadatak planiran u postrojenju $k$
       \item mašina $i$ mora biti u konfliktu sa $k-1$ drugih zadataka
       \item ali to znači da postoji konzistentan raspored koji koristi
@@ -1237,27 +1237,6 @@ def LCS_solution(X, Y, L):
   \end{itemize}
   \begin{center}
     \includegraphics[width=10cm]{asp-13-pic26.png}
-  \end{center}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Kodni trie}
-  \begin{itemize}
-    \item za dati string $X$ tražimo prefiksni kod takav da rezultat 
-    kompresije bude što kraći
-    \begin{itemize}
-      \item česti karakteri treba da imaju kratke kodne reči
-      \item retki karakteri mogu da imaju duže kodne reči
-    \end{itemize}
-    \item primer:
-    \begin{itemize}
-      \item $X = abracadabra$
-      \item $T_{1}$ kodira $X$ u 29 bita
-      \item $T_{2}$ kodira $X$ u 24 bita
-    \end{itemize}
-  \end{itemize}
-  \begin{center}
-    \includegraphics[width=10cm]{asp-13-pic27.png}
   \end{center}
 \end{frame}
 
