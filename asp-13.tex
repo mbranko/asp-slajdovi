@@ -388,7 +388,7 @@ def find_boyer_moore(T, P):
             \STATE \COMMENT{koristi $F$ da pomeriš $P$}
             \STATE $j \leftarrow F[j-1]$
           \ELSE
-            \STATE $F[0] \leftarrow 0$ \COMMENT{nema poklapanja}
+            \STATE $F[i] \leftarrow 0$ \COMMENT{nema poklapanja}
             \STATE $i \leftarrow i + 1$
           \ENDIF
         \ENDWHILE
