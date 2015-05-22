@@ -198,7 +198,7 @@ def find_brute_force(T, P):
         \ENDIF
       \ELSE
         \STATE $l \leftarrow L[T[i]]$ \COMMENT{indeks poslednjeg pojavljivanja}
-        \STATE $i \leftarrow i + m - \min(j, 1+l)$ \COMMENT{dva slučaja za skok}
+        \STATE $i \leftarrow i + m - min(j, 1+l)$ \COMMENT{dva slučaja za skok}
         \STATE $j \leftarrow m-1$
       \ENDIF
     \UNTIL{$i>n-1$}
@@ -900,7 +900,7 @@ def LCS_solution(X, Y, L):
   \begin{itemize}
     \item za dati string $X$ Huffman-ovo kodiranje konstruiše prefiksni 
     kod koji minimizuje dužinu kôda od $X$
-    \item radi u $O(n + d\log d)$ vremenu
+    \item radi u $O(n + d log d)$ vremenu
     \begin{itemize}
       \item $n$ je dužina $X$ 
       \item $d$ je veličina alfabeta
