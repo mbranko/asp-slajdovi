@@ -912,7 +912,7 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
 \begin{frame}[fragile]
   \frametitle{Crveno-crno stablo}
   \begin{itemize}
-    \item \textbf{red-black} stablo je reprezentacija (2,4) stabla pomoću binarnog stabla čiji čvorovi su obojeni \myred{crveno} ili \textbf{crno}
+    \item \textbf{\myred{red}-black} stablo je reprezentacija (2,4) stabla pomoću binarnog stabla čiji čvorovi su obojeni \textbf{\myred{crveno}} ili \textbf{crno}
     \item u poređenju sa (2,4) stablom, RB stablo ima
     \begin{itemize}
       \item jednake $O(\log n)$ performanse
@@ -930,21 +930,28 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Crveno-crno stablo}
+  \frametitle{Crveno-crno stablo: definicija}
   \begin{itemize}
-    \item \myred{crveno-}crno \myred{stablo} je binarno stablo sa osobinama
+    \item \myred{crveno-}crno stablo je binarno stablo pretrage sa osobinama
     \begin{itemize}
       \item koren je \textbf{crn}
-      \item svaki list je \textbf{crn}
       \item deca \textbf{\myred{crvenog}} čvora su \textbf{crna}
-      \item svi listovi imaju istu \textbf{crnu dubinu} $\Leftrightarrow$ sve putanje od korena do lista sadrže isti broj \textbf{crnih} čvorova
+      \begin{itemize}
+        \item deca \textbf{crnog} čvora ne moraju biti \textbf{\myred{crvena}}!
+      \end{itemize}
+      \item sve putanje od korena do lista sadrže isti broj \textbf{crnih} čvorova
+      \begin{itemize}
+        \item \textbf{crna dubina} čvora: broj crnih predaka (računajući i dati čvor)
+      \end{itemize}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Visina crveno-crnog stabla}
+  \frametitle{Crveno-crno stablo: posledice}
   \begin{itemize}
+    \item putanja od korena do najdaljeg lista nije više od duplo duža od putanje do najbližeg lista
+    \item RB-stablo je \textit{prilično dobro} balansirano
     \item visina RB stabla sa $n$ elemenata je $O(\log n)$
     \item pretraga na isti način kao za binarno stablo
     \item pretraga je takođe $O(\log n)$
