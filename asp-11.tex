@@ -968,7 +968,7 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Korekcija duplog crvenog: stric je crn}
+  \frametitle{[add] Korekcija duplog crvenog: stric je crn}
   \begin{itemize}
     \item slučaj 1: brat roditelja novog čvora je crn ili ne postoji
     \item radimo tri-node restructuring
@@ -984,7 +984,7 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Korekcija duplog crvenog: stric je crven}
+  \frametitle{[add] Korekcija duplog crvenog: stric je crven}
   \begin{itemize}
     \item slučaj 2: brat roditelja novog čvora je crven
     \item radimo \textbf{recoloring}:
@@ -995,6 +995,212 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
   \end{itemize}
   \includegraphics[width=7cm]{asp-11-pic40a.pdf} \\
   \includegraphics[width=7cm]{asp-11-pic40b.pdf}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 1}
+  \begin{itemize}
+    \item stablo je na početku prazno
+    \item dodajemo 4
+    \item on će biti koren
+    \item bojimo ga u crno
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=1.0]{asp-11-add-01.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 2}
+  \begin{itemize}
+    \item dodajemo 7 kao desno dete od 4
+    \item bojimo ga u crveno
+    \item nije potrebno restrukturiranje
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=1.0]{asp-11-add-02.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 3}
+  \begin{itemize}
+    \item dodajemo 12 kao desno dete od 7
+    \item bojimo ga u crveno
+    \item imamo duplo crveno
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=1.0]{asp-11-add-03.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 3a}
+  \begin{itemize}
+    \item 12 nema strica: slučaj 1
+    \item radimo tri-node restructuring
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=1.0]{asp-11-add-03.pdf} $\Rightarrow$
+    \includegraphics[scale=1.0]{asp-11-add-04.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 4}
+  \begin{itemize}
+    \item dodajemo 15 kao desno dete od 12
+    \item bojimo ga u crveno
+    \item imamo duplo crveno
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=1.0]{asp-11-add-05.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 4a}
+  \begin{itemize}
+    \item 15 ima crvenog strica: slučaj 2
+    \item radimo recoloring: obojimo oca i strica u crno a dedu u crveno osim ako je koren
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=1.0]{asp-11-add-05.pdf} $\Rightarrow$
+    \includegraphics[scale=1.0]{asp-11-add-06.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 5}
+  \begin{itemize}
+    \item dodajemo 3 kao levo dete od 4
+    \item bojimo ga u crveno
+    \item sve je u redu
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=1.0]{asp-11-add-07.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 6}
+  \begin{itemize}
+    \item dodajemo 5 kao desno dete od 4
+    \item bojimo ga u crveno
+    \item sve je u redu
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=1.0]{asp-11-add-08.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 7}
+  \begin{itemize}
+    \item dodajemo 14 kao levo dete od 15
+    \item bojimo ga u crveno
+    \item imamo duplo crveno
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=1.0]{asp-11-add-09.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 7a}
+  \begin{itemize}
+    \item 14 nema strica: slučaj 1
+    \item radimo tri-node restructuring za 12-15-14
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=1.0]{asp-11-add-09.pdf} $\Rightarrow$
+    \includegraphics[scale=1.0]{asp-11-add-10.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 8}
+  \begin{itemize}
+    \item dodajemo 18 kao desno dete od 15
+    \item bojimo ga u crveno
+    \item imamo duplo crveno
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-add-11.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 8a}
+  \begin{itemize}
+    \item 18 ima crvenog strica: slučaj 2
+    \item radimo recoloring: oca i strica u crno a dedu u crveno
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-add-11.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-add-12.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 9}
+  \begin{itemize}
+    \item dodajemo 16 kao levo dete od 18
+    \item bojimo ga u crveno
+    \item imamo duplo crveno
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-add-13.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 9a}
+  \begin{itemize}
+    \item 16 nema strica: slučaj 1
+    \item radimo tri-node restructuring za 15-18-16
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-add-13.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-add-14.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 10}
+  \begin{itemize}
+    \item dodajemo 17 kao levo dete od 18
+    \item bojimo ga u crveno
+    \item imamo duplo crveno
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-add-15.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 10a}
+  \begin{itemize}
+    \item 17 ima crvenog strica: slučaj 2
+    \item radimo recoloring: oca i strica u crno a dedu u crveno
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-add-15.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-add-16.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[add] Primer: korak 10b}
+  \begin{itemize}
+    \item sada je deda (16) u problemu - imamo duplo crveno
+    \item 16 ima crnog strica: slučaj 1
+    \item radimo tri-node restructuring za 7-14-16
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-add-16.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-add-17.pdf}
+  \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -1059,6 +1265,31 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
   \end{itemize}
   \begin{center}
     \includegraphics[width=8cm]{asp-11-pic44.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[remove] Primer: korak 1}
+  \begin{itemize}
+    \item uklanjamo 3
+    \item 3 je crven: ne menja se crna dubina
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-del-01.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-del-02.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[remove] Primer: korak 2}
+  \begin{itemize}
+    \item uklanjamo 12
+    \item 12 je crn: narušava se crna dubina
+
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-del-02.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-del-03.pdf}
   \end{center}
 \end{frame}
 
