@@ -1211,7 +1211,7 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
     \item ako je uklonjeni čvor bio crven sve je OK (ne menja se crna dubina)
     \item ako je uklonjeni čvor bio crn:
     \begin{itemize}
-      \item ako nema dece sve je OK
+      \item ako je uklonjeni čvor list - njegov brat je koren podstabla sa crnom dubinom 1
       \item ako mu je dete crveno: pomeramo dete na mesto uklonjenog roditelja i bojimo crno
       \item ako mu je dete crno: gubimo jedan crni čvor na putanji, narušava se crna dubina u tom podstablu
     \end{itemize}
@@ -1283,9 +1283,9 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
 \begin{frame}[fragile]
   \frametitle{[remove] Primer: korak 2}
   \begin{itemize}
-    \item uklanjamo 12
-    \item 12 je crn: narušava se crna dubina
-
+    \item uklanjamo 12 - to je crni list
+    \item njegov brat je crn i ima crveno dete
+    \item slučaj 1: radimo tri-node restructuring
   \end{itemize}
   \begin{center}
     \includegraphics[scale=0.8]{asp-11-del-02.pdf} $\Rightarrow$
@@ -1294,10 +1294,91 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{[remove] Primer: korak 2a}
+  \begin{itemize}
+    \item slučaj 1: radimo tri-node restructuring za 7-4-5
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-del-03.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-del-04.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[remove] Primer: korak 3}
+  \begin{itemize}
+    \item uklanjamo 17 - to je crveni list
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-del-04.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-del-05.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[remove] Primer: korak 4}
+  \begin{itemize}
+    \item uklanjamo 18 - crni list
+    \item njegov crni brat nema dece
+    \item slučaj 2: recoloring - menjamo boju brata i roditelja
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-del-05.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-del-06.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[remove] Primer: korak 4a}
+  \begin{itemize}
+    \item slučaj 2: recoloring - menjamo boju brata i roditelja
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-del-06.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-del-07.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[remove] Primer: korak 5}
+  \begin{itemize}
+    \item uklanjamo 15 - crveni list
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-del-07.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-del-08.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[remove] Primer: korak 6}
+  \begin{itemize}
+    \item uklanjamo 16 - crni list
+    \item njegov brat 5 je crven: slučaj 3
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-del-08.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{[remove] Primer: korak 6a}
+  \begin{itemize}
+    \item slučaj 3: radimo rotaciju pa recoloring
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.8]{asp-11-del-09.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-del-10.pdf} $\Rightarrow$
+    \includegraphics[scale=0.8]{asp-11-del-11.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{Crveno-crno stablo: performanse}
   \begin{itemize}
     \item jednake kao i za (2,4) stablo
-    \item sve operacije su $O(\log n)$ \\ \ \\
+    \item sve operacije su $O(\log n)$ 
+    \item dodavanje i uklanjanje zahtevaju konstantan broj operacija restrukturiranja \\ \ \\
     \item odličan interaktivni demo za RB stabla: \\
     \url{http://gauss.ececs.uc.edu/RedBlack/redblack.html}
   \end{itemize}
