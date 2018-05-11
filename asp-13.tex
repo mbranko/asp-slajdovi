@@ -142,15 +142,10 @@ def find_brute_force(T, P):
 \begin{frame}[fragile]
   \frametitle{Boyer-Moore}
   \begin{itemize}
-    \item \myred{Boyer-Moore} algoritam se zasniva na dve heuristike
+    \item \myred{Boyer-Moore} algoritam se zasniva na dva principa:
     \begin{itemize}
-      \item \myred{ogledalo}: poredi $P$ sa podsekvencom u $T$ idući unazad
-      \item \myred{skok}: ako se razlika otkrije u $T[i]=c$
-      \begin{itemize}
-        \item ako $P$ sadrži $c$, pomeri $P$ tako da se $T[i]$ poklopi sa
-        poslednjom pojavom $c$ u $P$
-        \item inače pomeri $P$ tako da se poklope $P[0]$ i $T[i+1]$
-      \end{itemize}
+      \item ogledalo: poredi $P$ sa podsekvencom u $T$ idući unazad
+      \item skok: ako se razlika otkrije u $T[i]=c$
     \end{itemize}
   \end{itemize}
   \begin{center}
@@ -179,6 +174,51 @@ def find_brute_force(T, P):
     \item može se predstaviti kao niz indeksiran numeričkim kodovima karaktera
     \item može se izračunati za $O(m+s)$ vreme gde je $m$ dužina $P$ a $s$ je veličina $\Sigma$
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Boyer-Moore}
+  \begin{itemize}
+    \item \myred{bad character shift}: preskoči sigurno neuspešna poređenja
+    \item 0: ako $P$ ne sadrži $c$: pomeri $P$ tako da se poklope $P[0]$ i $T[i+1]$
+    \item 1: ako $P$ sadrži $c$ i poslednja pojava $c$ je levo od pozicije $i$: pomeri $P$ tako da se $T[i]$ poklopi sa
+    poslednjom pojavom $c$ u $P$
+    \item 2: ako $P$ sadrži $c$ i poslednja pojava $c$ je desno od pozicije $i$: pomeri $P$ za jedno mesto
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Boyer-Moore skok, slučaj 0}
+  \begin{itemize}
+    \item slučaj 0 -- ako $P$ ne sadrži $c$: 
+    \item pomeri $P$ tako da se poklope $P[0]$ i $T[i+1]$
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-13-bm-01.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Boyer-Moore skok, slučaj 1}
+  \begin{itemize}
+    \item slučaj 1 -- ako $P$ sadrži $c$ i poslednja pojava $c$ je levo od pozicije $i$: 
+    \item pomeri $P$ tako da se $T[i]$ poklopi sa poslednjom pojavom $c$ u $P$
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-13-bm-02.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Boyer-Moore skok, slučaj 2}
+  \begin{itemize}
+    \item slučaj 2 -- ako $P$ sadrži $c$ i poslednja pojava $c$ je desno od pozicije $i$: 
+    \item rešenje A: pomeri $P$ za jedno mesto
+    \item rešenje B: pomeri $P$ tako da se $T[i]$ poklopi sa sledećom pojavom $c$ u $P$ -- last occurence funkcija više nije dovoljna!
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=11cm]{asp-13-bm-03.pdf}
+  \end{center}
 \end{frame}
 
 \begin{frame}[fragile,shrink]
@@ -220,29 +260,6 @@ def find_brute_force(T, P):
   \end{center}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Boyer-Moore: analiza}
-  \begin{columns}
-    \begin{column}[t]{6cm}
-      \begin{itemize}
-        \item Boyer-Moore je $O(nm+s)$
-        \item primer najgoreg slučaja:
-        \begin{itemize}
-          \item $T = aaa \ldots a$
-          \item $P = baaa$
-        \end{itemize}
-        \item najgori slučaj nije verovatan u tekstovima
-        \item znatno brži od grube sile za tekstove na prirodnom jeziku
-      \end{itemize}
-    \end{column}
-    \begin{column}[t]{6cm}
-      \begin{center}
-        \includegraphics[width=6cm]{asp-13-pic04.png}
-      \end{center}
-    \end{column}
-  \end{columns}
-\end{frame}
-
 \begin{frame}[fragile,shrink]
   \frametitle{Boyer-Moore u Pythonu}
 \begin{minted}[linenos=false]{python}
@@ -269,6 +286,39 @@ def find_boyer_moore(T, P):
       k = m - 1                           # restart at end of pattern
   return -1
 \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Boyer-Moore: analiza}
+  \begin{columns}
+    \begin{column}[t]{6cm}
+      \begin{itemize}
+        \item Boyer-Moore je $O(nm+s)$
+        \item primer najgoreg slučaja:
+        \begin{itemize}
+          \item $T = aaa \ldots a$
+          \item $P = baaa$
+        \end{itemize}
+        \item najgori slučaj nije verovatan u tekstovima
+        \item znatno brži od grube sile za tekstove na prirodnom jeziku
+      \end{itemize}
+    \end{column}
+    \begin{column}[t]{6cm}
+      \begin{center}
+        \includegraphics[width=6cm]{asp-13-pic04.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Boyer-Moore: analiza}
+  \begin{itemize}
+    \item najgori slučaj za BM je $O(nm)$, isto kao i gruba sila
+    \item za realne tekstove malo verovatan
+    \item postoji i drugo pravilo za skok, \myred{good suffix shift},
+    koje se zasniva na ideji koju koristi KMP algoritam (sledeći)
+  \end{itemize}
 \end{frame}
 
 \section[KMP]{Knuth-Morris-Pratt}
@@ -302,7 +352,7 @@ def find_boyer_moore(T, P):
         šablona
         \item \myred{funkcija neuspeha} $F(j)$ je veličina najvećeg prefiksa
         $P[0..j]$ takvog da je ujedno i sufiks $P[1..j]$
-        \item razlika KMP i GS: ako nema poklapanja za $P[j] \neq T[i]$ pomeramo
+        \item ako nema poklapanja za $P[j] \neq T[i]$ pomeramo
         $j \leftarrow F(j-1)$
       \end{itemize}
     \end{column}
@@ -544,7 +594,7 @@ def compute_kmp_fail(P):
   \begin{itemize}
     \item definišemo \myred{potprobleme}
     \begin{itemize}
-      \item nađi najbolji raspored zagrada za $A_{i}\cdot A_{i+1}\cdot \ldots A_{j}$
+      \item nađi najbolji raspored zagrada za podniz $A_{i}\cdot A_{i+1}\cdot \ldots A_{j}$
       \item neka je $N_{i,j}$ broj operacija za ovaj potproblem
       \item optimalno rešenje za ceo problem je $N_{0,n-1}$
     \end{itemize}
@@ -580,7 +630,7 @@ def compute_kmp_fail(P):
   \begin{itemize}
     \item pošto se problemi preklapaju, nećemo koristiti rekurziju
     \item konstruisaćemo optimalne potprobleme od dole na gore (\textit{bottom-up})
-    \item $N_{i,i}$ je lako, počnemo od njih
+    \item $N_{i,i}$ je lako - nema množenja, tj. 0 operacija, počnemo od njih
     \item onda pređemo na potprobleme dužine 2, 3, \ldots{}
     \item vreme izvršavanja je $O(n^3)$
   \end{itemize}
@@ -722,8 +772,33 @@ def matrix_chain(d):
       \item ako je $x_{i}\neq y_{j}$ onda $L[i,j] = max\{L[i-1,j], L[i,j-1]\}$ \\ (nemamo poklapanje)
     \end{itemize}
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LCS dinamičkim programiranjem}
+  \begin{itemize}
+    \item slučaj $x_{i}=y_{j}$
+    \item jednaki su poslednji znaci $X[0..i]$ i $Y[0..j]$
+    \item taj poslednji znak mora biti deo najduže podsekvence (dokaz kontradikcijom)
+    \item mora važiti $L[i,j] = L[i-1,j-1]+1$
+    \item primer: $L_{10,12} = 1 + L_{9,11}$
+  \end{itemize}
   \begin{center}
-    \includegraphics[width=11cm]{asp-13-pic10.png}
+    \includegraphics[width=5cm]{asp-13-dp-01.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LCS dinamičkim programiranjem}
+  \begin{itemize}
+    \item slučaj $x_{i} \neq y_{j}$
+    \item LCS ne može da sadrži i $x_{i}$ i $y_{j}$
+    \item LCS može da sadrži jednog od njih ili nijednog
+    \item sada važi $L[i,j] = \max\{L[i-1,j], L[i,j-1]\}$
+    \item primer: $L_{9,11} = \max\{L_{9,10}, L_{8,11}\}$
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=5cm]{asp-13-dp-02.pdf}
   \end{center}
 \end{frame}
 
@@ -755,7 +830,9 @@ def matrix_chain(d):
 \begin{frame}[fragile]
   \frametitle{LCS algoritam: vizuelizacija}
   \begin{center}
-    \includegraphics[width=11cm]{asp-13-pic11.png}
+    %\includegraphics[width=11cm]{asp-13-pic11.png}
+    \includegraphics[width=7cm]{asp-13-dp-03.pdf}
+    \includegraphics[width=4cm]{asp-13-dp-04.pdf}
   \end{center}
 \end{frame}
 
