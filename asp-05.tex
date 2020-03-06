@@ -418,7 +418,8 @@ def is_matched_html(raw):
 \ENSURE niz $S$ sa rasponima od $X$
 \STATE $S \leftarrow$ novi niz od $n$ celih brojeva
 \STATE $A \leftarrow$ novi prazan stek
-\FOR{$i\leftarrow 0$ \TO $n-1$}
+\STATE $S[0]\leftarrow 1$
+\FOR{$i\leftarrow 1$ \TO $n-1$}
   \WHILE{$\neg$ $A$.is\_empty()\, $\land\, X$[$A$.top()]$\leq X[i]$}
     \STATE $A$.pop()
   \ENDWHILE
