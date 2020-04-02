@@ -2,6 +2,7 @@
 \usepackage{irbookslide}
 \usepackage{irilmenau2}
 \usepackage{tikz}
+\usetikzlibrary{shapes}
 \usepackage{url}
 \usepackage{ifxetex}
 %\RequireXeTeX
@@ -24,7 +25,7 @@
 \author{\textcopyright \ \ Goodrich, Tamassia, Goldwasser}
 \institute{Katedra za informatiku, Fakultet tehničkih nauka, Univerzitet u
 Novom Sadu}
-\date{2018.}
+\date{2020.}
 \subject{Predavanja sa ASP}
 
 \begin{document}
@@ -865,6 +866,507 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
       \end{center}
     \end{column}
   \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item \textbf{\myred{53}}, 97, 50, 48, 83, 69, 64, 80, 73, 87, 71, 84, 65, 44, 18, 88
+    \item stablo je inicijalno prazno, kreiramo koren i dodajemo prvi ključ u njega
+  \end{itemize}
+  \begin{center}
+  \begin{tikzpicture}
+  \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+  \tikzstyle{every node}=[bplus]
+  \tikzstyle{level 1}=[sibling distance=60mm]
+  \tikzstyle{level 2}=[sibling distance=15mm]
+  \node {53} [->]
+  ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+  
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, \textbf{\myred{97}}, 50, 48, 83, 69, 64, 80, 73, 87, 71, 84, 65, 44, 18, 88
+    \item 97 dodajemo u koren, ima mesta
+  \end{itemize}
+  \begin{center}
+  \begin{tikzpicture}
+  \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+  \tikzstyle{every node}=[bplus]
+  \tikzstyle{level 1}=[sibling distance=60mm]
+  \tikzstyle{level 2}=[sibling distance=15mm]
+  \node {53 \nodepart{two} 97} [->]
+  ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+  
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, \textbf{\myred{50}}, 48, 83, 69, 64, 80, 73, 87, 71, 84, 65, 44, 18, 88
+    \item 50 dodajemo u koren, ima mesta
+  \end{itemize}
+  \begin{center}
+  \begin{tikzpicture}
+  \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+  \tikzstyle{every node}=[bplus]
+  \tikzstyle{level 1}=[sibling distance=60mm]
+  \tikzstyle{level 2}=[sibling distance=15mm]
+  \node {50 \nodepart{two} 53 \nodepart{three} 97} [->]
+  ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, \textbf{\myred{48}}, 83, 69, 64, 80, 73, 87, 71, 84, 65, 44, 18, 88
+    \item 48 dodajemo u koren, imamo prelivanje
+  \end{itemize}
+  \begin{tikzpicture}
+  \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+  \tikzstyle{every node}=[bplus]
+  \tikzstyle{level 1}=[sibling distance=60mm]
+  \tikzstyle{level 2}=[sibling distance=15mm]
+  \node {48 \nodepart{two} 50 \nodepart{three} \myred{53} \nodepart{four} 97} [->]
+  ;\end{tikzpicture}
+  {\Huge$\Rightarrow$}
+  \begin{tikzpicture}
+  \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+  \tikzstyle{every node}=[bplus]
+  \tikzstyle{level 1}=[sibling distance=30mm]
+  \tikzstyle{level 2}=[sibling distance=15mm]
+  \node {53} [->]
+    child {node {48 \nodepart{two} 50}} 
+    child {node {97}}
+  ;\end{tikzpicture}
+  \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, \textbf{\myred{83}}, 69, 64, 80, 73, 87, 71, 84, 65, 44, 18, 88
+    \item nakon prelivanja dodajemo 83, ima mesta
+  \end{itemize}
+  \begin{center}
+  \begin{tikzpicture}
+  \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+  \tikzstyle{every node}=[bplus]
+  \tikzstyle{level 1}=[sibling distance=30mm]
+  \tikzstyle{level 2}=[sibling distance=15mm]
+  \node {53} [->]
+    child {node {48 \nodepart{two} 50}} 
+    child {node {83 \nodepart{two} 97}}
+  ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, \textbf{\myred{69}}, 64, 80, 73, 87, 71, 84, 65, 44, 18, 88
+    \item dodajemo 69, ima mesta
+  \end{itemize}
+  \begin{center}
+  \begin{tikzpicture}
+  \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+  \tikzstyle{every node}=[bplus]
+  \tikzstyle{level 1}=[sibling distance=30mm]
+  \tikzstyle{level 2}=[sibling distance=15mm]
+  \node {53} [->]
+    child {node {48 \nodepart{two} 50}} 
+    child {node {69 \nodepart{two} 83 \nodepart{three} 97}}
+  ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, \textbf{\myred{64}}, 80, 73, 87, 71, 84, 65, 44, 18, 88
+    \item dodajemo 64, imamo prelivanje, 83 se penje u roditelja
+  \end{itemize}
+  \begin{center}
+  \begin{tikzpicture}
+  \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+  \tikzstyle{every node}=[bplus]
+  \tikzstyle{level 1}=[sibling distance=30mm]
+  \tikzstyle{level 2}=[sibling distance=15mm]
+  \node {53} [->]
+    child {node {48 \nodepart{two} 50}} 
+    child {node {64 \nodepart{two} 69 \nodepart{three} \myred{83} \nodepart{four} 97}}
+  ;\end{tikzpicture}
+
+  {\Huge$\Downarrow$}
+  
+  \begin{tikzpicture}
+    \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+    \tikzstyle{every node}=[bplus]
+    \tikzstyle{level 1}=[sibling distance=30mm]
+    \tikzstyle{level 2}=[sibling distance=15mm]
+    \node {53 \nodepart{two} 83} [->]
+      child {node {48 \nodepart{two} 50}} 
+      child {node {64 \nodepart{two} 69}}
+      child {node {97}}
+  ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, 64, \textbf{\myred{80}}, 73, 87, 71, 84, 65, 44, 18, 88
+    \item dodajemo 80, ima mesta
+  \end{itemize}
+  \begin{center}
+  \begin{tikzpicture}
+    \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+    \tikzstyle{every node}=[bplus]
+    \tikzstyle{level 1}=[sibling distance=30mm]
+    \tikzstyle{level 2}=[sibling distance=15mm]
+    \node {53 \nodepart{two} 83} [->]
+      child {node {48 \nodepart{two} 50}} 
+      child {node {64 \nodepart{two} 69 \nodepart{three} 80}}
+      child {node {97}}
+  ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, 64, 80, \textbf{\myred{73}}, 87, 71, 84, 65, 44, 18, 88
+    \item dodajemo 73, imamo prelivanje, 73 se penje u roditelja, tamo ima mesta
+  \end{itemize}
+  \begin{center}
+  \begin{tikzpicture}
+    \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+    \tikzstyle{every node}=[bplus]
+    \tikzstyle{level 1}=[sibling distance=30mm]
+    \tikzstyle{level 2}=[sibling distance=15mm]
+    \node {53 \nodepart{two} 83} [->]
+      child {node {48 \nodepart{two} 50}} 
+      child {node {64 \nodepart{two} 69 \nodepart{three} \myred{73} \nodepart{four}80}}
+      child {node {97}}
+  ;\end{tikzpicture}
+
+  {\Huge$\Downarrow$}
+
+  \begin{tikzpicture}
+    \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+    \tikzstyle{every node}=[bplus]
+    \tikzstyle{level 1}=[sibling distance=20mm]
+    \tikzstyle{level 2}=[sibling distance=15mm]
+    \node {53 \nodepart{two} 73 \nodepart{three} 83} [->]
+      child {node {48 \nodepart{two} 50}} 
+      child {node {64 \nodepart{two} 69}}
+      child {node {80}}
+      child {node {97}}
+  ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, 64, 80, 73, \textbf{\myred{87}}, 71, 84, 65, 44, 18, 88
+    \item dodajemo 87, ima mesta
+  \end{itemize}
+  \begin{center}
+  \begin{tikzpicture}
+    \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+    \tikzstyle{every node}=[bplus]
+    \tikzstyle{level 1}=[sibling distance=20mm]
+    \tikzstyle{level 2}=[sibling distance=15mm]
+    \node {53 \nodepart{two} 73 \nodepart{three} 83} [->]
+      child {node {48 \nodepart{two} 50}} 
+      child {node {64 \nodepart{two} 69}}
+      child {node {80}}
+      child {node {87 \nodepart{two} 97}}
+  ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, 64, 80, 73, 87, \textbf{\myred{71}}, 84, 65, 44, 18, 88
+    \item dodajemo 71, ima mesta
+  \end{itemize}
+  \begin{center}
+  \begin{tikzpicture}
+    \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+    \tikzstyle{every node}=[bplus]
+    \tikzstyle{level 1}=[sibling distance=30mm]
+    \tikzstyle{level 2}=[sibling distance=15mm]
+    \node {53 \nodepart{two} 73 \nodepart{three} 83} [->]
+      child {node {48 \nodepart{two} 50}} 
+      child {node {64 \nodepart{two} 69 \nodepart{three} 71}}
+      child {node {80}}
+      child {node {87 \nodepart{two} 97}}
+  ;\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, 64, 80, 73, 87, 71, \textbf{\myred{84}}, 65, 44, 18, 88
+    \item dodajemo 84, ima mesta
+  \end{itemize}
+  \begin{center}
+  \begin{tikzpicture}
+    \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+    \tikzstyle{every node}=[bplus]
+    \tikzstyle{level 1}=[sibling distance=30mm]
+    \tikzstyle{level 2}=[sibling distance=15mm]
+    \node {53 \nodepart{two} 73 \nodepart{three} 83} [->]
+      child {node {48 \nodepart{two} 50}} 
+      child {node {64 \nodepart{two} 69 \nodepart{three} 71}}
+      child {node {80}}
+      child {node {84 \nodepart{two} 87 \nodepart{three} 97}}
+  ;\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, 64, 80, 73, 87, 71, 84, \textbf{\myred{65}}, 44, 18, 88
+    \item dodajemo 65, imamo prelivanje, 69 penjemo u roditelja
+  \end{itemize}
+  \begin{center}
+  \begin{tikzpicture}
+    \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+    \tikzstyle{every node}=[bplus]
+    \tikzstyle{level 1}=[sibling distance=30mm]
+    \tikzstyle{level 2}=[sibling distance=15mm]
+    \node {53 \nodepart{two} 73 \nodepart{three} 83} [->]
+      child {node {48 \nodepart{two} 50}} 
+      child {node {64 \nodepart{two} 65 \nodepart{three} \myred{69} \nodepart{four} 71}}
+      child {node {80}}
+      child {node {84 \nodepart{two} 87 \nodepart{three} 97}}
+  ;\end{tikzpicture}
+
+  {\Huge$\Downarrow$}
+
+  \begin{tikzpicture}
+    \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+    \tikzstyle{every node}=[bplus]
+    \tikzstyle{level 1}=[sibling distance=20mm]
+    \tikzstyle{level 2}=[sibling distance=15mm]
+    \node {53 \nodepart{two} 69 \nodepart{three} 73 \nodepart{four} 83} [->]
+      child {node {48 \nodepart{two} 50}} 
+      child {node {64 \nodepart{two} 65}}
+      child {node {71}}
+      child {node {80}}
+      child {node {84 \nodepart{two} 87 \nodepart{three} 97}}
+  ;\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, 64, 80, 73, 87, 71, 84, \textbf{\myred{65}}, 44, 18, 88
+    \item sada u korenu imamo prelivanje i pravimo novi koren
+  \end{itemize}
+  \begin{center}
+    \begin{tikzpicture}
+      \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+      \tikzstyle{every node}=[bplus]
+      \tikzstyle{level 1}=[sibling distance=20mm]
+      \tikzstyle{level 2}=[sibling distance=15mm]
+      \node {53 \nodepart{two} 69 \nodepart{three} \myred{73} \nodepart{four} 83} [->]
+        child {node {48 \nodepart{two} 50}} 
+        child {node {64 \nodepart{two} 65}}
+        child {node {71}}
+        child {node {80}}
+        child {node {84 \nodepart{two} 87 \nodepart{three} 97}}
+    ;\end{tikzpicture}
+  
+    {\Huge$\Downarrow$}
+
+    \begin{tikzpicture}
+      \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+      \tikzstyle{every node}=[bplus]
+      \tikzstyle{level 1}=[sibling distance=40mm]
+      \tikzstyle{level 2}=[sibling distance=15mm]
+      \node {73} [->]
+        child {node {53 \nodepart{two} 69}
+          child {node {48 \nodepart{two} 50}} 
+          child {node {64 \nodepart{two} 65}}
+          child {node {71}}
+        }
+        child {node{83}
+          child {node {80}}
+          child {node {84 \nodepart{two} 87 \nodepart{three} 97}}
+        }
+    ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item (2,4) stablo povećava broj nivoa kada se desi prelivanje u korenu
+    \item raste ,,iz korena`` umesto ,,kroz listove``
+    \item u prethodnom koraku je 73 postao novi koren nakon prelivanja
+  \end{itemize}
+  \begin{center}
+    \begin{tikzpicture}
+      \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+      \tikzstyle{every node}=[bplus]
+      \tikzstyle{level 1}=[sibling distance=40mm]
+      \tikzstyle{level 2}=[sibling distance=15mm]
+      \node {73} [->]
+        child {node {53 \nodepart{two} 69}
+          child {node {48 \nodepart{two} 50}} 
+          child {node {64 \nodepart{two} 65}}
+          child {node {71}}
+        }
+        child {node{83}
+          child {node {80}}
+          child {node {84 \nodepart{two} 87 \nodepart{three} 97}}
+        }
+    ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, 64, 80, 73, 87, 71, 84, 65, \textbf{\myred{44}}, 18, 88
+    \item dodajemo 44, ima mesta
+  \end{itemize}
+  \begin{center}
+    \begin{tikzpicture}
+      \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+      \tikzstyle{every node}=[bplus]
+      \tikzstyle{level 1}=[sibling distance=40mm]
+      \tikzstyle{level 2}=[sibling distance=20mm]
+      \node {73} [->]
+        child {node {53 \nodepart{two} 69}
+          child {node {44 \nodepart{two} 48 \nodepart{three} 50}} 
+          child {node {64 \nodepart{two} 65}}
+          child {node {71}}
+        }
+        child {node{83}
+          child {node {80}}
+          child {node {84 \nodepart{two} 87 \nodepart{three} 97}}
+        }
+    ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, 64, 80, 73, 87, 71, 84, 65, 44, \textbf{\myred{18}}, 88
+    \item dodajemo 18, imamo prelivanje, 48 ide u roditelja
+  \end{itemize}
+  \begin{center}
+    \begin{tikzpicture}
+      \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+      \tikzstyle{every node}=[bplus]
+      \tikzstyle{level 1}=[sibling distance=50mm]
+      \tikzstyle{level 2}=[sibling distance=25mm]
+      \node {73} [->]
+        child {node {53 \nodepart{two} 69}
+          child {node {18 \nodepart{two} 44 \nodepart{three} \myred{48} \nodepart{four} 50}} 
+          child {node {64 \nodepart{two} 65}}
+          child {node {71}}
+        }
+        child {node{83}
+          child {node {80}}
+          child {node {84 \nodepart{two} 87 \nodepart{three} 97}}
+        }
+    ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, 64, 80, 73, 87, 71, 84, 65, 44, \textbf{\myred{18}}, 88
+    \item nakon prelivanja
+  \end{itemize}
+  \begin{center}
+    \begin{tikzpicture}
+      \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+      \tikzstyle{every node}=[bplus]
+      \tikzstyle{level 1}=[sibling distance=40mm]
+      \tikzstyle{level 2}=[sibling distance=15mm]
+      \node {73} [->]
+        child {node {48 \nodepart{two} 53 \nodepart{three} 69}
+          child {node {18 \nodepart{two} 44}}
+          child {node {50}} 
+          child {node {64 \nodepart{two} 65}}
+          child {node {71}}
+        }
+        child {node{83}
+          child {node {80}}
+          child {node {84 \nodepart{two} 87 \nodepart{three} 97}}
+        }
+    ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, 64, 80, 73, 87, 71, 84, 65, 44, 18, \textbf{\myred{88}}
+    \item dodajemo 88, imamo prelivanje, 88 ide u roditelja
+  \end{itemize}
+  \begin{center}
+    \begin{tikzpicture}
+      \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+      \tikzstyle{every node}=[bplus]
+      \tikzstyle{level 1}=[sibling distance=50mm]
+      \tikzstyle{level 2}=[sibling distance=20mm]
+      \node {73} [->]
+        child {node {48 \nodepart{two} 53 \nodepart{three} 69}
+          child {node {18 \nodepart{two} 44}}
+          child {node {50}} 
+          child {node {64 \nodepart{two} 65}}
+          child {node {71}}
+        }
+        child {node{83}
+          child {node {80}}
+          child {node {84 \nodepart{two} 87 \nodepart{three} \myred{88} \nodepart{four} 97}}
+        }
+    ;\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{(2,4) stablo: primer dodavanja}
+  \begin{itemize}
+    \item 53, 97, 50, 48, 83, 69, 64, 80, 73, 87, 71, 84, 65, 44, 18, \textbf{\myred{88}}
+    \item nakon prelivanja
+  \end{itemize}
+  \begin{center}
+    \begin{tikzpicture}
+      \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
+      \tikzstyle{every node}=[bplus]
+      \tikzstyle{level 1}=[sibling distance=50mm]
+      \tikzstyle{level 2}=[sibling distance=15mm]
+      \node {73} [->]
+        child {node {48 \nodepart{two} 53 \nodepart{three} 69}
+          child {node {18 \nodepart{two} 44}}
+          child {node {50}} 
+          child {node {64 \nodepart{two} 65}}
+          child {node {71}}
+        }
+        child {node{83 \nodepart{two} 88}
+          child {node {80}}
+          child {node {84 \nodepart{two} 87}}
+          child {node {97}}
+        }
+    ;\end{tikzpicture}
+  \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
