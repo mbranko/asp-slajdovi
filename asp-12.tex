@@ -1,4 +1,4 @@
-\documentclass[compress]{beamer}
+\documentclass[compress,aspectratio=169]{beamer}
 \usepackage{irbookslide}
 \usepackage{irilmenau2}
 \usepackage{tikz}
@@ -24,7 +24,7 @@
 \author{\textcopyright \ \ Goodrich, Tamassia, Goldwasser}
 \institute{Katedra za informatiku, Fakultet tehničkih nauka, Univerzitet u
 Novom Sadu}
-\date{2018.}
+\date{2020.}
 \subject{Predavanja sa ASP}
 
 \begin{document}
@@ -143,15 +143,15 @@ def merge(s1, s2, s):
 def merge_sort(s):
   n = len(s)
   if n < 2:
-    return  # already sorted
-  # divide
+    return  # već sortirano
+  # podeli
   mid = n//2
   s1 = s[0:mid]
   s2 = s[mid:n]
-  # recur
+  # rekurzija
   merge_sort(s1)
   merge_sort(s2)
-  # conquer
+  # vladaj
   merge(s1, s2, s)
 \end{minted}
 \end{frame}
