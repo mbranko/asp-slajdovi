@@ -1,4 +1,4 @@
-\documentclass[compress]{beamer}
+\documentclass[compress,aspectratio=169]{beamer}
 \usepackage{irbookslide}
 \usepackage{irilmenau2}
 \usepackage{tikz}
@@ -25,7 +25,7 @@
 \author{\textcopyright \ \ Goodrich, Tamassia, Goldwasser}
 \institute{Katedra za informatiku, Fakultet tehničkih nauka, Univerzitet u
 Novom Sadu}
-\date{2018.}
+\date{2020.}
 \subject{Predavanja sa ASP}
 
 \begin{document}
@@ -292,7 +292,7 @@ def find_boyer_moore(T, P):
 \begin{frame}[fragile]
   \frametitle{Boyer-Moore: analiza}
   \begin{columns}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{itemize}
         \item Boyer-Moore je $O(nm+s)$
         \item primer najgoreg slučaja:
@@ -304,7 +304,7 @@ def find_boyer_moore(T, P):
         \item znatno brži od grube sile za tekstove na prirodnom jeziku
       \end{itemize}
     \end{column}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{center}
         \includegraphics[width=6cm]{asp-13-pic04.png}
       \end{center}
@@ -327,7 +327,7 @@ def find_boyer_moore(T, P):
 \begin{frame}[fragile]
   \frametitle{Knuth-Morris-Pratt}
   \begin{columns}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{itemize}
         \item \myred{Knuth-Morris-Pratt} poredi tekst sa šablonom \textbf{sleva
         u desno} ali pomera šablon pametnije od grube sile
@@ -336,7 +336,7 @@ def find_boyer_moore(T, P):
         \item odgovor: najveći prefiks $P[0..j]$ koji je sufiks $P[1..j]$
       \end{itemize}
     \end{column}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{center}
         \includegraphics[width=6cm]{asp-13-pic05.png}
       \end{center}
@@ -347,7 +347,7 @@ def find_boyer_moore(T, P):
 \begin{frame}[fragile]
   \frametitle{KMP: funkcija neuspeha}
   \begin{columns}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{itemize}
         \item KMP analizira šablon da pronađe njegove prefikse unutar samog
         šablona
@@ -357,7 +357,7 @@ def find_boyer_moore(T, P):
         $j \leftarrow F(j-1)$
       \end{itemize}
     \end{column}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{center}
         \includegraphics[width=6cm]{asp-13-pic06.png}
       \end{center}
@@ -368,7 +368,7 @@ def find_boyer_moore(T, P):
 \begin{frame}[fragile,shrink=12]
   \frametitle{Knuth-Morris-Pratt algoritam}
   \begin{columns}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{itemize}
         \item funkcija neuspeha se može prikazati nizom koji se izračuna za $O(m)$
         \item u svakoj iteraciji petlje, ili
@@ -380,7 +380,7 @@ def find_boyer_moore(T, P):
         \item $\Rightarrow$ KMP je $O(m+n)$
       \end{itemize}
     \end{column}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \myred{KMPMatch}($T, P$)
       \begin{algorithmic}
         \STATE $F \leftarrow$ failureFunction($P$)
@@ -411,7 +411,7 @@ def find_boyer_moore(T, P):
 \begin{frame}[fragile,shrink=12]
   \frametitle{KMP: izračunavanje funkcije neuspeha}
   \begin{columns}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{itemize}
         \item funkcija neuspeha se može prikazati nizom koji se izračuna za $O(m)$
         \item slično kao i sam KMP algoritam
@@ -423,7 +423,7 @@ def find_boyer_moore(T, P):
         \item $\Rightarrow$ nema više od $2n$ iteracija u petlji
       \end{itemize}
     \end{column}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \myred{failureFunction}($P$)
       \begin{algorithmic}
         \STATE $F[0] \leftarrow 0$
