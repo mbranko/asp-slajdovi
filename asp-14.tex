@@ -1,4 +1,4 @@
-\documentclass[compress]{beamer}
+\documentclass[compress,aspectratio=169]{beamer}
 \usepackage{irbookslide}
 \usepackage{irilmenau2}
 \usepackage{tikz}
@@ -24,7 +24,7 @@
 \author{\textcopyright \ \ Goodrich, Tamassia, Goldwasser}
 \institute{Katedra za informatiku, Fakultet tehničkih nauka, Univerzitet u
 Novom Sadu}
-\date{2018.}
+\date{2020.}
 \subject{Predavanja sa ASP}
 
 \begin{document}
@@ -118,7 +118,7 @@ Novom Sadu}
     \end{column}
     \begin{column}[t]{6cm}
       \begin{center}
-        \includegraphics[width=6cm]{asp-14-pic03.png}
+        \includegraphics[width=5cm]{asp-14-pic03.png}
       \end{center}
     \end{column}
   \end{columns}
@@ -193,7 +193,7 @@ Novom Sadu}
 \begin{frame}[fragile]
   \frametitle{Terminologija $_{3}$}
   \begin{columns}
-    \begin{column}[t]{7.5cm}
+    \begin{column}[t]{9cm}
       \begin{itemize}
         \item petlja
         \begin{itemize}
@@ -272,7 +272,7 @@ Novom Sadu}
 
 \begin{frame}[fragile]
   \frametitle{Graf ATP}
-  {\scriptsize
+  {%\scriptsize
   \begin{tabular}{r|p{6cm}}
     \texttt{vertex\_count()} & broj čvorova \\ \hline
     \texttt{vertices()} & lista svih čvorova \\ \hline
@@ -318,8 +318,8 @@ Novom Sadu}
     \end{column}
     \begin{column}[t]{6cm}
       \begin{center}
-        \includegraphics[width=4cm]{asp-14-pic08.png} \\
-        \includegraphics[width=4cm]{asp-14-pic09.png}
+        \includegraphics[width=3.5cm]{asp-14-pic08.png} \\
+        \includegraphics[width=3.5cm]{asp-14-pic09.png}
       \end{center}
     \end{column}
   \end{columns}
@@ -548,7 +548,7 @@ class Graph:
     \end{column}
     \begin{column}[t]{6cm}
       \begin{center}
-        \includegraphics[width=5cm]{asp-14-pic14.png}
+        \includegraphics[width=4cm]{asp-14-pic14.png}
       \end{center}
     \end{column}
   \end{columns}
@@ -566,7 +566,7 @@ class Graph:
     \end{column}
     \begin{column}[t]{6cm}
       \begin{center}
-        \includegraphics[width=5cm]{asp-14-pic15.png}
+        \includegraphics[width=4.5cm]{asp-14-pic15.png}
       \end{center}
     \end{column}
   \end{columns}
@@ -617,7 +617,7 @@ class Graph:
     \end{column}
     \begin{column}[t]{6cm}
       \begin{center}
-        \includegraphics[width=5cm]{asp-14-pic17.png}
+        \includegraphics[width=4.5cm]{asp-14-pic17.png}
       \end{center}
     \end{column}
   \end{columns}
@@ -628,7 +628,7 @@ class Graph:
 \begin{frame}[fragile]
   \frametitle{Obilazak grafa po dubini}
   \begin{columns}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{itemize}
         \item depth-first-search (\myred{DFS}) je opšti metod za 
         obilazak grafa
@@ -640,7 +640,7 @@ class Graph:
         \end{itemize}
       \end{itemize}
     \end{column}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{itemize}
         \item DFS na grafu sa $n$ čvorova i $m$ grana traje $O(n+m)$
         \item može se proširiti za rešavanje drugih problema
@@ -660,7 +660,7 @@ class Graph:
   dodeljuje oznake (labele) čvorovima i granama
   {\footnotesize
   \begin{columns}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{algorithmic}
         \STATE \myred{DFS}($G$)
         \REQUIRE graf $G$
@@ -678,7 +678,7 @@ class Graph:
         \ENDFOR
       \end{algorithmic}
     \end{column}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{algorithmic}
         \STATE \myred{DFS}($G,v$)
         \REQUIRE graf $G$ i početni čvor $v$
@@ -784,7 +784,7 @@ def DFS(g, u, discovered):
   \frametitle{DFS za pronalaženje putanje}
   {\footnotesize
   \begin{columns}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{itemize}
         \item DFS se može upotrebiti za pronalaženje \textbf{putanje} 
           između dva čvora $u$ i $z$
@@ -794,7 +794,7 @@ def DFS(g, u, discovered):
         \item kada dođemo do $z$ na steku je cela putanja
       \end{itemize}
     \end{column}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{algorithmic}
         \STATE \myred{pathDFS}($G,v,z$)
         \STATE setLabel($v$, {\scriptsize VISITED})
@@ -824,7 +824,7 @@ def DFS(g, u, discovered):
   \frametitle{DFS za pronalaženje petlje}
   {\footnotesize
   \begin{columns}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{itemize}
         \item DFS se može upotrebiti za pronalaženje \textbf{petlje} 
         \item na steku $S$ čuvamo putanju od početnog do tekućeg čvora
@@ -832,7 +832,7 @@ def DFS(g, u, discovered):
           petlju kao sadržaj steka od vrha do čvora $w$
       \end{itemize}
     \end{column}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{algorithmic}
         \STATE \myred{cycleDFS}($G,v,z$)
         \STATE setLabel($v$, {\scriptsize VISITED})
@@ -864,7 +864,7 @@ def DFS(g, u, discovered):
 \begin{frame}[fragile]
   \frametitle{Obilazak grafa po širini}
   \begin{columns}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{itemize}
         \item breadth-first-search (\myred{BFS}) je opšti metod za 
         obilazak grafa
@@ -876,7 +876,7 @@ def DFS(g, u, discovered):
         \end{itemize}
       \end{itemize}
     \end{column}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{8cm}
       \begin{itemize}
         \item BFS na grafu sa $n$ čvorova i $m$ grana traje $O(n+m)$
         \item može se proširiti za rešavanje drugih problema
@@ -938,6 +938,9 @@ def DFS(g, u, discovered):
     \end{column}
   \end{columns}
   }
+
+  \ %
+
 \end{frame}
 
 \begin{frame}[fragile,shrink=20]
@@ -982,7 +985,7 @@ def BFS(g, s, discovered):
   \frametitle{Osobine BFS}
   $G_{s}$: povezana komponenta od $s$
   \begin{columns}
-    \begin{column}[t]{6cm}
+    \begin{column}[t]{9cm}
       \begin{itemize}
         \item[1] BFS($G,v$) obilazi sve čvorove i grane od $G_{s}$
         \item[2] grane označene kao {\scriptsize DISCOVERY} čine 
@@ -996,7 +999,7 @@ def BFS(g, s, discovered):
     \end{column}
     \begin{column}[t]{6cm}
       \begin{center}
-        \includegraphics[width=5cm]{asp-14-pic25.png}
+        \includegraphics[width=4.5cm]{asp-14-pic25.png}
       \end{center}
     \end{column}
   \end{columns}
@@ -1722,7 +1725,7 @@ def shortest_path_lengths(g, src):
 \begin{frame}[fragile]
   \frametitle{Dijkstra i pohlepa}
   \begin{columns}
-    \begin{column}[t]{7cm}
+    \begin{column}[t]{11cm}
       \begin{itemize}
         \item Dijkstra koristi pohlepni metod -- dodaje čvorove po 
           rastućem rastojanju
@@ -1764,7 +1767,7 @@ def shortest_path_lengths(g, src):
 \begin{frame}[fragile,shrink=2]
   \frametitle{Bellman-Ford algoritam}
   \begin{columns}
-    \begin{column}[t]{5cm}
+    \begin{column}[t]{7cm}
       \begin{itemize}
         \item radi i za negativne težine
         \item grane moraju biti usmerene -- inače bismo imali negativne 
@@ -1818,7 +1821,7 @@ def shortest_path_lengths(g, src):
         \item znatno brži od Dijkstre: $O(n+m)$
       \end{itemize}
     \end{column}
-    \begin{column}[t]{7cm}
+    \begin{column}[t]{7cm}{\small
       \begin{algorithmic}
         \STATE \myred{DagDistances}($G,s$)
         \FORALL{$v \in G$.vertices()}
@@ -1840,7 +1843,7 @@ def shortest_path_lengths(g, src):
             \ENDIF
           \ENDFOR
         \ENDFOR
-      \end{algorithmic}
+      \end{algorithmic}}
     \end{column}
   \end{columns}
 \end{frame}
@@ -1916,7 +1919,7 @@ def shortest_path_lengths(g, src):
     \end{column}
     \begin{column}[t]{5cm}
       \begin{center}
-        \includegraphics[width=4.5cm]{asp-14-pic71.png}
+        \includegraphics[width=4.3cm]{asp-14-pic71.png}
       \end{center}
     \end{column}
   \end{columns}
@@ -2173,8 +2176,7 @@ def MST_Kruskal(g):
 \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Particija pomoću stabla}
+\begin{frame}[t,fragile]{Particija pomoću stabla}
   \begin{itemize}
     \item čvor stabla čuva element i referencu na skup
     \item čvor $v$ čija referenca pokazuje na $v$ je istovremeno i skup
@@ -2186,22 +2188,19 @@ def MST_Kruskal(g):
   \end{center}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Particija pomoću stabla: union i find}
+\begin{frame}[t]{Particija pomoću stabla: union i find}
   \begin{columns}
-    \begin{column}[t]{7cm}
+    \column{7cm}
       \begin{itemize}
         \item \myred{union}: koren jednog stabla treba da pokazuje na
           koren drugog
         \item \myred{find}: prati reference do korena koji pokazuje na 
           samog sebe
       \end{itemize}
-    \end{column}
-    \begin{column}[t]{5cm}
+    \column{7cm}
       \begin{center}
         \includegraphics[width=4cm]{asp-14-pic79.png}
       \end{center}
-    \end{column}
   \end{columns}
 \end{frame}
 
