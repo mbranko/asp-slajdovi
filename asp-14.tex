@@ -1443,7 +1443,7 @@ def floyd_warshall(g):
     \end{column}
     \begin{column}[t]{6cm}
       \begin{algorithmic}
-        \STATE \myred{toplogicalDFS}($G,v$)
+        \STATE \myred{topologicalDFS}($G,v$)
         \STATE setLabel($v$, {\scriptsize VISITED})
         \FORALL{$e \in G$.outEdges($v$)}
           \STATE $w \leftarrow$ opposite($v,e$)
