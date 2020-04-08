@@ -1,4 +1,4 @@
-\documentclass[compress]{beamer}
+\documentclass[compress,aspectratio=169]{beamer}
 \usepackage{irbookslide}
 \usepackage{irilmenau2}
 \usepackage{tikz}
@@ -24,7 +24,7 @@
 \author{\textcopyright \ \ Goodrich, Tamassia, Goldwasser}
 \institute{Katedra za informatiku, Fakultet tehničkih nauka, Univerzitet u
 Novom Sadu}
-\date{2018.}
+\date{2020.}
 \subject{Predavanja sa ASP}
 
 \begin{document}
@@ -48,7 +48,7 @@ Novom Sadu}
 \begin{frame}[fragile]
   \frametitle{Mapa ATP: osnovne operacije}
   \begin{center}
-    \begin{tabular}{rp{8cm}}
+    \begin{tabular}{rp{12cm}}
       \textbf{\texttt{M[k]}} & vraća vrednost $v$ vezanu za ključ $k$ u mapi $M$; ako ne postoji, izaziva \texttt{KeyError}; implementira je \texttt{\_\_getitem\_\_} \\ \hline
       \textbf{\texttt{M[k] = v}} & dodeljuje vrednost $v$ ključu $k$ u mapi $M$; ako ključ već postoji, zamenjuje staru vrednost; implementira je \texttt{\_\_setitem\_\_} \\ \hline
       \textbf{\texttt{del M[k]}} & uklanja element sa ključem $k$ iz mape $M$; ako ne postoji, izaziva \texttt{KeyError}; implementira je \texttt{\_delitem\_\_} \\ \hline
@@ -61,7 +61,7 @@ Novom Sadu}
 \begin{frame}[fragile]
   \frametitle{Mapa ATP: dodatne operacije}
   \begin{center}
-    \begin{tabular}{rp{6cm}}
+    \begin{tabular}{rp{10cm}}
       \textbf{\texttt{k in M}} & vraća \texttt{True} ako mapa $M$ sadrži ključ $k$; implementira je \texttt{\_\_contains\_\_} \\ \hline
       \textbf{\texttt{M.get(k, d=None)}} & vraća $M[k]$ ako ključ $k$ postoji u $M$; inače vraća default vrednost $d$; ne izaziva \texttt{KeyError} \\ \hline
       \textbf{\texttt{M.setdefault(k, d)}} & ako $k$ postoji u mapi, vraća $M[k]$; ako ne postoji, postavlja $M[k]=d$ i vraća $d$ \\ \hline
@@ -73,7 +73,7 @@ Novom Sadu}
 \begin{frame}[fragile]
   \frametitle{Mapa ATP: još malo operacija}
   \begin{center}
-    \begin{tabular}{rp{8cm}}
+    \begin{tabular}{rp{11cm}}
       \textbf{\texttt{M.popitem()}} & uklanja neki element mape i vraća ($k$,$v$); ako je mapa prazna izaziva \texttt{KeyError} \\ \hline
       \textbf{\texttt{M.clear()}} & uklanja sve elemente iz mape \\ \hline
       \textbf{\texttt{M.keys()}} & vraća skup svih ključeva iz $M$ \\ \hline
@@ -976,7 +976,7 @@ class ProbeHashMap(HashMapBase):
 \begin{frame}[fragile]
   \frametitle{Skup ATP: osnovne operacije}
   \begin{center}
-    \begin{tabular}{rp{8cm}}
+    \begin{tabular}{rp{11cm}}
       \textbf{\texttt{S.add(e)}} & dodaje element $e$ u $S$; nema efekta ako je $e$ već prisutan u $S$\\ \hline
       \textbf{\texttt{S.discard(e)}} & uklanja $e$ iz $S$; nema efekta ako $e$ nije prisutan u $S$\\ \hline
       \textbf{\texttt{e in S}} & vraća \texttt{True} ako je $e$ prisutan u $S$; implementira je \texttt{\_\_contains\_\_} \\ \hline
@@ -992,7 +992,7 @@ class ProbeHashMap(HashMapBase):
 \begin{frame}[fragile]
   \frametitle{Skup ATP: dodatne operacije}
   \begin{center}
-    \begin{tabular}{rp{8cm}}
+    \begin{tabular}{rp{11cm}}
       \textbf{\texttt{S.remove(e)}} & uklanja $e$ iz $S$; ako $e$ nije prisutan u $S$ izaziva \texttt{KeyError}\\ \hline
       \textbf{\texttt{S.pop()}} & vraća i uklanja proizvoljan element iz $S$; ako je $S$ prazan izaziva \texttt{KeyError}\\ \hline
       \textbf{\texttt{S.clear()}} & uklanja sve elemente iz $S$ \\
@@ -1003,7 +1003,7 @@ class ProbeHashMap(HashMapBase):
 \begin{frame}[fragile]
   \frametitle{Skup ATP: poređenje skupova}
   \begin{center}
-    \begin{tabular}{rp{7.5cm}}
+    \begin{tabular}{rp{10cm}}
       \textbf{\texttt{S == T}} & vraća \texttt{True} ako skupovi imaju jednak sadržaj \\ \hline
       \textbf{\texttt{S != T}} & vraća \texttt{True} ako skupovi nemaju jednak sadržaj \\ \hline
       \textbf{\texttt{S <= T}} & vraća \texttt{True} ako je $S$ podskup od $T$ \\ \hline

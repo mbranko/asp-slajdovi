@@ -1,4 +1,4 @@
-\documentclass[compress]{beamer}
+\documentclass[compress,aspectratio=169]{beamer}
 \usepackage{irbookslide}
 \usepackage{irilmenau2}
 \usepackage{tikz}
@@ -22,7 +22,7 @@
 \author{\textcopyright \ \ Goodrich, Tamassia, Goldwasser}
 \institute{Katedra za informatiku, Fakultet tehničkih nauka, Univerzitet u
 Novom Sadu}
-\date{2018.}
+\date{2020.}
 \subject{Predavanja sa ASP}
 
 \begin{document}
@@ -45,19 +45,23 @@ Novom Sadu}
 
 \begin{frame}[fragile]
   \frametitle{Terminologija}
-  \begin{itemize}
-    \item \myred{koren} (root): jedini čvor bez roditelja
-    \item \myred{unutrašnji čvor}: čvor sa bar jednim detetom
-    \item \myred{spoljašnji čvor}/\myred{list} (leaf): čvor bez dece
-    \item \myred{predak}: roditelj, deda, pradeda, \ldots do korena
-    \item \myred{dubina čvora}: broj predaka
-    \item \myred{visina stabla}: najveća dubina
-    \item \myred{potomak}: dete, unuče, praunuče, \ldots
-    \item \myred{podstablo}: čvor stabla i njegovi potomci
-  \end{itemize}
-  \begin{center}
-    \includegraphics[width=4cm]{asp-08-pic02.png}
-  \end{center}
+  \begin{columns}
+    \column{9cm}
+      \begin{itemize}
+        \item \myred{koren} (root): jedini čvor bez roditelja
+        \item \myred{unutrašnji čvor}: čvor sa bar jednim detetom
+        \item \myred{spoljašnji čvor}/\myred{list} (leaf): čvor bez dece
+        \item \myred{predak}: roditelj, deda, pradeda, \ldots do korena
+        \item \myred{dubina čvora}: broj predaka
+        \item \myred{visina stabla}: najveća dubina
+        \item \myred{potomak}: dete, unuče, praunuče, \ldots
+        \item \myred{podstablo}: čvor stabla i njegovi potomci
+      \end{itemize}
+    \column{7cm}
+      \begin{center}
+        \includegraphics[width=7cm]{asp-08-pic02.png}
+      \end{center}
+  \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]

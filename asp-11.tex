@@ -1,4 +1,4 @@
-\documentclass[compress]{beamer}
+\documentclass[compress,aspectratio=169]{beamer}
 \usepackage{irbookslide}
 \usepackage{irilmenau2}
 \usepackage{tikz}
@@ -112,7 +112,7 @@ Novom Sadu}
     \item inorder obilazak: ključevi u rastućem redosledu 
   \end{itemize}
   \begin{center}
-    \includegraphics[width=6cm]{asp-11-pic02.pdf}
+    \includegraphics[width=5.5cm]{asp-11-pic02.pdf}
   \end{center}
 \end{frame}
 
@@ -128,13 +128,13 @@ Novom Sadu}
     \begin{column}[c]{6cm}
       \begin{center}
         Tražimo 65
-        \includegraphics[width=6cm]{asp-11-pic03a.pdf}
+        \includegraphics[width=5.8cm]{asp-11-pic03a.pdf}
       \end{center}
     \end{column}  
     \begin{column}[c]{6cm}
       \begin{center}
         Tražimo 68
-        \includegraphics[width=6cm]{asp-11-pic03b.pdf}
+        \includegraphics[width=5.8cm]{asp-11-pic03b.pdf}
       \end{center}
     \end{column}  
   \end{columns}
@@ -221,12 +221,12 @@ Novom Sadu}
   \begin{columns}
     \begin{column}[c]{6cm}
       \begin{center}
-        \includegraphics[width=6cm]{asp-11-pic06a.pdf}
+        \includegraphics[width=5.8cm]{asp-11-pic06a.pdf}
       \end{center}
     \end{column}  
     \begin{column}[c]{6cm}
       \begin{center}
-        \includegraphics[width=6cm]{asp-11-pic06b.pdf}
+        \includegraphics[width=5.8cm]{asp-11-pic06b.pdf}
       \end{center}
     \end{column}  
   \end{columns}
@@ -241,17 +241,24 @@ Novom Sadu}
       \item vežemo $r$ na mesto $p$; pošto $r$ neposredno prethodi $p$ po vrednosti ključa, svi elementi u desnom podstablu od $p$ su veći od $r$ i svi elementi u levom podstablu od $p$ su manji od $r$
       \item treba još obrisati stari $r$ -- pošto je to ,,najdesniji`` element, on nema desno dete, pa se može obrisati po prethodnom algoritmu
     \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Uklanjanje iz stabla}
+  \begin{itemize}
+    \item ako $p$ ima \textbf{dva} deteta
     \item primer: uklanjamo 88
   \end{itemize}
   \begin{columns}
     \begin{column}[c]{6cm}
       \begin{center}
-        \includegraphics[width=4.5cm]{asp-11-pic07a.pdf}
+        \includegraphics[width=6cm]{asp-11-pic07a.pdf}
       \end{center}
     \end{column}  
     \begin{column}[c]{6cm}
       \begin{center}
-        \includegraphics[width=4.5cm]{asp-11-pic07b.pdf}
+        \includegraphics[width=6cm]{asp-11-pic07b.pdf}
       \end{center}
     \end{column}  
   \end{columns}
@@ -372,16 +379,12 @@ Novom Sadu}
   \end{itemize}
   \begin{columns}
     \begin{column}[t]{6cm}
-      \begin{center}
         pre balansiranja 
         \includegraphics[width=5cm]{asp-11-pic15a.pdf}
-      \end{center}
     \end{column}  
     \begin{column}[t]{6cm}
-      \begin{center}
         posle balansiranja
         \includegraphics[width=6cm]{asp-11-pic15b.pdf}
-      \end{center}
     \end{column}  
   \end{columns}
 \end{frame}
@@ -1177,8 +1180,8 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
     \begin{tikzpicture}
       \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
       \tikzstyle{every node}=[bplus]
-      \tikzstyle{level 1}=[sibling distance=20mm]
-      \tikzstyle{level 2}=[sibling distance=15mm]
+      \tikzstyle{level 1}=[sibling distance=20mm,level distance=10mm]
+      \tikzstyle{level 2}=[sibling distance=15mm,level distance=10mm]
       \node {53 \nodepart{two} 69 \nodepart{three} \myred{73} \nodepart{four} 83} [->]
         child {node {48 \nodepart{two} 50}} 
         child {node {64 \nodepart{two} 65}}
@@ -1187,13 +1190,13 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
         child {node {84 \nodepart{two} 87 \nodepart{three} 97}}
     ;\end{tikzpicture}
   
-    {\Huge$\Downarrow$}
+    {\Large$\Downarrow$}
 
     \begin{tikzpicture}
       \tikzstyle{bplus}=[rectangle split, rectangle split horizontal,rectangle split ignore empty parts,draw]
       \tikzstyle{every node}=[bplus]
-      \tikzstyle{level 1}=[sibling distance=40mm]
-      \tikzstyle{level 2}=[sibling distance=15mm]
+      \tikzstyle{level 1}=[sibling distance=40mm,level distance=10mm]
+      \tikzstyle{level 2}=[sibling distance=15mm,level distance=10mm]
       \node {73} [->]
         child {node {53 \nodepart{two} 69}
           child {node {48 \nodepart{two} 50}} 
@@ -1401,7 +1404,7 @@ nakon restrukturiranja: \includegraphics[width=3.5cm]{asp-11-pic16c.pdf}
 
 \begin{frame}[fragile]
   \frametitle{Različite implementacije mape}
-  \begin{tabular}{p{2cm}|p{1cm}|p{1cm}|p{1cm}|p{4cm}}
+  \begin{tabular}{p{2cm}|p{1cm}|p{1cm}|p{1cm}|p{6cm}}
   & \textbf{search} & \textbf{insert} & \textbf{delete} & \textbf{napomene} \\ \hline\hline
   hash tabela & 1 \mbox{\tiny očekivano} & 1 \mbox{\tiny očekivano} & 1 \mbox{\tiny očekivano} & {\scriptsize nema metode za sortiranu mapu; jednostavna implementacija} \\ \hline
   skip lista & $\log n$ \mbox{\tiny verovatno} & $\log n$ \mbox{\tiny verovatno} & $\log n$ \mbox{\tiny verovatno} & {\scriptsize randomized insert; jednostavna implementacija} \\ \hline

@@ -250,7 +250,7 @@ def find_brute_force(T, P):
 \begin{frame}[fragile]
   \frametitle{Boyer-Moore}
   \begin{center}
-    \includegraphics[width=6cm]{asp-13-pic02.png}
+    \includegraphics[width=5.7cm]{asp-13-pic02.png}
   \end{center}
 \end{frame}
 
@@ -381,8 +381,9 @@ def find_boyer_moore(T, P):
       \end{itemize}
     \end{column}
     \begin{column}[t]{8cm}
-      \myred{KMPMatch}($T, P$)
+      {\small
       \begin{algorithmic}
+        \STATE KMPMatch($T, P$)
         \STATE $F \leftarrow$ failureFunction($P$)
         \STATE $i \leftarrow 0$
         \STATE $j \leftarrow 0$
@@ -403,7 +404,7 @@ def find_boyer_moore(T, P):
           \ENDIF
         \ENDWHILE
         \RETURN $-1$ \COMMENT{nije pronađen}
-      \end{algorithmic}    
+      \end{algorithmic}}
     \end{column}
   \end{columns}
 \end{frame}
@@ -424,20 +425,18 @@ def find_boyer_moore(T, P):
       \end{itemize}
     \end{column}
     \begin{column}[t]{8cm}
-      \myred{failureFunction}($P$)
       \begin{algorithmic}
+        \STATE failureFunction($P$)
         \STATE $F[0] \leftarrow 0$
         \STATE $i \leftarrow 1$
         \STATE $j \leftarrow 0$
         \WHILE{$i<m$}
           \IF{$P[i]=P[j]$}
-            \STATE \COMMENT{poklapa se $j+1$ znakova}
-            \STATE $F[i] \leftarrow j+1$
+            \STATE $F[i] \leftarrow j+1$ \COMMENT{poklapa se $j+1$ znakova}
             \STATE $i \leftarrow i+1$
             \STATE $j \leftarrow j+1$
           \ELSIF{$j>0$}
-            \STATE \COMMENT{koristi $F$ da pomeriš $P$}
-            \STATE $j \leftarrow F[j-1]$
+            \STATE $j \leftarrow F[j-1]$ \COMMENT{koristi $F$ da pomeriš $P$}
           \ELSE
             \STATE $F[i] \leftarrow 0$ \COMMENT{nema poklapanja}
             \STATE $i \leftarrow i + 1$
@@ -1020,11 +1019,11 @@ def LCS_solution(X, Y, L):
 \begin{frame}[fragile]
   \frametitle{Huffman: primer 2}
   \begin{center}
-    \includegraphics[width=10cm]{asp-13-pic15.png}
+    \includegraphics[width=9.8cm]{asp-13-pic15.png}
   \end{center}
 \end{frame}
 
-\begin{comment}
+%\begin{comment}
 \begin{frame}[fragile]
   \frametitle{Problem ranca}
   \begin{itemize}
@@ -1169,7 +1168,7 @@ def LCS_solution(X, Y, L):
     \includegraphics[width=10cm]{asp-13-pic17.png}
   \end{center}
 \end{frame}
-\end{comment}
+%\end{comment}
 
 \section[Trie]{Trie}
 
@@ -1246,22 +1245,15 @@ def LCS_solution(X, Y, L):
 
 \begin{frame}[fragile]
   \frametitle{Kompresovani trie}
-  \begin{center}
-    \includegraphics[width=9cm]{asp-13-pic21.png}
-  \end{center}
+  \begin{itemize}
+    \item \myred{kompresovani trie} ima unutrašnje čvorove sa bar 2 deteta
+    \item dobija se od standardnog kompresovanjem lanaca ,,redundantnih`` čvorova
+  \end{itemize}
   \begin{columns}
-    \begin{column}[t]{5cm}
-      {\footnotesize
-      \begin{itemize}
-        \item \myred{kompresovani trie} ima unutrašnje čvorove sa bar 2 deteta
-        \item dobija se od standardnog kompresovanjem lanaca ,,redundantnih`` čvorova
-      \end{itemize}}
-    \end{column}
-    \begin{column}[t]{7cm}
-      \begin{center}
-        \includegraphics[width=6cm]{asp-13-pic22.png}
-      \end{center}
-    \end{column}
+    \column{10cm}
+      \includegraphics[width=9cm]{asp-13-pic21.png}
+    \column{6cm}
+      \includegraphics[width=6cm]{asp-13-pic22.png}
   \end{columns}
 \end{frame}
 
