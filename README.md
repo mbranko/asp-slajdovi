@@ -1,6 +1,6 @@
 # Algoritmi i strukture podataka
 
-Slajdovi za predmet Algoritmi i strukture podataka. Studijski program
+Slajdovi za predmet **Algoritmi i strukture podataka**. Studijski program
 *Softversko inženjerstvo i informacione tehnologije*, prva godina, Univerzitet 
 u Novom Sadu, Fakultet tehničkih nauka.
 
@@ -10,7 +10,7 @@ Materijal prati sadržaj knjige:
 
 > Michael T. Goodrich, Roberto Tamassia, Michael H. Goldwasser. 
 > *Data Structures and Algorithms in Python*. Wiley, 2013. ISBN 978-1118290279
-> (amazon)[https://www.amazon.com/Structures-Algorithms-Python-Michael-Goodrich/dp/1118290275]
+> [amazon](https://www.amazon.com/Structures-Algorithms-Python-Michael-Goodrich/dp/1118290275)
 
 
 ## Sadržaj
