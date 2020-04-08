@@ -26,16 +26,24 @@ Materijal prati sadržaj knjige:
 * `asp-08`: stablo
 * `asp-09`: red sa prioritetom; heap; adaptivni red sa prioritetom
 * `asp-10`: mapa; heš tabela; skip lista; skup
-* `asp-11`: **stabla pretrage**: binarno stablo pretrage; AVL stablo; splay stablo; (2,4)-stablo; crveno-crno stablo
-* `asp-12`: **sortiranje i selekcija**: merge sort; quick sort; teorijski limit brzine sortiranja; bucket sort; radix sort; quick select
-* `asp-13`: **obrada teksta**: pretraga teksta (gruba sila; Boyer-Moore; Knuth-Morris-Pratt); dinamičko programiranje; pohlepni algoritmi (Huffmanovo kodiranje; knapsack problem); trie stabla
-* `asp-14`: **grafovi**: reprezentacije grafa; obilazak grafa (DFS, BFS); usmereni graf (Floyd-Warshall, topološka analiza); težinski graf (Dijkstra, Bellman-Ford); minimalno pokrivajuće stablo (Prim-Jarnik, Kruskal)
+* `asp-11`: **stabla pretrage**: binarno stablo pretrage; AVL stablo; splay 
+  stablo; (2,4)-stablo; crveno-crno stablo
+* `asp-12`: **sortiranje i selekcija**: merge sort; quick sort; teorijski 
+  limit brzine sortiranja; bucket sort; radix sort; quick select
+* `asp-13`: **obrada teksta**: pretraga teksta (gruba sila; Boyer-Moore; 
+  Knuth-Morris-Pratt); dinamičko programiranje; pohlepni algoritmi (Huffmanovo
+  kodiranje; knapsack problem); trie stabla
+* `asp-14`: **grafovi**: reprezentacije grafa; obilazak grafa (DFS, BFS); 
+  usmereni graf (Floyd-Warshall, topološka analiza); težinski graf (Dijkstra,
+  Bellman-Ford); minimalno pokrivajuće stablo (Prim-Jarnik, Kruskal)
 * `asp-15`: upravljanje memorijom i B-stabla
 
 
 ## Prevođenje
 
-Slajdovi su pripremljeni pomoću LaTeX Beamer paketa. Za prevođenje koristiti:
+Slajdovi su pripremljeni pomoću XeLaTeX sistema i 
+[Beamer](https://en.wikipedia.org/wiki/Beamer_(LaTeX)) paketa. Za prevođenje 
+koristiti:
 ```bash
 xelatex -shell-escape asp-xx.tex
 xelatex -shell-escape asp-xx.tex
