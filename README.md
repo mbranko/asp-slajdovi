@@ -56,3 +56,9 @@ for i in asp-*.tex; do xelatex -shell-escape $i; done
 ```
 
 Rezultat prevođenja su fajlovi `asp-xx.pdf` koji predstavljaju gotove slajdove.
+
+
+## Snimci predavanja
+
+Snimci predavanja dostupni su na YouTube u okviru ove 
+[playliste](https://www.youtube.com/playlist?list=PLZtTMexk_VEYAKC6u14UIxjw8w1bxEh0v).
