@@ -112,12 +112,85 @@ w = Widget()
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Mark-and-sweep algoritam}
+  \frametitle{Brojanje referenci}
+  \begin{itemize}
+    \item \myred{reference counting}: svaki objekat ima uz sebe i brojač
+      referenci na sebe; brojač se ažurira prilikom operacija dodele
+      vrednosti
+    \item kada brojač padne na nulu, objekat može da se ukloni jer je
+      nedostupan
+    \item ali šta kada dva objekta imaju reference jedan na drugog, a
+      nisu dostupni spolja (\myred{cirkularne reference})?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Python i brojanje referenci}
+\begin{minted}[linenos=false]{python}
+>>> import sys
+>>> a = 'test'
+>>> b = [a]
+>>> c = {'key': a}
+>>> sys.getrefcount(a)
+4
+>>> 
+\end{minted}
+\begin{itemize}
+  \item referenca \texttt{a}
+  \item referenca u listi \texttt{b}
+  \item referenca u rečniku \texttt{c}
+  \item referenca u parametru funkcije \texttt{getrefcount} prilikom poziva :)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Cirkularne reference}
+  \begin{itemize}
+    \item šta kada dva objekta imaju reference jedan na drugog, a
+      nisu dostupni spolja (\myred{cirkularne reference})?
+    \item ili objekat ima referencu na samog sebe?
+  \end{itemize}
+\begin{minted}[linenos=false]{python}
+>>> class MyClass:
+...     pass
+...
+>>> a = MyClass()
+>>> a.obj = a
+>>> del a
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile,shrink]
+  \frametitle{Generational garbage collection}
+  \begin{itemize}
+    \item GC prati sve objekte u memoriji
+    \item svaki novi objekat počinje život u ,,prvoj generaciji``
+    \item kada se pokrene GC proces i objekat preživi, seli se u
+      narednu (drugu) generaciju
+    \item svaka generacija ima limit na broj objekata koji može da primi
+    \item Python ima 3 generacije za GC
+    \item statistika kaže: većina objekata u programu su kratkog veka
+  \end{itemize}
+\begin{minted}[linenos=false]{python}
+>>> import gc
+>>> gc.get_threshold()
+(700, 10, 10)
+>>> gc.get_count()
+(445, 3, 3)
+>>> gc.collect()
+115
+>>> gc.get_count()
+(24, 0, 0)
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Java: mark-and-sweep algoritam}
   \begin{itemize}
     \item svakom objektu dodeljena je oznaka (\myred{mark}) da li je
     objekat živ
-    \item kada odlučimo da je potrebno skupljati đubre, zaustavimo sve
-    druge aktivnosti i 
+    \item kada odlučimo da je potrebno skupljati đubre, \textbf{zaustavimo sve
+    druge aktivnosti} i 
     \begin{itemize}
       \item ukinemo mark za sve objekte na heapu
       \item prođemo kroz sve module i sve korenske objekte označimo kao žive
@@ -231,7 +304,8 @@ w = Widget()
   \begin{itemize}
     \item čuvamo veliku kolekciju elemenata koja ne može stati u 
     operativnu memoriju
-    \item spoljnu memoriju smo podelili na \myred{disk blokove}
+    \item spoljnu memoriju smo podelili na \myred{disk blokove} -- red 
+      veličine 8KB
     \item prenos bloka između spoljne i operativne memorije je 
     \myred{disk transfer} ili \myred{I/O}
     \item velika razlika između vremena pristupa operativnoj i spoljnoj 
