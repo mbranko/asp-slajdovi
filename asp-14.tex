@@ -834,7 +834,7 @@ def DFS(g, u, discovered):
     \end{column}
     \begin{column}[t]{8cm}
       \begin{algorithmic}
-        \STATE \myred{cycleDFS}($G,v,z$)
+        \STATE \myred{cycleDFS}($G,v$)
         \STATE setLabel($v$, {\scriptsize VISITED})
         \FORALL{$e\in G$.incidentEdges($v$)}
           \IF{label($e$) = {\scriptsize UNEXPLORED}}
@@ -1128,8 +1128,8 @@ def BFS(g, s, discovered):
         \begin{itemize}
           \item discovery
           \item back
-          \item forward
-          \item cross
+          \item forward: vodi prema potomku u pokrivajućem stablu
+          \item cross: vodi prema čvoru u pokrivajućem stablu koji nije ni predak ni potomak
         \end{itemize}
         \item DFS za usmereni graf polazeći od čvora $s$ određuje
           čvorove \myred{dostupne} iz $s$ 
@@ -1315,56 +1315,56 @@ def floyd_warshall(g):
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Floyd-Warshall primer $_1$}
+  \frametitle{Floyd-Warshall primer: $G_0$}
   \begin{center}
     \includegraphics[width=10cm]{asp-14-pic37.png}
   \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Floyd-Warshall primer $_2$}
+  \frametitle{Floyd-Warshall primer: $G_1$}
   \begin{center}
     \includegraphics[width=10cm]{asp-14-pic38.png}
   \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Floyd-Warshall primer $_3$}
+  \frametitle{Floyd-Warshall primer: $G_2$}
   \begin{center}
     \includegraphics[width=10cm]{asp-14-pic39.png}
   \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Floyd-Warshall primer $_4$}
+  \frametitle{Floyd-Warshall primer: $G_3$}
   \begin{center}
     \includegraphics[width=10cm]{asp-14-pic40.png}
   \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Floyd-Warshall primer $_5$}
+  \frametitle{Floyd-Warshall primer: $G_4$}
   \begin{center}
     \includegraphics[width=10cm]{asp-14-pic41.png}
   \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Floyd-Warshall primer $_6$}
+  \frametitle{Floyd-Warshall primer: $G_5$}
   \begin{center}
     \includegraphics[width=10cm]{asp-14-pic42.png}
   \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Floyd-Warshall primer $_7$}
+  \frametitle{Floyd-Warshall primer: $G_6$}
   \begin{center}
     \includegraphics[width=10cm]{asp-14-pic43.png}
   \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Floyd-Warshall primer $_8$}
+  \frametitle{Floyd-Warshall primer: $G_7$}
   \begin{center}
     \includegraphics[width=10cm]{asp-14-pic44.png}
   \end{center}
@@ -1424,7 +1424,7 @@ def floyd_warshall(g):
 \renewcommand{\algorithmiccomment}[1]{\{\myred{#1}\}}
 
 \begin{frame}[fragile]
-  \frametitle{Topološko sortiranje pomoću BFS}
+  \frametitle{Topološko sortiranje pomoću DFS}
   {\small
   \begin{columns}
     \begin{column}[t]{6cm}
@@ -1616,7 +1616,7 @@ def floyd_warshall(g):
           \item $z$ nije u oblaku
         \end{itemize}
         \item reklasiranje grane $e$ ažurira rastojanje $d(z)$:
-          $$ d(z) \leftarrow \min\{d(z), d(u)+weight(e\}$$
+          $$ d(z) \leftarrow \min\{d(z), d(u)+weight(e)\}$$
       \end{itemize}
     \end{column}
     \begin{column}[t]{6cm}
@@ -2075,7 +2075,7 @@ def MST_PrimJarnik(g):
       \STATE $(u,e) \leftarrow Q$.removeMin()
       \STATE $C(u)$ je klaster koji sadrži $u$
       \STATE $C(v)$ je klaster koji sadrži $v$
-      \IF{$C(u)<C(v)$}
+      \IF{$C(u) \neq C(v)$}
         \STATE dodaj granu $(u,v)$ u $T$
         \STATE spoj $C(u)$ i $C(v)$ u jedan klaster
       \ENDIF
@@ -2123,7 +2123,7 @@ def MST_PrimJarnik(g):
     \begin{itemize}
       \item \myred{find}($u$) traje $O(1)$ i vraća skup koji sadrži $u$
       \item \myred{union}($A,B$): premeštamo elemente iz manjeg skupa u
-        veći i ažuriramo reference na skup; traje $O(min(|A|,|B|))$
+        veći i ažuriramo reference na skup; traje $O(min\{|A|,|B|\})$
     \end{itemize}
     \item kada se element obradi, prelazi u skup koji je bar duplo veći,
       dakle svaki element se obrađuje najviše $\log n$ puta
