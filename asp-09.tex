@@ -496,18 +496,25 @@ class HeapPriorityQueue:
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Analiza konstrukcije heapa}
+  \frametitle{Analiza konstrukcije heapa $_1$}
   \begin{itemize}
-    \item najgori slučaj za downheap: prvo krene desno pa onda stalno levo do
-    dna heapa
-    \item svaki čvor se obiđe u najviše dve putanje
-    \item ukupan broj čvorova u putanjama je $O(n)$
-    \item bottom-up konstrukcija heapa radi u $O(n)$ vremenu
-    \item bottom-up konstrukcija heapa je brža nego $n$ dodavanja u heap sa upheap korekcijom
+    \item listovi ne narušavaju osobinu heap-a, ne moraju se proveravati: preskočimo kontrolu polovine svih čvorova u stablu
+    \item čvor na nivou $h$ će morati da se pomera najviše $h$ puta - $O(h)$
+    \item ukupan broj čvorova na nivou $h$ je $\lceil{\frac{n}{2^{h+1}}}\rceil$
+    \item ukupan broj čvorova za sve nivoe je $\sum_{h=0}^{\lfloor{\log n}\rfloor}{}$
+    \item $n$ je konstanta -- može ispred sume, $h$ može u razlomak, $O$ može ispred:
+    $$O(n\cdot \sum_{h=0}^{\lfloor{\log n}\rfloor} \frac{h}{2^{h+1}})$$
+    \item $O(2^{h+1})$ je $O(2^{h}\cdot 2)$ je $O(2^h)$
   \end{itemize}
-  \begin{center}
-    \includegraphics[width=10cm]{asp-09-pic18.png}
-  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Analiza konstrukcije heapa $_2$}
+  \begin{itemize}
+    \item kada $n\rightarrow\infty$ suma $\sum_h^\infty \frac{h}{2^h}$ teži $2$
+    $$O(n\cdot \sum_h^\infty \frac{h}{2^h}) = O(n\cdot 2) = O(n)$$
+    \item složenost algoritma je $O(n)$ !!!
+  \end{itemize}
 \end{frame}
 
 \section[Adaptivni RSP]{Adaptivni red sa prioritetom}
