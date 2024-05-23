@@ -194,7 +194,8 @@ w = Widget()
     \begin{itemize}
       \item ukinemo mark za sve objekte na heapu
       \item prođemo kroz sve module i sve korenske objekte označimo kao žive
-      \item odredimo da li su ostali objekti dostupni preko korenskih objekata -- pretragom grafa po dubini
+      \item odredimo da li su ostali objekti dostupni preko korenskih objekata \\ 
+        \myred{pretragom grafa po dubini}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -337,8 +338,11 @@ w = Widget()
     takvi da je $2\leq a\leq (b+1)/2$ je n-arno stablo pretrage sa
     sledećim osobinama
     \begin{itemize}
-      \item \myred{veličina}: svaki interni čvor osim korena ima 
-      najmanje $a$ dece; koren ima najviše $b$ dece
+      \item \myred{veličina}:
+      \begin{itemize}
+        \item unutrašnji čvor ima najmanje $a$ dece
+        \item koren ima najviše $b$ dece 
+      \end{itemize}
       \item \myred{dubina}: svi listovi imaju istu dubinu
     \end{itemize}
   \end{itemize}
